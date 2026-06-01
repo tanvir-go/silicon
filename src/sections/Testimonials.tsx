@@ -84,7 +84,7 @@ export default function Testimonials() {
         </div>
 
         {/* Testimonial Active Display Window */}
-        <div className="relative min-h-[340px] sm:min-h-[280px] w-full flex items-center justify-center p-6 sm:p-10 rounded-3xl glass border shadow-xl">
+        <div className="relative min-h-[340px] sm:min-h-[280px] w-full flex items-center justify-center p-6 sm:p-10 rounded-2xl glass border border-slate-100/50 shadow-[0_8px_30px_rgba(0,0,0,0.04)]">
           {/* Large Accent Quote Mark */}
           <div className="absolute top-6 left-6 text-slate-100 pointer-events-none">
             <Quote className="w-16 h-16 opacity-30 " />
@@ -108,7 +108,7 @@ export default function Testimonials() {
               </div>
 
               {/* Quote text */}
-              <p className="text-sm sm:text-base text-slate-700 font-medium leading-relaxed max-w-2xl">
+              <p className="text-sm sm:text-base text-slate-700 font-medium leading-normal max-w-2xl">
                 "{current.quote}"
               </p>
 

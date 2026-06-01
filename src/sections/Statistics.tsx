@@ -30,11 +30,6 @@ export default function Statistics() {
   return (
     <section className="relative w-full py-20 bg-white overflow-hidden border-b border-slate-200">
       
-      {/* Background Year Watermark behind cards (Matches screenshot!) */}
-      <div className="absolute right-6 bottom-10 text-[180px] sm:text-[240px] font-black text-slate-100/70 pointer-events-none select-none select-none tracking-tighter leading-none z-0">
-        2026
-      </div>
-
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         
         {/* Section Header */}
@@ -84,7 +79,7 @@ export default function Statistics() {
                 {/* Audience 2 */}
                 <circle cx="85" cy="90" r="6" fill="#FDBA74" />
                 <path d="M75,96 C75,96 85,95 95,96 L97,115 L73,115 Z" fill="#0F2C59" />
-
+ 
                 {/* Audience 3 */}
                 <circle cx="115" cy="92" r="6" fill="#FDBA74" />
                 <path d="M105,98 C105,98 115,97 125,98 L127,115 L103,115 Z" fill="#475569" />
@@ -100,53 +95,53 @@ export default function Statistics() {
           <div className="lg:col-span-6 grid grid-cols-2 gap-5 relative z-10">
             
             {/* Stat Box 1 */}
-            <div className="p-6 rounded-2xl bg-[#F0F4F7] shadow-md flex flex-col justify-center min-h-[140px] hover:shadow-lg hover:transition-all duration-300">
+            <div className="p-6 rounded-2xl bg-[#F0F4F7] shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.08)] transition-all duration-300 flex flex-col justify-center min-h-[140px]">
               <div className="text-3xl sm:text-4xl font-extrabold text-[#0F2C59] tracking-tight">
                 <Counter value={15} />+
               </div>
               <h3 className="font-bold text-xs text-[#D32F2F] mt-2 tracking-wide uppercase">
                 Successful Projects
               </h3>
-              <p className="text-[10px] text-slate-500 mt-1 leading-relaxed">
+              <p className="text-[10px] text-slate-500 mt-1 leading-normal">
                 Premium custom cloud architectures deployed.
               </p>
             </div>
 
             {/* Stat Box 2 */}
-            <div className="p-6 rounded-2xl bg-[#F0F4F7] shadow-md flex flex-col justify-center min-h-[140px] hover:shadow-lg hover:transition-all duration-300">
+            <div className="p-6 rounded-2xl bg-[#F0F4F7] shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.08)] transition-all duration-300 flex flex-col justify-center min-h-[140px]">
               <div className="text-3xl sm:text-4xl font-extrabold text-[#0F2C59] tracking-tight">
                 <Counter value={5} />+
               </div>
               <h3 className="font-bold text-xs text-[#D32F2F] mt-2 tracking-wide uppercase">
                 Years Experience
               </h3>
-              <p className="text-[10px] text-slate-500 mt-1 leading-relaxed">
+              <p className="text-[10px] text-slate-500 mt-1 leading-normal">
                 Operating corporate-level IT system engineering.
               </p>
             </div>
 
             {/* Stat Box 3 */}
-            <div className="p-6 rounded-2xl bg-[#F0F4F7] shadow-md flex flex-col justify-center min-h-[140px] hover:shadow-lg hover:transition-all duration-300">
+            <div className="p-6 rounded-2xl bg-[#F0F4F7] shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.08)] transition-all duration-300 flex flex-col justify-center min-h-[140px]">
               <div className="text-3xl sm:text-4xl font-extrabold text-[#0F2C59] tracking-tight">
                 <Counter value={50} />+
               </div>
               <h3 className="font-bold text-xs text-[#D32F2F] mt-2 tracking-wide uppercase">
                 Customers
               </h3>
-              <p className="text-[10px] text-slate-500 mt-1 leading-relaxed">
+              <p className="text-[10px] text-slate-500 mt-1 leading-normal">
                 Satisfied regional bank, tech, and enterprise clients.
               </p>
             </div>
 
             {/* Stat Box 4 */}
-            <div className="p-6 rounded-2xl bg-[#F0F4F7] shadow-md flex flex-col justify-center min-h-[140px] hover:shadow-lg hover:transition-all duration-300">
+            <div className="p-6 rounded-2xl bg-[#F0F4F7] shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.08)] transition-all duration-300 flex flex-col justify-center min-h-[140px]">
               <div className="text-3xl sm:text-4xl font-extrabold text-[#0F2C59] tracking-tight">
                 24/7
               </div>
               <h3 className="font-bold text-xs text-[#D32F2F] mt-2 tracking-wide uppercase">
                 Support
               </h3>
-              <p className="text-[10px] text-slate-500 mt-1 leading-relaxed">
+              <p className="text-[10px] text-slate-500 mt-1 leading-normal">
                 Providing persistent network threat containment.
               </p>
             </div>

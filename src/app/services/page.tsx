@@ -113,7 +113,7 @@ export default function ServicesPage() {
               <motion.div
                 key={service.id}
                 variants={fadeInUp(0, 0.55)}
-                className="group relative p-6 rounded-2xl bg-[#F0F4F7] hover-glow transition-all duration-300 flex flex-col justify-between shadow-sm"
+                className="group relative p-6 rounded-2xl bg-[#F0F4F7] shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.08)] hover-glow transition-all duration-300 flex flex-col justify-between"
               >
                 <div className="relative z-10 flex flex-col gap-5">
                   {/* Icon capsule */}
@@ -125,7 +125,7 @@ export default function ServicesPage() {
                     <h3 className="font-extrabold text-base text-slate-800 leading-tight">
                       {service.title}
                     </h3>
-                    <p className="text-xs text-slate-500 mt-2.5 leading-relaxed">
+                    <p className="text-xs text-slate-500 mt-2.5 leading-normal">
                       {service.shortDesc}
                     </p>
                   </div>

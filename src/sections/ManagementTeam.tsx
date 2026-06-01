@@ -43,7 +43,7 @@ export default function ManagementTeam() {
           {executives.map((member, idx) => (
             <div 
               key={idx}
-              className="bg-white rounded-2xl border border-slate-100 shadow-[0_4px_20px_rgba(0,0,0,0.02)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.05)] transition-all duration-300 p-8 flex flex-col items-center justify-center text-center"
+              className="bg-white rounded-2xl border border-slate-100 shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.08)] transition-all duration-300 p-8 flex flex-col items-center justify-center text-center"
             >
               
               {/* Circular Avatar Photo */}
@@ -57,7 +57,7 @@ export default function ManagementTeam() {
               </div>
 
               {/* Executive Metadata */}
-              <div className="text-xs sm:text-[13px] text-slate-700 leading-relaxed font-semibold">
+              <div className="text-xs sm:text-[13px] text-slate-700 leading-snug font-semibold">
                 <span className="font-bold text-slate-800">{member.name}</span>
                 <span className="text-slate-400 font-normal"> - {member.role}</span>
               </div>

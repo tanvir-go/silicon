@@ -22,7 +22,7 @@ export default function Services() {
         <div className="grid md:grid-cols-3 gap-8">
           
           {/* Pillar 1: High-Performance */}
-          <div className="group p-8 rounded-2xl bg-[#F0F4F7] shadow-md hover:shadow-xl hover:transition-all duration-300 flex flex-col items-center text-center gap-5">
+          <div className="group p-8 rounded-2xl bg-[#F0F4F7] shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.08)] transition-all duration-300 flex flex-col items-center text-center gap-5">
             <div className="p-4 rounded-full bg-[#F4F7FC] text-[#0F2C59] group-hover:bg-[#0F2C59] group-hover:text-white transition-all duration-300 w-16 h-16 flex items-center justify-center">
               <Zap className="w-8 h-8" />
             </div>
@@ -31,13 +31,13 @@ export default function Services() {
               High-Performance
             </h3>
             
-            <p className="text-xs text-slate-500 leading-relaxed">
+            <p className="text-xs text-slate-500 leading-normal">
               Delivering customized systems engineered with minimal hardware footprints, extremely low API latency index, and highly optimized processing threads.
             </p>
           </div>
 
           {/* Pillar 2: Quick Delivery */}
-          <div className="group p-8 rounded-2xl bg-[#F0F4F7] shadow-md hover:shadow-xl hover:transition-all duration-300 flex flex-col items-center text-center gap-5">
+          <div className="group p-8 rounded-2xl bg-[#F0F4F7] shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.08)] transition-all duration-300 flex flex-col items-center text-center gap-5">
             <div className="p-4 rounded-full bg-[#F4F7FC] text-[#0F2C59] group-hover:bg-[#0F2C59] group-hover:text-white transition-all duration-300 w-16 h-16 flex items-center justify-center">
               <Clock className="w-8 h-8" />
             </div>
@@ -46,13 +46,13 @@ export default function Services() {
               Quick Delivery
             </h3>
             
-            <p className="text-xs text-slate-500 leading-relaxed">
+            <p className="text-xs text-slate-500 leading-normal">
               Allocating dedicated systems architects immediately to scope, compile, and deploy enterprise-level workloads in highly optimized cycles.
             </p>
           </div>
 
           {/* Pillar 3: Premium Security */}
-          <div className="group p-8 rounded-2xl bg-[#F0F4F7] shadow-md hover:shadow-xl hover:transition-all duration-300 flex flex-col items-center text-center gap-5">
+          <div className="group p-8 rounded-2xl bg-[#F0F4F7] shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.08)] transition-all duration-300 flex flex-col items-center text-center gap-5">
             <div className="p-4 rounded-full bg-[#F4F7FC] text-[#0F2C59] group-hover:bg-[#0F2C59] group-hover:text-white transition-all duration-300 w-16 h-16 flex items-center justify-center">
               <ShieldCheck className="w-8 h-8" />
             </div>
@@ -61,7 +61,7 @@ export default function Services() {
               Premium Security
             </h3>
             
-            <p className="text-xs text-slate-500 leading-relaxed">
+            <p className="text-xs text-slate-500 leading-normal">
               Structuring custom private servers, zero-trust network credentials, and active SIEM telemetry capture for complete compliance audit.
             </p>
           </div>
