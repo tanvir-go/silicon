@@ -32,22 +32,22 @@ export default function ContactPage() {
             { 
               icon: HeartHandshake, 
               title: "Sales &amp; Partnerships", 
-              email: "sales@siliconcomputing.com", 
-              phone: "+880 2 12345678 Ext: 101",
+              email: "sales@silicon.com.bd", 
+              phone: "09614556655 Ext: 101",
               desc: "Enterprise AI implementations, cloud migrations, and digital roadmap scoping inquiries." 
             },
             { 
               icon: ShieldCheck, 
               title: "Technical Operations", 
-              email: "ops@siliconcomputing.com", 
-              phone: "+880 2 12345678 Ext: 102",
+              email: "ops@silicon.com.bd", 
+              phone: "09614556655 Ext: 102",
               desc: "Active client deployment support, SCADA grid security monitoring, and server credentials setup." 
             },
             { 
               icon: FileText, 
               title: "Executive Board Desk", 
-              email: "board@siliconcomputing.com", 
-              phone: "+880 2 12345678 Ext: 100",
+              email: "board@silicon.com.bd", 
+              phone: "09614556655 Ext: 100",
               desc: "Strategic investments, global partnerships, press releases, and executive advisory desk." 
             }
           ].map((dept, idx) => (

@@ -92,58 +92,66 @@ export default function Statistics() {
           </div>
 
           {/* Right Column: 2x2 Stats Grid */}
-          <div className="lg:col-span-6 grid grid-cols-2 gap-5 relative z-10">
+          <div className="lg:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-5 relative z-10">
             
-            {/* Stat Box 1 */}
-            <div className="p-6 rounded-2xl bg-[#F0F4F7] shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.08)] transition-all duration-300 flex flex-col justify-center min-h-[140px]">
-              <div className="text-3xl sm:text-4xl font-extrabold text-[#0F2C59] tracking-tight">
-                <Counter value={15} />+
+            {/* Card 1: Successful Projects (Colored Card) */}
+            <div className="p-6 sm:p-8 rounded-2xl bg-gradient-to-br from-[#121B54] via-[#0F174C] to-[#0A103E] border border-blue-500/20 shadow-[0_10px_30px_rgba(0,0,0,0.25)] hover:-translate-y-1 hover:shadow-[0_15px_35px_rgba(0,0,0,0.35)] transition-all duration-300 flex flex-col justify-between min-h-[160px]">
+              <div>
+                <div className="text-4xl sm:text-5xl font-black text-white tracking-tight">
+                  <Counter value={15} />+
+                </div>
+                <h4 className="font-bold text-sm sm:text-base text-white mt-3 tracking-wide">
+                  Successful Projects
+                </h4>
+                <p className="text-[11px] sm:text-xs text-slate-200/80 mt-2 leading-relaxed font-medium">
+                  Delivering IT solutions across industries with proven results.
+                </p>
               </div>
-              <h3 className="font-bold text-xs text-[#D32F2F] mt-2 tracking-wide uppercase">
-                Successful Projects
-              </h3>
-              <p className="text-[10px] text-slate-500 mt-1 leading-normal">
-                Premium custom cloud architectures deployed.
-              </p>
             </div>
 
-            {/* Stat Box 2 */}
-            <div className="p-6 rounded-2xl bg-[#F0F4F7] shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.08)] transition-all duration-300 flex flex-col justify-center min-h-[140px]">
-              <div className="text-3xl sm:text-4xl font-extrabold text-[#0F2C59] tracking-tight">
-                <Counter value={5} />+
+            {/* Card 2: Industry Expertise (White Card) */}
+            <div className="p-6 sm:p-8 rounded-2xl bg-white border border-slate-100 shadow-[0_10px_30px_rgba(0,0,0,0.04)] hover:-translate-y-1 hover:shadow-[0_15px_35px_rgba(0,0,0,0.1)] transition-all duration-300 flex flex-col justify-between min-h-[160px]">
+              <div>
+                <div className="text-4xl sm:text-5xl font-black text-[#0F2C59] tracking-tight">
+                  <Counter value={5} />+ Years
+                </div>
+                <h4 className="font-bold text-sm sm:text-base text-slate-800 mt-3 tracking-wide">
+                  Industry Expertise
+                </h4>
+                <p className="text-[11px] sm:text-xs text-slate-500 mt-2 leading-relaxed font-medium">
+                  A decade of experience in digital transformation.
+                </p>
               </div>
-              <h3 className="font-bold text-xs text-[#D32F2F] mt-2 tracking-wide uppercase">
-                Years Experience
-              </h3>
-              <p className="text-[10px] text-slate-500 mt-1 leading-normal">
-                Operating corporate-level IT system engineering.
-              </p>
             </div>
 
-            {/* Stat Box 3 */}
-            <div className="p-6 rounded-2xl bg-[#F0F4F7] shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.08)] transition-all duration-300 flex flex-col justify-center min-h-[140px]">
-              <div className="text-3xl sm:text-4xl font-extrabold text-[#0F2C59] tracking-tight">
-                <Counter value={50} />+
+            {/* Card 3: Enterprise Clients (White Card) */}
+            <div className="p-6 sm:p-8 rounded-2xl bg-white border border-slate-100 shadow-[0_10px_30px_rgba(0,0,0,0.04)] hover:-translate-y-1 hover:shadow-[0_15px_35px_rgba(0,0,0,0.1)] transition-all duration-300 flex flex-col justify-between min-h-[160px]">
+              <div>
+                <div className="text-4xl sm:text-5xl font-black text-[#0F2C59] tracking-tight">
+                  <Counter value={50} />+
+                </div>
+                <h4 className="font-bold text-sm sm:text-base text-slate-800 mt-3 tracking-wide">
+                  Enterprise Clients
+                </h4>
+                <p className="text-[11px] sm:text-xs text-slate-500 mt-2 leading-relaxed font-medium">
+                  Trusted by leading businesses for mission-critical IT services.
+                </p>
               </div>
-              <h3 className="font-bold text-xs text-[#D32F2F] mt-2 tracking-wide uppercase">
-                Customers
-              </h3>
-              <p className="text-[10px] text-slate-500 mt-1 leading-normal">
-                Satisfied regional bank, tech, and enterprise clients.
-              </p>
             </div>
 
-            {/* Stat Box 4 */}
-            <div className="p-6 rounded-2xl bg-[#F0F4F7] shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.08)] transition-all duration-300 flex flex-col justify-center min-h-[140px]">
-              <div className="text-3xl sm:text-4xl font-extrabold text-[#0F2C59] tracking-tight">
-                24/7
+            {/* Card 4: Support & Monitoring (White Card) */}
+            <div className="p-6 sm:p-8 rounded-2xl bg-white border border-slate-100 shadow-[0_10px_30px_rgba(0,0,0,0.04)] hover:-translate-y-1 hover:shadow-[0_15px_35px_rgba(0,0,0,0.1)] transition-all duration-300 flex flex-col justify-between min-h-[160px]">
+              <div>
+                <div className="text-4xl sm:text-5xl font-black text-[#0F2C59] tracking-tight">
+                  24/7
+                </div>
+                <h4 className="font-bold text-sm sm:text-base text-slate-800 mt-3 tracking-wide">
+                  Support & Monitoring
+                </h4>
+                <p className="text-[11px] sm:text-xs text-slate-500 mt-2 leading-relaxed font-medium">
+                  Ensuring uninterrupted operations with reliable support.
+                </p>
               </div>
-              <h3 className="font-bold text-xs text-[#D32F2F] mt-2 tracking-wide uppercase">
-                Support
-              </h3>
-              <p className="text-[10px] text-slate-500 mt-1 leading-normal">
-                Providing persistent network threat containment.
-              </p>
             </div>
 
           </div>

@@ -2,7 +2,34 @@
 
 import React from "react";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, TrendingUp, Users, Award, HeartHandshake } from "lucide-react";
+
+const chooseUsFeatures = [
+  {
+    title: "End-to-End Transformation",
+    description: "We handle everything from architectural planning to custom coding, 24/7 security protection, and long-term cloud management.",
+    icon: TrendingUp,
+    iconColor: "text-blue-400 bg-blue-500/10",
+  },
+  {
+    title: "Experienced Professionals",
+    description: "Our staff consists of certified senior architects, cybersecurity specialists, and AI researchers with decades of experience.",
+    icon: Users,
+    iconColor: "text-emerald-400 bg-emerald-500/10",
+  },
+  {
+    title: "Proven Track Record",
+    description: "We have delivered custom operational architectures, database migrations, and predictive AI solutions globally.",
+    icon: Award,
+    iconColor: "text-amber-400 bg-amber-500/10",
+  },
+  {
+    title: "Client-Centric Approach",
+    description: "We build dedicated channels, run weekly syncs, maintain 100% transparency, and craft custom solutions shaped by your metrics.",
+    icon: HeartHandshake,
+    iconColor: "text-rose-400 bg-rose-500/10",
+  }
+];
 
 export default function FeaturedInsight() {
   return (
@@ -16,45 +43,33 @@ export default function FeaturedInsight() {
 
       <div className="max-w-7xl mx-auto px-6 py-20 grid lg:grid-cols-12 gap-12 lg:gap-16 items-center relative z-10">
         
-        {/* Left Side: Four Key Stats Grid (Matches screenshot!) */}
-        <div className="lg:col-span-5 order-2 lg:order-1 grid grid-cols-2 gap-6 text-center">
-          
-          {/* Stat 1 */}
-          <div className="flex flex-col items-center justify-center p-4 rounded-2xl bg-[#F0F4F7]/5 backdrop-blur-sm shadow-inner">
-            <span className="text-3xl font-black text-white tracking-tight">250+</span>
-            <span className="text-[10px] font-bold text-slate-350 mt-1 uppercase tracking-wider">
-              Customers
-            </span>
-          </div>
-
-          {/* Stat 2 */}
-          <div className="flex flex-col items-center justify-center p-4 rounded-2xl bg-[#F0F4F7]/5 backdrop-blur-sm shadow-inner">
-            <span className="text-3xl font-black text-white tracking-tight">4</span>
-            <span className="text-[10px] font-bold text-slate-350 mt-1 uppercase tracking-wider">
-              Successful Projects
-            </span>
-          </div>
-
-          {/* Stat 3 */}
-          <div className="flex flex-col items-center justify-center p-4 rounded-2xl bg-[#F0F4F7]/5 backdrop-blur-sm shadow-inner">
-            <span className="text-3xl font-black text-white tracking-tight">40+</span>
-            <span className="text-[10px] font-bold text-slate-350 mt-1 uppercase tracking-wider">
-              Specialists
-            </span>
-          </div>
-
-          {/* Stat 4 */}
-          <div className="flex flex-col items-center justify-center p-4 rounded-2xl bg-[#F0F4F7]/5 backdrop-blur-sm shadow-inner">
-            <span className="text-3xl font-black text-white tracking-tight">3</span>
-            <span className="text-[10px] font-bold text-slate-350 mt-1 uppercase tracking-wider">
-              Experience Years
-            </span>
-          </div>
-
+        {/* Left Side: Four Premium Benefit Cards */}
+        <div className="lg:col-span-6 order-2 lg:order-1 grid grid-cols-1 sm:grid-cols-2 gap-6 text-left">
+          {chooseUsFeatures.map((feat, idx) => {
+            const Icon = feat.icon;
+            return (
+              <div 
+                key={idx}
+                className="group relative p-6 sm:p-7 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 hover:border-white/20 hover:-translate-y-1 hover:shadow-2xl transition-all duration-300 flex flex-col justify-between"
+              >
+                <div>
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-4 transition-transform group-hover:scale-110 duration-300 ${feat.iconColor}`}>
+                    <Icon className="w-5 h-5" />
+                  </div>
+                  <h4 className="text-sm sm:text-base font-bold text-white tracking-wide group-hover:text-blue-200 transition-colors">
+                    {feat.title}
+                  </h4>
+                  <p className="text-xs sm:text-[13px] text-slate-300 leading-relaxed mt-2 font-normal">
+                    {feat.description}
+                  </p>
+                </div>
+              </div>
+            );
+          })}
         </div>
 
         {/* Right Side: Driving Digital Transformation Content */}
-        <div className="lg:col-span-7 order-1 lg:order-2 flex flex-col gap-5 text-left">
+        <div className="lg:col-span-6 order-1 lg:order-2 flex flex-col gap-5 text-left">
           
           <span className="text-[11px] font-extrabold tracking-widest text-[#ef4444] uppercase">
             WHY CHOOSE US

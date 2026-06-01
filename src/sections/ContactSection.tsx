@@ -76,9 +76,9 @@ export default function ContactSection() {
             {/* Info Cards Row */}
             <div className="grid sm:grid-cols-2 gap-4">
               {[
-                { icon: MapPin, title: "Our Location", detail: "Road-4, Block-B, Sector-1, Uttara, Dhaka-1230, BD" },
-                { icon: Phone, title: "Phone / Support", detail: "+880 2 12345678\n+880 1711223344" },
-                { icon: Mail, title: "Inquiries", detail: "info@siliconcomputing.com\nsales@siliconcomputing.com" },
+                { icon: MapPin, title: "Our Location", detail: "BDBL Bhaban, (Level-9, West), 12 Kawran Bazar, Dhaka 1215" },
+                { icon: Phone, title: "Phone / Support", detail: "09614556655" },
+                { icon: Mail, title: "Inquiries", detail: "sales@silicon.com.bd" },
                 { icon: Clock, title: "Working Hours", detail: "Sunday - Thursday\n09:00 AM - 06:00 PM" }
               ].map((card, idx) => (
                 <div key={idx} className="p-4.5 rounded-2xl glass border shadow-sm flex gap-3">
@@ -97,14 +97,14 @@ export default function ContactSection() {
             <div className="relative w-full h-[250px] sm:h-[300px] rounded-3xl overflow-hidden border shadow-md">
               <iframe
                 title="Silicon Computing Ltd Dhaka Office Map"
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3648.3732007817454!2d90.39958061543085!3d23.876356784527702!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3757c43354b6fbcd%3A0x6b5d92e59df95e92!2sUttara%20Dhaka!5e0!3m2!1sen!2sbd!4v1652877960142!5m2!1sen!2sbd"
+                src="https://maps.google.com/maps?q=BDBL%20Bhaban,%2012%20Kawran%20Bazar,%20Dhaka%201215&t=&z=16&ie=UTF8&iwloc=&output=embed"
                 width="100%"
                 height="100%"
                 style={{ border: 0 }}
                 allowFullScreen={false}
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
-                className="grayscale ] transition-all duration-300"
+                className="grayscale transition-all duration-300"
               />
             </div>
 
