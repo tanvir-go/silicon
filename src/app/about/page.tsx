@@ -2,19 +2,10 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { Compass, ShieldCheck, Cloud, Cpu, Code, Award, ArrowRight, Server, Database, Network } from "lucide-react";
-import { timelineMilestones } from "@/data/mockData";
+import { Award, ArrowRight, Facebook, Youtube, Linkedin } from "lucide-react";
 import { scaleUp } from "@/lib/utils";
 import Link from "next/link";
 import ContactSection from "@/sections/ContactSection";
-
-const iconMap = {
-  Compass,
-  ShieldCheck,
-  Cloud,
-  Cpu,
-  Code
-};
 
 export default function AboutPage() {
   return (
@@ -66,56 +57,86 @@ export default function AboutPage() {
           ))}
         </div>
 
-        {/* Corporate Timeline Section */}
+        {/* About Silicon Computing Ltd Grid Section */}
         <div className="mb-24">
-          <div className="text-center max-w-xl mx-auto mb-16">
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0F2C59]">
-              Milestones of Innovation
-            </h2>
-            <p className="text-xs text-slate-550 mt-2">
-              A historical look at the timeline markers shaping our digital outcomes.
-            </p>
-          </div>
+          <div className="bg-white rounded-3xl border border-slate-100 p-8 sm:p-12 shadow-sm grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+            {/* Left Side: Team image */}
+            <div className="lg:col-span-5 relative w-full aspect-[4/3] rounded-2xl overflow-hidden shadow-md border border-slate-100">
+              <img
+                src="/about1.webp"
+                alt="Silicon Computing Ltd Team"
+                className="w-full h-full object-cover"
+              />
+            </div>
 
-          {/* Vertical Line Container */}
-          <div className="relative border-l-2 border-dashed border-slate-200 md:border-l-0 md:before:absolute md:before:left-1/2 md:before:top-0 md:before:bottom-0 md:before:w-[2px] md:before:border-l-2 md:before:border-dashed md:before:border-slate-200 md:before:max-w-4xl mx-auto flex flex-col gap-12">
-            
-            {timelineMilestones.map((milestone, idx) => {
-              const Icon = iconMap[milestone.icon as keyof typeof iconMap] || Compass;
-              const isEven = idx % 2 === 0;
-              
-              return (
-                <motion.div
-                  key={milestone.year}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-50px" }}
-                  transition={{ duration: 0.6, delay: 0.1 }}
-                  className="relative pl-8 md:pl-0 md:grid md:grid-cols-2 md:gap-16 items-center"
-                >
-                  {/* Circle Node Icon */}
-                  <div className="absolute left-[-17px] top-1 md:left-1/2 md:-translate-x-1/2 md:top-1/2 md:-translate-y-1/2 w-8 h-8 rounded-full bg-gradient-to-tr from-[#000072] to-[#000072]/80 flex items-center justify-center shadow-lg z-10">
-                    <Icon className="w-4.5 h-4.5 text-white" />
-                  </div>
+            {/* Right Side: Text content & Social Links */}
+            <div className="lg:col-span-7 flex flex-col justify-between h-full text-left">
+              <div>
+                <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0F2C59] tracking-tight mb-6">
+                  About Silicon Computing Ltd
+                </h2>
+                
+                <p className="text-xs sm:text-sm text-slate-500 leading-relaxed font-semibold mb-6">
+                  Silicon Computing Ltd is a next-generation IT solutions company,
+                  established in 2021 in Dhaka, Bangladesh, with a vision to empower
+                  businesses through innovation, intelligence, and reliability. We
+                  specialize in delivering cutting-edge technologies that transform the
+                  way organizations operate and grow in the digital era. From app
+                  modernization to end-to-end app maintenance, our solutions help
+                  businesses stay agile and future-ready. We harness the power of
+                  Artificial Intelligence (AI) and Internet of Things (IoT) to drive
+                  automation, intelligence, and efficiency across industries. Our
+                  expertise spans across: Private Cloud & Multi-Cloud Solutions –
+                  enabling secure, scalable, and flexible IT infrastructure. Data
+                  Management & Database Services – ensuring data is structured,
+                  reliable, and optimized for business insights. Servers, Data Storage &
+                  Networking – delivering high-performance infrastructure for
+                  mission-critical workloads. Cybersecurity – protecting businesses with
+                  advanced security frameworks and resilient defense strategies. At
+                  Silicon, we believe technology should adapt to business needs, not the
+                  other way around. That's why we partner with clients to design and
+                  deploy customized IT solutions that align with their long-term goals.
+                  Whether it's modernizing legacy systems, building intelligent
+                  applications, or managing complex IT environments, we bring
+                  expertise, innovation, and trust to every engagement. As a proud
+                  Bangladeshi company with global aspirations, Silicon Computing Ltd is
+                  committed to driving digital transformation, fostering sustainability,
+                  and shaping the future of technology for businesses across industries.
+                </p>
+              </div>
 
-                  {/* Timeline card, shifting sides */}
-                  <div className={`md:col-span-1 ${isEven ? "md:text-right md:order-1" : "md:col-start-2 md:order-2"}`}>
-                    <div className="p-6 bg-white rounded-2xl border border-slate-100 shadow-sm inline-block max-w-[380px] w-full text-left">
-                      <span className="font-extrabold text-base text-[#000072] block mb-1">
-                        {milestone.year}
-                      </span>
-                      <h4 className="font-extrabold text-sm text-[#0F2C59] mb-2">
-                        {milestone.title}
-                      </h4>
-                      <p className="text-xs text-slate-500 leading-relaxed">
-                        {milestone.description}
-                      </p>
-                    </div>
-                  </div>
-                </motion.div>
-              );
-            })}
-
+              <div className="border-t border-slate-100 pt-6">
+                <div className="flex items-center gap-3">
+                  <a
+                    href="https://facebook.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-8 h-8 rounded-full bg-slate-100 text-slate-500 hover:bg-[#000072]/10 hover:text-[#000072] flex items-center justify-center transition-colors duration-300"
+                    aria-label="Facebook"
+                  >
+                    <Facebook className="w-4 h-4" />
+                  </a>
+                  <a
+                    href="https://youtube.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-8 h-8 rounded-full bg-slate-100 text-slate-500 hover:bg-[#D32F2F]/10 hover:text-[#D32F2F] flex items-center justify-center transition-colors duration-300"
+                    aria-label="YouTube"
+                  >
+                    <Youtube className="w-4 h-4" />
+                  </a>
+                  <a
+                    href="https://linkedin.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-8 h-8 rounded-full bg-slate-100 text-slate-500 hover:bg-[#0F2C59]/10 hover:text-[#0F2C59] flex items-center justify-center transition-colors duration-300"
+                    aria-label="LinkedIn"
+                  >
+                    <Linkedin className="w-4 h-4" />
+                  </a>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 

@@ -49,7 +49,7 @@ export default function ContactSection() {
   };
 
   return (
-    <section id="contact" className="relative w-full py-24 bg-white overflow-hidden border-b border-slate-200/50 ">
+    <section id="contact" className="relative w-full py-24 mt-16 bg-white overflow-hidden border-b border-slate-200/50 ">
       {/* Background Ambience Orbs */}
       <div className="absolute top-1/3 left-10 w-[300px] h-[300px] rounded-full bg-primary-600/5 blur-[100px] pointer-events-none" />
       <div className="absolute bottom-1/3 right-10 w-[300px] h-[300px] rounded-full bg-accent-500/5 blur-[100px] pointer-events-none" />

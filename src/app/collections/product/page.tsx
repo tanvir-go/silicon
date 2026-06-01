@@ -3,13 +3,15 @@
 import React, { useState, useMemo, useEffect, Suspense } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
-  Search, ArrowRight, Check, X, Filter, ShoppingCart, Star, Box, SlidersHorizontal, Package, Tag, Shield
+  Search, ArrowRight, Check, X, Filter, ShoppingCart, Star, Box, SlidersHorizontal, Package, Tag, Shield,
+  Server, Cloud, Eye, Database, Network, ShieldAlert, ShieldCheck
 } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { fadeInUp, staggerContainer } from "@/lib/utils";
+import { fadeInUp, staggerContainer, cn } from "@/lib/utils";
 
 import { ShopProduct, shopProducts } from "@/data/mockProducts";
+import { productMatrixData } from "@/data/mockProductMatrix";
 
 function ProductsContent() {
   const searchParams = useSearchParams();
@@ -21,6 +23,17 @@ function ProductsContent() {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  
+  const [activeTab, setActiveTab] = useState<"catalog" | "matrix">("catalog");
+  const [matrixSearchQuery, setMatrixSearchQuery] = useState("");
+
+  const handleOemClick = (oem: string) => {
+    setActiveTab("catalog");
+    setSelectedCategories([]);
+    setSelectedBrands([]);
+    setSearchQuery(oem);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
   
   // Quick View Modal
   const [selectedProduct, setSelectedProduct] = useState<ShopProduct | null>(null);
@@ -61,6 +74,16 @@ function ProductsContent() {
     });
   }, [searchQuery, selectedCategories, selectedBrands]);
 
+  const filteredMatrix = useMemo(() => {
+    return productMatrixData.filter((item) => {
+      const query = matrixSearchQuery.toLowerCase();
+      const matchesDomain = item.domain.toLowerCase().includes(query);
+      const matchesCategory = item.categories.some(c => c.toLowerCase().includes(query));
+      const matchesOem = item.oems.some(o => o.toLowerCase().includes(query));
+      return matchesDomain || matchesCategory || matchesOem;
+    });
+  }, [matrixSearchQuery]);
+
   const toggleFilter = (type: "category" | "brand", value: string) => {
     if (type === "category") {
       setSelectedCategories(prev => prev.includes(value) ? prev.filter(c => c !== value) : [...prev, value]);
@@ -94,7 +117,36 @@ function ProductsContent() {
           </button>
         </div>
 
-        <div className="flex flex-col lg:flex-row gap-8">
+        {/* Navigation Tabs */}
+        <div className="flex items-center gap-2 mb-8 bg-slate-200/40 p-1 rounded-xl w-fit border border-slate-200/30">
+          <button
+            onClick={() => setActiveTab("catalog")}
+            className={cn(
+              "px-4 py-2.5 rounded-lg font-bold text-xs uppercase tracking-wider transition-all duration-300 flex items-center gap-2 cursor-pointer",
+              activeTab === "catalog"
+                ? "bg-[#000072] text-white shadow-md shadow-[#000072]/20"
+                : "text-slate-600 hover:text-[#0F2C59] hover:bg-slate-100"
+            )}
+          >
+            <Package className="w-3.5 h-3.5" />
+            Procurement Catalog
+          </button>
+          <button
+            onClick={() => setActiveTab("matrix")}
+            className={cn(
+              "px-4 py-2.5 rounded-lg font-bold text-xs uppercase tracking-wider transition-all duration-300 flex items-center gap-2 cursor-pointer",
+              activeTab === "matrix"
+                ? "bg-[#000072] text-white shadow-md shadow-[#000072]/20"
+                : "text-slate-600 hover:text-[#0F2C59] hover:bg-slate-100"
+            )}
+          >
+            <SlidersHorizontal className="w-3.5 h-3.5" />
+            Product & OEM Matrix
+          </button>
+        </div>
+
+        {activeTab === "catalog" && (
+          <div className="flex flex-col lg:flex-row gap-8">
           
           {/* Left Sidebar Filters */}
           <aside className={`w-full lg:w-64 shrink-0 flex flex-col gap-8 ${mobileFiltersOpen ? 'block' : 'hidden lg:flex'}`}>
@@ -262,6 +314,128 @@ function ProductsContent() {
             )}
           </div>
         </div>
+      )}
+
+        {/* Matrix Tab Content */}
+        {activeTab === "matrix" && (
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={staggerContainer(0.05, 0.1)}
+            className="flex flex-col gap-8"
+          >
+            {/* Matrix Search & Header */}
+            <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-6">
+              <div>
+                <h2 className="text-xl font-extrabold text-[#0F2C59] mb-1">Product Domains & Partner Brands</h2>
+                <p className="text-xs text-slate-500 font-medium">Explore the technology domains, product categories, and OEM partners we collaborate with.</p>
+              </div>
+              <div className="relative w-full md:w-80">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                <input
+                  type="text"
+                  placeholder="Search domain, category, OEM..."
+                  value={matrixSearchQuery}
+                  onChange={(e) => setMatrixSearchQuery(e.target.value)}
+                  className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-[#F5F7F9] text-xs text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#000072]/30 transition-all border border-transparent focus:border-transparent"
+                />
+                {matrixSearchQuery && (
+                  <button 
+                    onClick={() => setMatrixSearchQuery("")}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs font-bold"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {filteredMatrix.length > 0 ? (
+              <div className="grid md:grid-cols-2 gap-6">
+                {filteredMatrix.map((item) => {
+                  const IconComponent = (() => {
+                    switch (item.iconName) {
+                      case "Server": return Server;
+                      case "Cloud": return Cloud;
+                      case "Eye": return Eye;
+                      case "Database": return Database;
+                      case "Network": return Network;
+                      case "ShieldAlert": return ShieldAlert;
+                      case "ShieldCheck": return ShieldCheck;
+                      default: return Box;
+                    }
+                  })();
+
+                  return (
+                    <motion.div
+                      variants={fadeInUp(0, 0.4)}
+                      key={item.id}
+                      className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 hover:shadow-md hover:border-slate-200 transition-all duration-300 flex flex-col gap-5 relative overflow-hidden group"
+                    >
+                      {/* Domain Title Section */}
+                      <div className="flex items-start gap-4">
+                        <div className="p-3 rounded-xl bg-[#000072]/10 text-[#000072] group-hover:bg-[#000072] group-hover:text-white transition-all duration-300">
+                          <IconComponent className="w-6 h-6" />
+                        </div>
+                        <div>
+                          <h3 className="font-extrabold text-[#0F2C59] text-lg leading-tight group-hover:text-[#000072] transition-colors">
+                            {item.domain}
+                          </h3>
+                          <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-1 block">
+                            Technology Domain
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Product Categories */}
+                      <div className="flex flex-col gap-2">
+                        <h4 className="text-[10px] font-black text-slate-800 uppercase tracking-wider">Product Categories</h4>
+                        <div className="flex flex-wrap gap-1.5">
+                          {item.categories.map((cat, idx) => (
+                            <span 
+                              key={idx} 
+                              className="text-[11px] font-semibold bg-[#F5F7F9] text-slate-600 px-2.5 py-1 rounded-md border border-slate-200/50"
+                            >
+                              {cat}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* OEM Partners */}
+                      <div className="flex flex-col gap-2.5 mt-auto pt-4 border-t border-slate-100">
+                        <h4 className="text-[10px] font-black text-[#000072] uppercase tracking-wider flex items-center gap-1">
+                          Partner OEMs
+                          <span className="text-[9px] font-medium text-slate-400 normal-case">(click to browse catalog)</span>
+                        </h4>
+                        <div className="flex flex-wrap gap-2">
+                          {item.oems.map((oem, idx) => (
+                            <button
+                              key={idx}
+                              onClick={() => handleOemClick(oem)}
+                              className="text-xs font-bold text-slate-700 bg-white border border-slate-200 hover:border-[#000072] hover:text-[#000072] hover:bg-[#000072]/5 px-3 py-1.5 rounded-lg transition-all duration-200 cursor-pointer shadow-sm active:scale-95 flex items-center gap-1"
+                            >
+                              {oem}
+                              <ArrowRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="bg-white rounded-3xl p-16 text-center shadow-sm border border-slate-100 flex flex-col items-center justify-center">
+                <Box className="w-16 h-16 text-slate-200 mb-4" />
+                <h3 className="text-xl font-extrabold text-[#0F2C59] mb-2">No matching domains found</h3>
+                <p className="text-sm text-slate-500 max-w-sm mx-auto">
+                  Try searching for a different domain, category, or OEM partner.
+                </p>
+              </div>
+            )}
+          </motion.div>
+        )}
 
         {/* Modern E-Commerce Quick View Modal */}
         <AnimatePresence>

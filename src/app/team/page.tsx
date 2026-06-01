@@ -3,13 +3,14 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
-  Users, Calculator, Box, Cpu, ShieldCheck, Palette, TrendingUp, Compass, ArrowRight, Mail, Linkedin
+  Users, Calculator, Box, Cpu, ShieldCheck, Palette, TrendingUp, Compass, ArrowRight, Mail, Linkedin, Briefcase, Layers
 } from "lucide-react";
 import { teamData, TeamMember } from "@/data/mockData";
 import Link from "next/link";
 import ContactSection from "@/sections/ContactSection";
 
 const tabCategories = [
+  { id: "all", label: "ALL DEPARTMENTS", icon: Layers },
   { id: "management", label: "MANAGEMENT", icon: Compass },
   { id: "hr-admin", label: "HR & ADMIN", icon: Users },
   { id: "accounts-finance", label: "ACCOUNTS & FINANCE", icon: Calculator },
@@ -17,15 +18,18 @@ const tabCategories = [
   { id: "engineering", label: "ENGINEERING", icon: Cpu },
   { id: "enterprise-support", label: "ENTERPRISE SUPPORT", icon: ShieldCheck },
   { id: "creative", label: "CREATIVE", icon: Palette },
-  { id: "business", label: "BUSINESS", icon: TrendingUp }
+  { id: "business", label: "BUSINESS", icon: TrendingUp },
+  { id: "techno-sales", label: "TECHNO SALES", icon: Briefcase }
 ];
 
 export default function TeamPage() {
-  const [activeTab, setActiveTab] = useState("management");
+  const [activeTab, setActiveTab] = useState("all");
 
-  const filteredMembers = teamData.filter(
-    (member) => member.department.toLowerCase() === activeTab.toLowerCase()
-  );
+  const filteredMembers = activeTab === "all"
+    ? teamData
+    : teamData.filter(
+        (member) => member.department.toLowerCase() === activeTab.toLowerCase()
+      );
 
   return (
     <main className="min-h-screen bg-[#F8FAFC] pt-32 pb-16 relative overflow-hidden">
@@ -49,12 +53,12 @@ export default function TeamPage() {
           </p>
         </div>
 
-        {/* Tab Selection Bar (Strictly Two Rows of 4 Tabs Each) */}
+        {/* Tab Selection Bar (Strictly Two Rows of Tabs) */}
         <div className="bg-white rounded-3xl border border-slate-100 p-6 shadow-md mb-16 max-w-5xl mx-auto flex flex-col items-center gap-3">
           
-          {/* Row 1: First 4 Tabs */}
+          {/* Row 1: First 5 Tabs */}
           <div className="flex flex-wrap justify-center gap-2 sm:gap-3 w-full">
-            {tabCategories.slice(0, 4).map((tab) => {
+            {tabCategories.slice(0, 5).map((tab) => {
               const Icon = tab.icon;
               const isActive = activeTab === tab.id;
               return (
@@ -76,7 +80,7 @@ export default function TeamPage() {
           
           {/* Row 2: Next 4 Tabs */}
           <div className="flex flex-wrap justify-center gap-2 sm:gap-3 w-full">
-            {tabCategories.slice(4).map((tab) => {
+            {tabCategories.slice(5).map((tab) => {
               const Icon = tab.icon;
               const isActive = activeTab === tab.id;
               return (

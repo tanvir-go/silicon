@@ -351,30 +351,30 @@ export default function Navbar() {
           <div className="flex flex-col gap-3.5">
             <div className="rounded-xl overflow-hidden shadow-sm aspect-[4/3] border border-slate-150">
               <img
-                src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=250&h=200"
+                src="/about1.webp"
                 alt="Corporate teamwork"
                 className="w-full h-full object-cover"
               />
             </div>
             <div className="rounded-xl overflow-hidden shadow-sm aspect-[4/3] border border-slate-150">
               <img
-                src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&q=80&w=250&h=200"
+                src="/about2.webp"
                 alt="Technical synergy"
                 className="w-full h-full object-cover"
               />
             </div>
           </div>
-          <div className="flex flex-col gap-3.5 items-center justify-between">
-            <div className="w-18 h-18 sm:w-20 sm:h-20 rounded-full overflow-hidden border-2 border-slate-200 shadow-md flex items-center justify-center shrink-0">
+          <div className="flex flex-col gap-5 items-center justify-center h-full">
+            <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full overflow-hidden border-2 border-slate-200 shadow-md flex items-center justify-center shrink-0">
               <img
-                src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=150&h=150"
-                alt="Al-Hasan CEO"
+                src="/Nasir Feroz.png"
+                alt="MD Nasir Feroz CEO"
                 className="w-full h-full object-cover animate-pulse"
               />
             </div>
             <div className="rounded-xl overflow-hidden shadow-sm aspect-[4/3] border border-slate-150 w-full">
               <img
-                src="https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&q=80&w=250&h=200"
+                src="/about3.webp"
                 alt="Consultation workshop"
                 className="w-full h-full object-cover"
               />
@@ -478,14 +478,20 @@ export default function Navbar() {
             <div
               onMouseEnter={() => setHoveredMenu(hoveredMenu)}
               onMouseLeave={() => setHoveredMenu(null)}
-              className="absolute top-full left-0 right-0 mx-auto max-w-6xl z-40 pt-4 px-6"
+              className="absolute top-full left-0 right-0 mx-auto z-40 pt-4 px-6 flex justify-center"
             >
               <motion.div
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 15 }}
                 transition={{ duration: 0.22, ease: "easeOut" }}
-                className="bg-[#F0F4F7] rounded-3xl p-8 shadow-2xl relative"
+                className={cn(
+                  "bg-white border border-slate-200/80 rounded-3xl p-8 shadow-2xl relative w-full",
+                  hoveredMenu === "Solutions" && "max-w-4xl",
+                  hoveredMenu === "Products" && "max-w-5xl",
+                  hoveredMenu === "Services" && "max-w-5xl",
+                  hoveredMenu === "Company" && "max-w-5xl"
+                )}
               >
                 {hoveredMenu === "Solutions" && renderSolutionsMenu()}
                 {hoveredMenu === "Products" && renderProductsMenu()}

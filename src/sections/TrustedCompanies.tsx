@@ -5,36 +5,42 @@ import React from "react";
 interface LogoInfo {
   name: string;
   shortName: string;
+  logoUrl: string;
 }
 
 const allCompanies: LogoInfo[] = [
-  { name: "Popular Diagnostic Centre Ltd.", shortName: "PDC" },
-  { name: "Popular Medical College & Hospital Ltd.", shortName: "PMC" },
-  { name: "KiDO DHAKA Co., Ltd.", shortName: "KiDO" },
-  { name: "Crowne Plaza Dhaka Gulshan by IHG", shortName: "Crowne Plaza" },
-  { name: "Leading University", shortName: "LU" },
-  { name: "Counter Terrorism & Transnational Crime, DMP", shortName: "CTTC" },
-  { name: "Bangladesh Football Federation", shortName: "BFF" },
-  { name: "BAIUST", shortName: "BAIUST" },
-  { name: "MJL Bangladesh", shortName: "MJL" },
-  { name: "Divine Mercy Hospital Ltd.", shortName: "DMH" },
-  { name: "NASSA Group", shortName: "NASSA" },
-  { name: "Bangladesh Ainjeebe Shahakari Samity", shortName: "BASS" },
-  { name: "Bangladesh Development Bank Ltd.", shortName: "BDBL" },
-  { name: "Office of the Registrar General, BDR", shortName: "BDR" },
-  { name: "BRTA", shortName: "BRTA" },
-  { name: "BGMEA University of Fashion and Technology", shortName: "BUFT" },
-  { name: "CPTU", shortName: "CPTU" },
-  { name: "Crossline Knit and Fabric Ltd", shortName: "Crossline" },
-  { name: "Daffodil International University", shortName: "DIU" },
-  { name: "Divine Mercy General Hospital", shortName: "DMGH" },
-  { name: "Dr. Fazlul Haque Colorectal Hospital Limited", shortName: "FHCH" },
-  { name: "Hannan Group", shortName: "Hannan" },
-  { name: "Ibn Sina Pharmaceuticals Ltd", shortName: "Ibn Sina" },
+  { name: "Beximco Pharmaceuticals Ltd.", shortName: "Beximco", logoUrl: "/images/logos/logo_r1_1.png" },
+  { name: "Popular Diagnostic Centre Ltd.", shortName: "PDC", logoUrl: "/images/logos/logo_r1_4.png" },
+  { name: "Popular Medical College & Hospital Ltd.", shortName: "PMC", logoUrl: "/images/logos/logo_r1_4.png" },
+  { name: "KiDO DHAKA Co., Ltd.", shortName: "KiDO", logoUrl: "/images/logos/logo_r1_5.png" },
+  { name: "Crowne Plaza Dhaka Gulshan by IHG", shortName: "Crowne Plaza", logoUrl: "/images/logos/logo_r2_7.png" },
+  { name: "Leading University", shortName: "LU", logoUrl: "/images/logos/logo_r2_6.png" },
+  { name: "Counter Terrorism & Transnational Crime, DMP", shortName: "CTTC", logoUrl: "/images/logos/logo_r2_4.png" },
+  { name: "Bangladesh Football Federation", shortName: "BFF", logoUrl: "/images/logos/logo_r1_5.png" },
+  { name: "BAIUST", shortName: "BAIUST", logoUrl: "/images/logos/logo_r2_6.png" },
+  { name: "MJL Bangladesh", shortName: "MJL", logoUrl: "/images/logos/logo_r2_3.png" },
+  { name: "Divine Mercy Hospital Ltd.", shortName: "DMH", logoUrl: "/images/logos/logo_r1_3.png" },
+  { name: "NASSA Group", shortName: "NASSA", logoUrl: "/images/logos/logo_r1_6.png" },
+  { name: "Bangladesh Ainjeebe Shahakari Samity", shortName: "BASS", logoUrl: "/images/logos/logo_r2_8.png" },
+  { name: "Bangladesh Development Bank Ltd.", shortName: "BDBL", logoUrl: "/images/logos/logo_r1_2.png" },
+  { name: "Office of the Registrar General, BDR", shortName: "BDR", logoUrl: "/images/logos/logo_r2_5.png" },
+  { name: "BRTA", shortName: "BRTA", logoUrl: "/images/logos/logo_r2_3.png" },
+  { name: "BGMEA University of Fashion and Technology", shortName: "BUFT", logoUrl: "/images/logos/logo_r2_6.png" },
+  { name: "CPTU", shortName: "CPTU", logoUrl: "/images/logos/logo_r2_5.png" },
+  { name: "Crossline Knit and Fabric Ltd", shortName: "Crossline", logoUrl: "/images/logos/logo_r1_6.png" },
+  { name: "Daffodil International University", shortName: "DIU", logoUrl: "/images/logos/logo_r2_6.png" },
+  { name: "Divine Mercy General Hospital", shortName: "DMGH", logoUrl: "/images/logos/logo_r1_3.png" },
+  { name: "Dr. Fazlul Haque Colorectal Hospital Limited", shortName: "FHCH", logoUrl: "/images/logos/logo_r1_3.png" },
+  { name: "Hannan Group", shortName: "Hannan", logoUrl: "/images/logos/logo_r1_6.png" },
+  { name: "Ibn Sina Pharmaceuticals Ltd", shortName: "Ibn Sina", logoUrl: "/images/logos/logo_r2_2.png" },
+  { name: "Eskayef Pharmaceuticals Ltd.", shortName: "SK+F", logoUrl: "/images/logos/logo_r1_8.png" },
+  { name: "Nuvista Pharma Limited", shortName: "Nuvista", logoUrl: "/images/logos/logo_r1_7.png" },
+  { name: "Mutual Trust Bank Securities", shortName: "MTB", logoUrl: "/images/logos/logo_r2_1.png" },
+  { name: "TVS Auto Bangladesh Ltd.", shortName: "TVS", logoUrl: "/images/logos/logo_r2_3.png" }
 ];
 
-const row1 = allCompanies.slice(0, 12);
-const row2 = allCompanies.slice(12, 23);
+const row1 = allCompanies.slice(0, 14);
+const row2 = allCompanies.slice(14, 28);
 
 export default function TrustedCompanies() {
   return (
@@ -82,16 +88,15 @@ export default function TrustedCompanies() {
               {[...row1, ...row1].map((logo, idx) => (
                 <div 
                   key={`r1-${idx}`}
-                  className="group relative w-40 h-32 sm:w-48 sm:h-36 rounded-3xl bg-[#F0F4F7] shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col items-center justify-center p-4 select-none overflow-hidden shrink-0 cursor-pointer"
+                  className="group relative w-36 h-20 sm:w-44 sm:h-24 rounded-2xl bg-white border border-slate-100 shadow-sm hover:shadow-md transition-all duration-300 flex items-center justify-center p-3 select-none overflow-hidden shrink-0 cursor-pointer"
                 >
-                  <div className="w-12 h-12 rounded-full bg-white shadow-sm flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300 shrink-0">
-                    <span className="text-[#0F2C59] font-black text-lg tracking-tight">
-                      {logo.shortName.charAt(0)}
-                    </span>
+                  <div className="w-full h-full flex items-center justify-center group-hover:scale-105 transition-transform duration-300 shrink-0">
+                    <img 
+                      src={logo.logoUrl} 
+                      alt={logo.name} 
+                      className="max-w-[85%] max-h-[85%] object-contain transition-all duration-300"
+                    />
                   </div>
-                  <span className="text-[10px] sm:text-xs font-bold text-slate-600 text-center leading-tight whitespace-normal break-words w-full group-hover:text-[#0F2C59] transition-colors">
-                    {logo.name}
-                  </span>
                 </div>
               ))}
             </div>
@@ -103,16 +108,15 @@ export default function TrustedCompanies() {
               {[...row2, ...row2].map((logo, idx) => (
                 <div 
                   key={`r2-${idx}`}
-                  className="group relative w-40 h-32 sm:w-48 sm:h-36 rounded-3xl bg-[#F0F4F7] shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col items-center justify-center p-4 select-none overflow-hidden shrink-0 cursor-pointer"
+                  className="group relative w-36 h-20 sm:w-44 sm:h-24 rounded-2xl bg-white border border-slate-100 shadow-sm hover:shadow-md transition-all duration-300 flex items-center justify-center p-3 select-none overflow-hidden shrink-0 cursor-pointer"
                 >
-                  <div className="w-12 h-12 rounded-full bg-white shadow-sm flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300 shrink-0">
-                    <span className="text-[#D32F2F] font-black text-lg tracking-tight">
-                      {logo.shortName.charAt(0)}
-                    </span>
+                  <div className="w-full h-full flex items-center justify-center group-hover:scale-105 transition-transform duration-300 shrink-0">
+                    <img 
+                      src={logo.logoUrl} 
+                      alt={logo.name} 
+                      className="max-w-[85%] max-h-[85%] object-contain transition-all duration-300"
+                    />
                   </div>
-                  <span className="text-[10px] sm:text-xs font-bold text-slate-600 text-center leading-tight whitespace-normal break-words w-full group-hover:text-[#0F2C59] transition-colors">
-                    {logo.name}
-                  </span>
                 </div>
               ))}
             </div>

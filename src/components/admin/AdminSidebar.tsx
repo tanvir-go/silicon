@@ -64,9 +64,7 @@ export default function AdminSidebar({ isOpen, setIsOpen }: SidebarProps) {
       icon: LayoutDashboard,
       items: [
         { name: "Overview", href: "/admin/dashboard" },
-        { name: "Analytics", href: "/admin/dashboard/analytics" },
-        { name: "Revenue Reports", href: "/admin/dashboard/reports?tab=revenue" },
-        { name: "Sales Summary", href: "/admin/dashboard/reports?tab=sales" }
+        { name: "Analytics", href: "/admin/dashboard/analytics" }
       ]
     },
     {
@@ -75,24 +73,7 @@ export default function AdminSidebar({ isOpen, setIsOpen }: SidebarProps) {
       items: [
         { name: "All Products", href: "/admin/dashboard/products" },
         { name: "Add Product", href: "/admin/dashboard/products/add" },
-        { name: "Categories", href: "/admin/dashboard/products?tab=categories" },
-        { name: "Brands", href: "/admin/dashboard/products?tab=brands" },
-        { name: "Product Variants", href: "/admin/dashboard/products?tab=variants" },
-        { name: "Inventory Management", href: "/admin/dashboard/inventory" },
-        { name: "Product Reviews", href: "/admin/dashboard/products?tab=reviews" }
-      ]
-    },
-    {
-      name: "Orders",
-      icon: FileText,
-      items: [
-        { name: "All Orders", href: "/admin/dashboard/orders" },
-        { name: "Pending Orders", href: "/admin/dashboard/orders?status=Pending" },
-        { name: "Processing Orders", href: "/admin/dashboard/orders?status=Processing" },
-        { name: "Completed Orders", href: "/admin/dashboard/orders?status=Completed" },
-        { name: "Cancelled Orders", href: "/admin/dashboard/orders?status=Cancelled" },
-        { name: "Returns & Refunds", href: "/admin/dashboard/orders?tab=returns" },
-        { name: "Invoices", href: "/admin/dashboard/orders?tab=invoices" }
+        { name: "Inventory Management", href: "/admin/dashboard/inventory" }
       ]
     },
     {
@@ -103,15 +84,6 @@ export default function AdminSidebar({ isOpen, setIsOpen }: SidebarProps) {
         { name: "Customer Reviews", href: "/admin/dashboard/customers?tab=reviews" },
         { name: "Wishlist Users", href: "/admin/dashboard/customers?tab=wishlist" },
         { name: "Loyalty Program", href: "/admin/dashboard/customers?tab=loyalty" }
-      ]
-    },
-    {
-      name: "Inventory",
-      icon: Boxes,
-      items: [
-        { name: "Stock List", href: "/admin/dashboard/inventory" },
-        { name: "Low Stock Alerts", href: "/admin/dashboard/inventory?tab=alerts" },
-        { name: "Stock History", href: "/admin/dashboard/inventory?tab=history" }
       ]
     },
     {
@@ -156,12 +128,7 @@ export default function AdminSidebar({ isOpen, setIsOpen }: SidebarProps) {
     {
       name: "Reports",
       icon: BarChart3,
-      items: [
-        { name: "Sales Reports", href: "/admin/dashboard/reports?tab=sales" },
-        { name: "Product Reports", href: "/admin/dashboard/reports?tab=products" },
-        { name: "Customer Reports", href: "/admin/dashboard/reports?tab=customers" },
-        { name: "Tax Reports", href: "/admin/dashboard/reports?tab=tax" }
-      ]
+      href: "/admin/dashboard/reports"
     },
     {
       name: "Support",
@@ -227,7 +194,7 @@ export default function AdminSidebar({ isOpen, setIsOpen }: SidebarProps) {
   // Auto-expand group that contains active link on mount or navigation change
   useEffect(() => {
     const activeGroup = menuGroups.find((group) =>
-      group.items.some((item) => {
+      group.items?.some((item) => {
         // Match exact or base path
         const itemPath = item.href.split("?")[0];
         return pathname === itemPath || currentFullPath === item.href;
@@ -276,11 +243,36 @@ export default function AdminSidebar({ isOpen, setIsOpen }: SidebarProps) {
               const GroupIcon = group.icon;
               const isExpanded = !!expandedGroups[group.name];
               
+              if ("href" in group && group.href) {
+                const isGroupActive = pathname === group.href.split("?")[0] || currentFullPath === group.href;
+                return (
+                  <Link
+                    key={group.name}
+                    href={group.href}
+                    onClick={() => setIsOpen(false)}
+                    className={cn(
+                      "w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-bold tracking-wide transition-all duration-150 border cursor-pointer",
+                      isGroupActive
+                        ? "bg-[#0F2C59]/5 text-[#0F2C59] border-[#0F2C59]/10 font-extrabold"
+                        : "text-slate-600 hover:text-slate-900 hover:bg-slate-50 border-transparent"
+                    )}
+                  >
+                    <GroupIcon
+                      className={cn(
+                        "w-4 h-4 shrink-0",
+                        isGroupActive ? "text-[#0F2C59]" : "text-slate-400"
+                      )}
+                    />
+                    <span>{group.name}</span>
+                  </Link>
+                );
+              }
+
               // Check if any child item is active
-              const hasActiveChild = group.items.some((item) => {
+              const hasActiveChild = group.items ? group.items.some((item) => {
                 const itemPath = item.href.split("?")[0];
                 return pathname === itemPath || currentFullPath === item.href;
-              });
+              }) : false;
 
               return (
                 <div key={group.name} className="space-y-1">
@@ -318,7 +310,7 @@ export default function AdminSidebar({ isOpen, setIsOpen }: SidebarProps) {
                       isExpanded ? "max-h-[300px] opacity-100 mt-1 py-1" : "max-h-0 opacity-0 pointer-events-none"
                     )}
                   >
-                    {group.items.map((item) => {
+                    {group.items?.map((item) => {
                       // Match exactly or matching path prefix (for active views)
                       const isItemActive = currentFullPath === item.href || pathname === item.href.split("?")[0];
                       return (

@@ -44,7 +44,7 @@ export default function About() {
           {/* Top Left: Corporate collaboration group */}
           <div className="rounded-2xl overflow-hidden shadow-md aspect-square border border-slate-100 hover:scale-102 transition-transform duration-350">
             <img
-              src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=400&h=400"
+              src="/about1.webp"
               alt="Corporate teamwork"
               className="w-full h-full object-cover"
               loading="lazy"
@@ -62,15 +62,15 @@ export default function About() {
             </p>
             
             <div className="border-t border-white/10 pt-3 relative z-10">
-              <h5 className="font-extrabold text-xs text-white">Al-Hasan</h5>
-              <p className="text-[9px] text-slate-300">CEO &amp; Founder, SCL</p>
+              <h5 className="font-extrabold text-xs text-white">MD Nasir Feroz</h5>
+              <p className="text-[9px] text-slate-300">CEO</p>
             </div>
           </div>
 
           {/* Bottom Left: Corporate gathering / team interaction */}
           <div className="rounded-2xl overflow-hidden shadow-md aspect-square border border-slate-100 hover:scale-102 transition-transform duration-350">
             <img
-              src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&q=80&w=400&h=400"
+              src="/about2.webp"
               alt="Technical synergy"
               className="w-full h-full object-cover"
               loading="lazy"
@@ -80,7 +80,7 @@ export default function About() {
           {/* Bottom Right: Collaboration / presentation */}
           <div className="rounded-2xl overflow-hidden shadow-md aspect-square border border-slate-100 hover:scale-102 transition-transform duration-350">
             <img
-              src="https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&q=80&w=400&h=400"
+              src="/about3.webp"
               alt="Consultation workshop"
               className="w-full h-full object-cover"
               loading="lazy"
