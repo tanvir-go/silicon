@@ -311,8 +311,9 @@ export default function AdminSidebar({ isOpen, setIsOpen }: SidebarProps) {
                     )}
                   >
                     {group.items?.map((item) => {
-                      // Match exactly or matching path prefix (for active views)
-                      const isItemActive = currentFullPath === item.href || pathname === item.href.split("?")[0];
+                      const isItemActive = item.href.includes("?") || currentFullPath.includes("?")
+                        ? currentFullPath === item.href
+                        : pathname === item.href;
                       return (
                         <Link
                           key={item.name}

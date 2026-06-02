@@ -295,7 +295,7 @@ export default function OverviewPage() {
             <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider border-b border-slate-100 pb-2">Top Selling hardware</h3>
             <div className="space-y-3">
               {topProducts.map((p, idx) => (
-                <div key={p.id} className="flex justify-between items-center text-xs gap-3">
+                <div key={`${p.id}-${idx}`} className="flex justify-between items-center text-xs gap-3">
                   <div className="overflow-hidden">
                     <h4 className="font-bold text-slate-800 truncate leading-tight">{p.title}</h4>
                     <span className="text-[9px] text-slate-400 font-bold uppercase">{p.brand}</span>
@@ -313,8 +313,8 @@ export default function OverviewPage() {
               <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider">Support tickets</h3>
             </div>
             <div className="space-y-3 text-xs">
-              {supportTickets.map((t) => (
-                <div key={t.id} className="flex justify-between items-start border-b border-slate-50 pb-2.5 last:border-0 last:pb-0">
+              {supportTickets.map((t, idx) => (
+                <div key={`${t.id}-${idx}`} className="flex justify-between items-start border-b border-slate-50 pb-2.5 last:border-0 last:pb-0">
                   <div className="space-y-0.5">
                     <h4 className="font-bold text-slate-800 leading-snug">{t.topic}</h4>
                     <p className="text-[9px] text-slate-400 font-medium">From: {t.user} ({t.date})</p>
@@ -335,12 +335,12 @@ export default function OverviewPage() {
             </div>
             
             <div className="space-y-3 max-h-48 overflow-y-auto no-scrollbar">
-              {activities.slice(0, 5).map((act) => (
-                <div key={act.id} className="flex gap-2 text-[10px] leading-relaxed border-b border-slate-50 pb-2 last:border-0 last:pb-0 font-medium text-slate-600">
+              {activities.slice(0, 5).map((act, index) => (
+                <div key={`${act.id}-${index}`} className="flex gap-2 text-[10px] leading-relaxed border-b border-slate-50 pb-2 last:border-0 last:pb-0 font-medium text-slate-600">
                   <div className="w-1.5 h-1.5 rounded-full bg-[#0F2C59] shrink-0 mt-1.5"></div>
                   <div className="space-y-0.5">
                     <p className="text-slate-700 font-semibold">{act.text}</p>
-                    <span className="text-[9px] text-slate-455 text-slate-400 font-medium block">{act.time}</span>
+                    <span className="text-[9px] text-slate-400 font-medium block">{act.time}</span>
                   </div>
                 </div>
               ))}

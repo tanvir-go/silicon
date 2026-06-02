@@ -358,8 +358,9 @@ export function useAdminState() {
   };
 
   const addActivity = (text: string) => {
+    const randomSuffix = Math.random().toString(36).substring(2, 9);
     const newAct: Activity = {
-      id: Date.now().toString(),
+      id: `${Date.now()}-${randomSuffix}`,
       text,
       time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" })
     };
@@ -510,7 +511,7 @@ export function useAdminState() {
       setSettings(defaultSettings);
       
       const resetLog: Activity[] = [
-        { id: Date.now().toString(), text: "Database catalogs reset to default settings", time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }
+        { id: `reset-${Date.now()}`, text: "Database catalogs reset to default settings", time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }
       ];
       setActivities(resetLog);
       

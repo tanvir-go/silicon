@@ -3,14 +3,32 @@
 import React, { useState, useEffect } from "react";
 import { useAdminState } from "@/hooks/useAdminState";
 import { Database, ShieldAlert, CheckCircle, Cpu, ShieldCheck, Settings, Bell, DollarSign } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 
 type SettingsTab = "profile" | "configs" | "database" | "system";
 
 export default function SettingsPage() {
+  const searchParams = useSearchParams();
+  const tabParam = searchParams.get("tab");
   const { resetAllData, loading, addActivity } = useAdminState();
   const [activeTab, setActiveTab] = useState<SettingsTab>("profile");
   const [successMsg, setSuccessMsg] = useState("");
   const [dbSize, setDbSize] = useState("0.00 KB");
+
+  // Sync activeTab with search param tabParam
+  useEffect(() => {
+    if (tabParam) {
+      if (tabParam === "general") {
+        setActiveTab("profile");
+      } else if (["shipping", "currency", "tax", "email", "notifications", "seo"].includes(tabParam)) {
+        setActiveTab("configs");
+      } else if (tabParam === "database") {
+        setActiveTab("database");
+      } else if (tabParam === "system") {
+        setActiveTab("system");
+      }
+    }
+  }, [tabParam]);
 
   // Global configurations state
   const [currencySymbol, setCurrencySymbol] = useState("৳");
@@ -18,6 +36,9 @@ export default function SettingsPage() {
   const [taxRate, setTaxRate] = useState(5);
   const [emailAlerts, setEmailAlerts] = useState(true);
   const [stockThreshold, setStockThreshold] = useState(5);
+  const [seoTitleTemplate, setSeoTitleTemplate] = useState("%title% | Silicon Computing Ltd");
+  const [seoDefaultKeywords, setSeoDefaultKeywords] = useState("B2B servers, Dhaka IT support");
+  const [googleVerification, setGoogleVerification] = useState("google-site-verification-12345");
 
   // Load configs from local storage on mount
   useEffect(() => {
@@ -26,11 +47,17 @@ export default function SettingsPage() {
       const savedShipping = localStorage.getItem("scl_config_shipping");
       const savedTax = localStorage.getItem("scl_config_tax");
       const savedStock = localStorage.getItem("scl_config_stock_threshold");
+      const savedSeoTitle = localStorage.getItem("scl_config_seo_title");
+      const savedSeoKeywords = localStorage.getItem("scl_config_seo_keywords");
+      const savedGoogleVerification = localStorage.getItem("scl_config_google_verification");
       
       if (savedCurrency) setCurrencySymbol(savedCurrency);
       if (savedShipping) setBaseShipping(Number(savedShipping));
       if (savedTax) setTaxRate(Number(savedTax));
       if (savedStock) setStockThreshold(Number(savedStock));
+      if (savedSeoTitle) setSeoTitleTemplate(savedSeoTitle);
+      if (savedSeoKeywords) setSeoDefaultKeywords(savedSeoKeywords);
+      if (savedGoogleVerification) setGoogleVerification(savedGoogleVerification);
     }
   }, []);
 
@@ -74,6 +101,9 @@ export default function SettingsPage() {
       localStorage.setItem("scl_config_shipping", baseShipping.toString());
       localStorage.setItem("scl_config_tax", taxRate.toString());
       localStorage.setItem("scl_config_stock_threshold", stockThreshold.toString());
+      localStorage.setItem("scl_config_seo_title", seoTitleTemplate);
+      localStorage.setItem("scl_config_seo_keywords", seoDefaultKeywords);
+      localStorage.setItem("scl_config_google_verification", googleVerification);
       
       setSuccessMsg("Global configurations committed successfully.");
       addActivity("Updated administrative global system settings.");
@@ -246,6 +276,45 @@ export default function SettingsPage() {
                   emailAlerts ? "translate-x-5.5" : "translate-x-0"
                 }`}></div>
               </button>
+            </div>
+            <div className="sm:col-span-2 border-t border-slate-100 pt-5 mt-2 space-y-4">
+              <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider">Search Engine Optimization (SEO) & Webmaster</h4>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <label className="text-[9px] font-bold text-slate-500 uppercase tracking-wider block">Default Title Template</label>
+                  <input
+                    type="text"
+                    required
+                    value={seoTitleTemplate}
+                    onChange={(e) => setSeoTitleTemplate(e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-200 focus:bg-white focus:border-[#0F2C59] rounded-xl py-2 px-3 text-xs text-slate-900 outline-none"
+                    placeholder="%title% | Silicon Computing Ltd"
+                  />
+                </div>
+                
+                <div className="space-y-1">
+                  <label className="text-[9px] font-bold text-slate-500 uppercase tracking-wider block">Google Site Verification ID</label>
+                  <input
+                    type="text"
+                    value={googleVerification}
+                    onChange={(e) => setGoogleVerification(e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-200 focus:bg-white focus:border-[#0F2C59] rounded-xl py-2 px-3 text-xs text-slate-900 outline-none"
+                    placeholder="google-site-verification-..."
+                  />
+                </div>
+
+                <div className="sm:col-span-2 space-y-1">
+                  <label className="text-[9px] font-bold text-slate-500 uppercase tracking-wider block">Default Metadata Keywords</label>
+                  <textarea
+                    rows={2}
+                    value={seoDefaultKeywords}
+                    onChange={(e) => setSeoDefaultKeywords(e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-200 focus:bg-white focus:border-[#0F2C59] rounded-xl p-3 text-xs text-slate-900 outline-none leading-relaxed"
+                    placeholder="B2B servers, Dhaka IT support..."
+                  ></textarea>
+                </div>
+              </div>
             </div>
           </div>
 

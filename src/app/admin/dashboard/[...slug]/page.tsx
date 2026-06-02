@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useAdminState } from "@/hooks/useAdminState";
 import {
   Sparkles,
@@ -21,12 +21,18 @@ import {
   UserCheck,
   Settings,
   Truck,
-  MessageSquare
+  MessageSquare,
+  Star,
+  Eye,
+  ArrowRight
 } from "lucide-react";
 
 export default function CatchAllDashboardPage() {
   const params = useParams();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const tabParam = searchParams.get("tab");
+  const actionParam = searchParams.get("action");
   const {
     products,
     updateProduct,
@@ -66,6 +72,20 @@ export default function CatchAllDashboardPage() {
   const [seoKeywords, setSeoKeywords] = useState("");
   const [seoTarget, setSeoTarget] = useState("Homepage");
   const [seoResult, setSeoResult] = useState<any>(null);
+
+  // Purchase Orders State
+  const [purchaseOrders, setPurchaseOrders] = useState([
+    { id: "po-1", supplier: "Cisco APAC Distributor", items: "15x Catalyst 9300 Switches", total: 2450000, date: "2026-05-10", status: "Delivered" },
+    { id: "po-2", supplier: "HP Enterprise Bangladesh", items: "5x ProLiant DL380 Servers", total: 4200000, date: "2026-05-14", status: "Pending Delivery" },
+    { id: "po-3", supplier: "MikroTik SIA", items: "30x Routerboard CCR1016", total: 1150000, date: "2026-05-18", status: "Approved" }
+  ]);
+
+  const handleApprovePO = (id: string) => {
+    setPurchaseOrders(prev => prev.map(po => po.id === id ? { ...po, status: "Delivered" } : po));
+    setSuccessMsg("Purchase order status marked as delivered.");
+    addActivity("Updated purchase order status to delivered.");
+    setTimeout(() => setSuccessMsg(""), 3000);
+  };
 
   // AI Sales Predictions State
   const [salesInsights, setSalesInsights] = useState<string[]>([]);
@@ -576,10 +596,71 @@ export default function CatchAllDashboardPage() {
       addActivity(`Registered supplier: "${newSupplier.name}"`);
     };
 
+    if (tabParam === "po") {
+      return (
+        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+          <div className="border-b border-slate-100 pb-3 flex justify-between items-center">
+            <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
+              <Truck className="w-4 h-4 text-[#0F2C59]" />
+              Purchase Orders (PO) Registry
+            </h3>
+          </div>
+
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr className="border-b border-slate-200 bg-slate-50 text-[9px] font-bold text-slate-500 uppercase tracking-widest">
+                  <th className="py-4 px-6">PO Number</th>
+                  <th className="py-4 px-6">Supplier Company</th>
+                  <th className="py-4 px-6">Hardware Items</th>
+                  <th className="py-4 px-6">Total Value</th>
+                  <th className="py-4 px-6">Order Date</th>
+                  <th className="py-4 px-6">Status</th>
+                  <th className="py-4 px-6 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {purchaseOrders.map(po => (
+                  <tr key={po.id} className="hover:bg-slate-50/30">
+                    <td className="py-4 px-6 font-bold text-slate-800 font-mono">{po.id.toUpperCase()}</td>
+                    <td className="py-4 px-6 font-bold text-[#0F2C59]">{po.supplier}</td>
+                    <td className="py-4 px-6 font-semibold text-slate-600">{po.items}</td>
+                    <td className="py-4 px-6 font-extrabold text-slate-900">৳ {po.total.toLocaleString("en-BD")}</td>
+                    <td className="py-4 px-6 text-slate-400 font-medium">{po.date}</td>
+                    <td className="py-4 px-6">
+                      <span className={`text-[9px] font-extrabold uppercase py-0.5 px-2 rounded-full ${
+                        po.status === "Delivered" ? "bg-emerald-50 text-emerald-600 border border-emerald-100" :
+                        po.status === "Pending Delivery" ? "bg-amber-50 text-amber-600 border border-amber-100" :
+                        "bg-blue-50 text-blue-600 border border-blue-100"
+                      }`}>
+                        {po.status}
+                      </span>
+                    </td>
+                    <td className="py-4 px-6 text-right">
+                      {po.status !== "Delivered" && (
+                        <button
+                          onClick={() => handleApprovePO(po.id)}
+                          className="px-2.5 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-250 border-emerald-200 rounded-lg font-bold text-[9px] uppercase tracking-wider transition-colors cursor-pointer"
+                        >
+                          Mark Delivered
+                        </button>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Supplier Form */}
-        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-5 h-fit">
+        <div className={`bg-white p-6 rounded-2xl border shadow-sm space-y-5 h-fit transition-all duration-300 ${
+          actionParam === "add" ? "border-[#0F2C59] ring-4 ring-[#0F2C59]/10" : "border-slate-200"
+        }`}>
           <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
             <Truck className="w-5 h-5 text-[#0F2C59]" />
             <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider">Register Supplier</h3>
