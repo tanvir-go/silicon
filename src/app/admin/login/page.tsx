@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Lock, Mail, Terminal, AlertTriangle, ShieldCheck } from "lucide-react";
+import { db, isConfigured } from "@/lib/firebase";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -19,16 +21,79 @@ export default function AdminLoginPage() {
         router.push("/admin/dashboard");
       }
     }
+
+    // Seed default admins to Firestore if configured
+    const seedAdmins = async () => {
+      if (isConfigured) {
+        try {
+          const defaultAdminRef = doc(db, "admins", "admin@silicon.com");
+          const defaultAdminDoc = await getDoc(defaultAdminRef);
+          if (!defaultAdminDoc.exists()) {
+            await setDoc(doc(db, "admins", "admin@silicon.com"), {
+              email: "admin@silicon.com",
+              password: "admin123",
+              name: "MD Nasir Feroz",
+              role: "Super Administrator"
+            });
+          }
+
+          const superAdminRef = doc(db, "admins", "silicon.website.bd@gmail.com");
+          const superAdminDoc = await getDoc(superAdminRef);
+          if (!superAdminDoc.exists()) {
+            await setDoc(doc(db, "admins", "silicon.website.bd@gmail.com"), {
+              email: "silicon.website.bd@gmail.com",
+              password: "Silicon@2026",
+              name: "Nasir Feroz",
+              role: "Super Administrator"
+            });
+          }
+        } catch (e) {
+          console.error("Failed to seed admins:", e);
+        }
+      }
+    };
+    seedAdmins();
   }, [router]);
 
-  const handleLogin = (e?: React.FormEvent) => {
+  const handleLogin = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     setError("");
     setLoading(true);
  
-    // Simulated network delay
+    if (isConfigured) {
+      try {
+        const adminDocRef = doc(db, "admins", email.trim().toLowerCase());
+        const adminDoc = await getDoc(adminDocRef);
+ 
+        if (adminDoc.exists()) {
+          const adminData = adminDoc.data();
+          if (adminData.password === password) {
+            setSuccess(true);
+            if (typeof window !== "undefined") {
+              sessionStorage.setItem("scl_admin_token", "authenticated");
+              sessionStorage.setItem("scl_admin_user", JSON.stringify({
+                name: adminData.name || "Administrator",
+                email: adminData.email,
+                role: adminData.role || "Super Administrator"
+              }));
+            }
+            setTimeout(() => {
+              router.push("/admin/dashboard");
+            }, 1000);
+            return;
+          }
+        }
+        setError("Invalid administrative credentials. Please check and try again.");
+        setLoading(false);
+        return;
+      } catch (err) {
+        console.error("Firebase auth check failed:", err);
+      }
+    }
+ 
+    // Fallback: Simulated network delay
     setTimeout(() => {
-      if (email === "admin@silicon.com" && password === "admin123") {
+      if (email.trim().toLowerCase() === "admin@silicon.com" && password === "admin123") {
         setSuccess(true);
         if (typeof window !== "undefined") {
           sessionStorage.setItem("scl_admin_token", "authenticated");
