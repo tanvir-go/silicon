@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { BlogPost, blogPostsData } from "@/data/mockData";
 import { ShopProduct, shopProducts } from "@/data/mockProducts";
 import { db, isConfigured } from "@/lib/firebase";
-import { collection, doc, getDocs, setDoc, deleteDoc, writeBatch } from "firebase/firestore";
+import { collection, doc, getDocs, setDoc, deleteDoc, writeBatch, onSnapshot } from "firebase/firestore";
 
 export interface Activity {
   id: string;
@@ -232,146 +232,158 @@ export function useAdminState() {
 
   // Initialize and load from Firebase (if configured) or Local Storage (fallback)
   useEffect(() => {
+    let unsubscribes: (() => void)[] = [];
+
     const initData = async () => {
       if (typeof window !== "undefined") {
         if (isConfigured) {
           try {
-            // Load Blogs
-            const blogsSnap = await getDocs(collection(db, "blogs"));
-            let firebaseBlogs: BlogPost[] = [];
-            if (blogsSnap.empty) {
-              const batch = writeBatch(db);
-              blogPostsData.forEach((blog) => {
-                batch.set(doc(db, "blogs", blog.id), blog);
-              });
-              await batch.commit();
-              firebaseBlogs = blogPostsData;
-            } else {
-              blogsSnap.forEach((d) => firebaseBlogs.push(d.data() as BlogPost));
-            }
-            setBlogs(firebaseBlogs);
-            localStorage.setItem("scl_blogs", JSON.stringify(firebaseBlogs));
-
-            // Load Products
-            const productsSnap = await getDocs(collection(db, "products"));
-            let firebaseProducts: ShopProduct[] = [];
-            if (productsSnap.empty) {
-              const batch = writeBatch(db);
-              shopProducts.forEach((prod) => {
-                batch.set(doc(db, "products", prod.id), prod);
-              });
-              await batch.commit();
-              firebaseProducts = shopProducts;
-            } else {
-              productsSnap.forEach((d) => firebaseProducts.push(d.data() as ShopProduct));
-            }
-            setProducts(firebaseProducts);
-            localStorage.setItem("scl_products", JSON.stringify(firebaseProducts));
-
-            // Load Orders
-            const ordersSnap = await getDocs(collection(db, "orders"));
-            let firebaseOrders: Order[] = [];
-            if (ordersSnap.empty) {
-              const batch = writeBatch(db);
-              initialOrders.forEach((ord) => {
-                batch.set(doc(db, "orders", ord.id), ord);
-              });
-              await batch.commit();
-              firebaseOrders = initialOrders;
-            } else {
-              ordersSnap.forEach((d) => firebaseOrders.push(d.data() as Order));
-            }
-            setOrders(firebaseOrders);
-            localStorage.setItem("scl_orders", JSON.stringify(firebaseOrders));
-
-            // Load Customers
-            const customersSnap = await getDocs(collection(db, "customers"));
-            let firebaseCustomers: Customer[] = [];
-            if (customersSnap.empty) {
-              const batch = writeBatch(db);
-              initialCustomers.forEach((cust) => {
-                batch.set(doc(db, "customers", cust.id), cust);
-              });
-              await batch.commit();
-              firebaseCustomers = initialCustomers;
-            } else {
-              customersSnap.forEach((d) => firebaseCustomers.push(d.data() as Customer));
-            }
-            setCustomers(firebaseCustomers);
-            localStorage.setItem("scl_customers", JSON.stringify(firebaseCustomers));
-
-            // Load Suppliers
-            const suppliersSnap = await getDocs(collection(db, "suppliers"));
-            let firebaseSuppliers: Supplier[] = [];
-            if (suppliersSnap.empty) {
-              const batch = writeBatch(db);
-              initialSuppliers.forEach((sup) => {
-                batch.set(doc(db, "suppliers", sup.id), sup);
-              });
-              await batch.commit();
-              firebaseSuppliers = initialSuppliers;
-            } else {
-              suppliersSnap.forEach((d) => firebaseSuppliers.push(d.data() as Supplier));
-            }
-            setSuppliers(firebaseSuppliers);
-            localStorage.setItem("scl_suppliers", JSON.stringify(firebaseSuppliers));
-
-            // Load Coupons
-            const couponsSnap = await getDocs(collection(db, "coupons"));
-            let firebaseCoupons: Coupon[] = [];
-            if (couponsSnap.empty) {
-              const batch = writeBatch(db);
-              initialCoupons.forEach((cop) => {
-                batch.set(doc(db, "coupons", cop.id), cop);
-              });
-              await batch.commit();
-              firebaseCoupons = initialCoupons;
-            } else {
-              couponsSnap.forEach((d) => firebaseCoupons.push(d.data() as Coupon));
-            }
-            setCoupons(firebaseCoupons);
-            localStorage.setItem("scl_coupons", JSON.stringify(firebaseCoupons));
-
-            // Load Settings
-            const settingsSnap = await getDocs(collection(db, "settings"));
-            let firebaseSettings = defaultSettings;
-            let settingsFound = false;
-            settingsSnap.forEach((d) => {
-              if (d.id === "general") {
-                firebaseSettings = d.data() as GeneralSettings;
-                settingsFound = true;
+            // 1. Blogs Real-time Sync
+            const unsubBlogs = onSnapshot(collection(db, "blogs"), (snap) => {
+              if (snap.empty) {
+                const batch = writeBatch(db);
+                blogPostsData.forEach((blog) => {
+                  batch.set(doc(db, "blogs", blog.id), blog);
+                });
+                batch.commit().catch(console.error);
+              } else {
+                const firebaseBlogs: BlogPost[] = [];
+                snap.forEach((d) => firebaseBlogs.push(d.data() as BlogPost));
+                setBlogs(firebaseBlogs);
+                localStorage.setItem("scl_blogs", JSON.stringify(firebaseBlogs));
               }
             });
-            if (!settingsFound) {
-              await setDoc(doc(db, "settings", "general"), defaultSettings);
-            }
-            setSettings(firebaseSettings);
-            localStorage.setItem("scl_settings", JSON.stringify(firebaseSettings));
+            unsubscribes.push(unsubBlogs);
 
-            // Load Activities
-            const activitiesSnap = await getDocs(collection(db, "activities"));
-            let firebaseActivities: Activity[] = [];
-            if (activitiesSnap.empty) {
-              const defaultLogs: Activity[] = [
-                { id: "1", text: "Dashboard connected & synced to Google Firebase cloud database", time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) },
-                { id: "2", text: "Successfully loaded remote system Catalogs", time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }
-              ];
-              const batch = writeBatch(db);
-              defaultLogs.forEach((act) => {
-                batch.set(doc(db, "activities", act.id), act);
+            // 2. Products Real-time Sync
+            const unsubProducts = onSnapshot(collection(db, "products"), (snap) => {
+              if (snap.empty) {
+                const batch = writeBatch(db);
+                shopProducts.forEach((prod) => {
+                  batch.set(doc(db, "products", prod.id), prod);
+                });
+                batch.commit().catch(console.error);
+              } else {
+                const firebaseProducts: ShopProduct[] = [];
+                snap.forEach((d) => firebaseProducts.push(d.data() as ShopProduct));
+                setProducts(firebaseProducts);
+                localStorage.setItem("scl_products", JSON.stringify(firebaseProducts));
+              }
+            });
+            unsubscribes.push(unsubProducts);
+
+            // 3. Orders Real-time Sync
+            const unsubOrders = onSnapshot(collection(db, "orders"), (snap) => {
+              if (snap.empty) {
+                const batch = writeBatch(db);
+                initialOrders.forEach((ord) => {
+                  batch.set(doc(db, "orders", ord.id), ord);
+                });
+                batch.commit().catch(console.error);
+              } else {
+                const firebaseOrders: Order[] = [];
+                snap.forEach((d) => firebaseOrders.push(d.data() as Order));
+                setOrders(firebaseOrders);
+                localStorage.setItem("scl_orders", JSON.stringify(firebaseOrders));
+              }
+            });
+            unsubscribes.push(unsubOrders);
+
+            // 4. Customers Real-time Sync
+            const unsubCustomers = onSnapshot(collection(db, "customers"), (snap) => {
+              if (snap.empty) {
+                const batch = writeBatch(db);
+                initialCustomers.forEach((cust) => {
+                  batch.set(doc(db, "customers", cust.id), cust);
+                });
+                batch.commit().catch(console.error);
+              } else {
+                const firebaseCustomers: Customer[] = [];
+                snap.forEach((d) => firebaseCustomers.push(d.data() as Customer));
+                setCustomers(firebaseCustomers);
+                localStorage.setItem("scl_customers", JSON.stringify(firebaseCustomers));
+              }
+            });
+            unsubscribes.push(unsubCustomers);
+
+            // 5. Suppliers Real-time Sync
+            const unsubSuppliers = onSnapshot(collection(db, "suppliers"), (snap) => {
+              if (snap.empty) {
+                const batch = writeBatch(db);
+                initialSuppliers.forEach((sup) => {
+                  batch.set(doc(db, "suppliers", sup.id), sup);
+                });
+                batch.commit().catch(console.error);
+              } else {
+                const firebaseSuppliers: Supplier[] = [];
+                snap.forEach((d) => firebaseSuppliers.push(d.data() as Supplier));
+                setSuppliers(firebaseSuppliers);
+                localStorage.setItem("scl_suppliers", JSON.stringify(firebaseSuppliers));
+              }
+            });
+            unsubscribes.push(unsubSuppliers);
+
+            // 6. Coupons Real-time Sync
+            const unsubCoupons = onSnapshot(collection(db, "coupons"), (snap) => {
+              if (snap.empty) {
+                const batch = writeBatch(db);
+                initialCoupons.forEach((cop) => {
+                  batch.set(doc(db, "coupons", cop.id), cop);
+                });
+                batch.commit().catch(console.error);
+              } else {
+                const firebaseCoupons: Coupon[] = [];
+                snap.forEach((d) => firebaseCoupons.push(d.data() as Coupon));
+                setCoupons(firebaseCoupons);
+                localStorage.setItem("scl_coupons", JSON.stringify(firebaseCoupons));
+              }
+            });
+            unsubscribes.push(unsubCoupons);
+
+            // 7. Settings Real-time Sync
+            const unsubSettings = onSnapshot(collection(db, "settings"), (snap) => {
+              let firebaseSettings = defaultSettings;
+              let settingsFound = false;
+              snap.forEach((d) => {
+                if (d.id === "general") {
+                  firebaseSettings = d.data() as GeneralSettings;
+                  settingsFound = true;
+                }
               });
-              await batch.commit();
-              firebaseActivities = defaultLogs;
-            } else {
-              activitiesSnap.forEach((d) => firebaseActivities.push(d.data() as Activity));
-            }
-            setActivities(firebaseActivities);
-            localStorage.setItem("scl_activities", JSON.stringify(firebaseActivities));
+              if (!settingsFound) {
+                setDoc(doc(db, "settings", "general"), defaultSettings).catch(console.error);
+              } else {
+                setSettings(firebaseSettings);
+                localStorage.setItem("scl_settings", JSON.stringify(firebaseSettings));
+              }
+            });
+            unsubscribes.push(unsubSettings);
+
+            // 8. Activities Real-time Sync
+            const unsubActivities = onSnapshot(collection(db, "activities"), (snap) => {
+              if (snap.empty) {
+                const defaultLogs: Activity[] = [
+                  { id: "1", text: "Dashboard connected & synced to Google Firebase cloud database", time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) },
+                  { id: "2", text: "Successfully loaded remote system Catalogs", time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }
+                ];
+                const batch = writeBatch(db);
+                defaultLogs.forEach((act) => {
+                  batch.set(doc(db, "activities", act.id), act);
+                });
+                batch.commit().catch(console.error);
+              } else {
+                const firebaseActivities: Activity[] = [];
+                snap.forEach((d) => firebaseActivities.push(d.data() as Activity));
+                setActivities(firebaseActivities.sort((a, b) => b.id.localeCompare(a.id)));
+                localStorage.setItem("scl_activities", JSON.stringify(firebaseActivities));
+              }
+            });
+            unsubscribes.push(unsubActivities);
 
             setLoading(false);
             return;
           } catch (err) {
-            console.error("Firebase syncing failed, falling back to local database", err);
+            console.error("Firebase real-time sync failed, falling back to local database", err);
           }
         }
 
@@ -454,6 +466,10 @@ export function useAdminState() {
     };
 
     initData();
+
+    return () => {
+      unsubscribes.forEach((unsub) => unsub());
+    };
   }, []);
 
   const saveBlogs = (newBlogs: BlogPost[]) => {
