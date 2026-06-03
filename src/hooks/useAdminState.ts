@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import { BlogPost, blogPostsData } from "@/data/mockData";
 import { ShopProduct, shopProducts } from "@/data/mockProducts";
+import { db, isConfigured } from "@/lib/firebase";
+import { collection, doc, getDocs, setDoc, deleteDoc, writeBatch } from "firebase/firestore";
 
 export interface Activity {
   id: string;
@@ -228,84 +230,230 @@ export function useAdminState() {
   const [settings, setSettings] = useState<GeneralSettings>(defaultSettings);
   const [loading, setLoading] = useState(true);
 
-  // Initialize and load from local storage
+  // Initialize and load from Firebase (if configured) or Local Storage (fallback)
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      try {
-        const storedBlogs = localStorage.getItem("scl_blogs");
-        const storedProducts = localStorage.getItem("scl_products");
-        const storedActivities = localStorage.getItem("scl_activities");
-        const storedOrders = localStorage.getItem("scl_orders");
-        const storedCustomers = localStorage.getItem("scl_customers");
-        const storedSuppliers = localStorage.getItem("scl_suppliers");
-        const storedCoupons = localStorage.getItem("scl_coupons");
-        const storedSettings = localStorage.getItem("scl_settings");
+    const initData = async () => {
+      if (typeof window !== "undefined") {
+        if (isConfigured) {
+          try {
+            // Load Blogs
+            const blogsSnap = await getDocs(collection(db, "blogs"));
+            let firebaseBlogs: BlogPost[] = [];
+            if (blogsSnap.empty) {
+              const batch = writeBatch(db);
+              blogPostsData.forEach((blog) => {
+                batch.set(doc(db, "blogs", blog.id), blog);
+              });
+              await batch.commit();
+              firebaseBlogs = blogPostsData;
+            } else {
+              blogsSnap.forEach((d) => firebaseBlogs.push(d.data() as BlogPost));
+            }
+            setBlogs(firebaseBlogs);
+            localStorage.setItem("scl_blogs", JSON.stringify(firebaseBlogs));
 
-        if (storedBlogs) {
-          setBlogs(JSON.parse(storedBlogs));
-        } else {
-          localStorage.setItem("scl_blogs", JSON.stringify(blogPostsData));
-          setBlogs(blogPostsData);
+            // Load Products
+            const productsSnap = await getDocs(collection(db, "products"));
+            let firebaseProducts: ShopProduct[] = [];
+            if (productsSnap.empty) {
+              const batch = writeBatch(db);
+              shopProducts.forEach((prod) => {
+                batch.set(doc(db, "products", prod.id), prod);
+              });
+              await batch.commit();
+              firebaseProducts = shopProducts;
+            } else {
+              productsSnap.forEach((d) => firebaseProducts.push(d.data() as ShopProduct));
+            }
+            setProducts(firebaseProducts);
+            localStorage.setItem("scl_products", JSON.stringify(firebaseProducts));
+
+            // Load Orders
+            const ordersSnap = await getDocs(collection(db, "orders"));
+            let firebaseOrders: Order[] = [];
+            if (ordersSnap.empty) {
+              const batch = writeBatch(db);
+              initialOrders.forEach((ord) => {
+                batch.set(doc(db, "orders", ord.id), ord);
+              });
+              await batch.commit();
+              firebaseOrders = initialOrders;
+            } else {
+              ordersSnap.forEach((d) => firebaseOrders.push(d.data() as Order));
+            }
+            setOrders(firebaseOrders);
+            localStorage.setItem("scl_orders", JSON.stringify(firebaseOrders));
+
+            // Load Customers
+            const customersSnap = await getDocs(collection(db, "customers"));
+            let firebaseCustomers: Customer[] = [];
+            if (customersSnap.empty) {
+              const batch = writeBatch(db);
+              initialCustomers.forEach((cust) => {
+                batch.set(doc(db, "customers", cust.id), cust);
+              });
+              await batch.commit();
+              firebaseCustomers = initialCustomers;
+            } else {
+              customersSnap.forEach((d) => firebaseCustomers.push(d.data() as Customer));
+            }
+            setCustomers(firebaseCustomers);
+            localStorage.setItem("scl_customers", JSON.stringify(firebaseCustomers));
+
+            // Load Suppliers
+            const suppliersSnap = await getDocs(collection(db, "suppliers"));
+            let firebaseSuppliers: Supplier[] = [];
+            if (suppliersSnap.empty) {
+              const batch = writeBatch(db);
+              initialSuppliers.forEach((sup) => {
+                batch.set(doc(db, "suppliers", sup.id), sup);
+              });
+              await batch.commit();
+              firebaseSuppliers = initialSuppliers;
+            } else {
+              suppliersSnap.forEach((d) => firebaseSuppliers.push(d.data() as Supplier));
+            }
+            setSuppliers(firebaseSuppliers);
+            localStorage.setItem("scl_suppliers", JSON.stringify(firebaseSuppliers));
+
+            // Load Coupons
+            const couponsSnap = await getDocs(collection(db, "coupons"));
+            let firebaseCoupons: Coupon[] = [];
+            if (couponsSnap.empty) {
+              const batch = writeBatch(db);
+              initialCoupons.forEach((cop) => {
+                batch.set(doc(db, "coupons", cop.id), cop);
+              });
+              await batch.commit();
+              firebaseCoupons = initialCoupons;
+            } else {
+              couponsSnap.forEach((d) => firebaseCoupons.push(d.data() as Coupon));
+            }
+            setCoupons(firebaseCoupons);
+            localStorage.setItem("scl_coupons", JSON.stringify(firebaseCoupons));
+
+            // Load Settings
+            const settingsSnap = await getDocs(collection(db, "settings"));
+            let firebaseSettings = defaultSettings;
+            let settingsFound = false;
+            settingsSnap.forEach((d) => {
+              if (d.id === "general") {
+                firebaseSettings = d.data() as GeneralSettings;
+                settingsFound = true;
+              }
+            });
+            if (!settingsFound) {
+              await setDoc(doc(db, "settings", "general"), defaultSettings);
+            }
+            setSettings(firebaseSettings);
+            localStorage.setItem("scl_settings", JSON.stringify(firebaseSettings));
+
+            // Load Activities
+            const activitiesSnap = await getDocs(collection(db, "activities"));
+            let firebaseActivities: Activity[] = [];
+            if (activitiesSnap.empty) {
+              const defaultLogs: Activity[] = [
+                { id: "1", text: "Dashboard connected & synced to Google Firebase cloud database", time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) },
+                { id: "2", text: "Successfully loaded remote system Catalogs", time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }
+              ];
+              const batch = writeBatch(db);
+              defaultLogs.forEach((act) => {
+                batch.set(doc(db, "activities", act.id), act);
+              });
+              await batch.commit();
+              firebaseActivities = defaultLogs;
+            } else {
+              activitiesSnap.forEach((d) => firebaseActivities.push(d.data() as Activity));
+            }
+            setActivities(firebaseActivities);
+            localStorage.setItem("scl_activities", JSON.stringify(firebaseActivities));
+
+            setLoading(false);
+            return;
+          } catch (err) {
+            console.error("Firebase syncing failed, falling back to local database", err);
+          }
         }
 
-        if (storedProducts) {
-          setProducts(JSON.parse(storedProducts));
-        } else {
-          localStorage.setItem("scl_products", JSON.stringify(shopProducts));
-          setProducts(shopProducts);
-        }
+        // Local Storage Fallback
+        try {
+          const storedBlogs = localStorage.getItem("scl_blogs");
+          const storedProducts = localStorage.getItem("scl_products");
+          const storedActivities = localStorage.getItem("scl_activities");
+          const storedOrders = localStorage.getItem("scl_orders");
+          const storedCustomers = localStorage.getItem("scl_customers");
+          const storedSuppliers = localStorage.getItem("scl_suppliers");
+          const storedCoupons = localStorage.getItem("scl_coupons");
+          const storedSettings = localStorage.getItem("scl_settings");
 
-        if (storedOrders) {
-          setOrders(JSON.parse(storedOrders));
-        } else {
-          localStorage.setItem("scl_orders", JSON.stringify(initialOrders));
-          setOrders(initialOrders);
-        }
+          if (storedBlogs) {
+            setBlogs(JSON.parse(storedBlogs));
+          } else {
+            localStorage.setItem("scl_blogs", JSON.stringify(blogPostsData));
+            setBlogs(blogPostsData);
+          }
 
-        if (storedCustomers) {
-          setCustomers(JSON.parse(storedCustomers));
-        } else {
-          localStorage.setItem("scl_customers", JSON.stringify(initialCustomers));
-          setCustomers(initialCustomers);
-        }
+          if (storedProducts) {
+            setProducts(JSON.parse(storedProducts));
+          } else {
+            localStorage.setItem("scl_products", JSON.stringify(shopProducts));
+            setProducts(shopProducts);
+          }
 
-        if (storedSuppliers) {
-          setSuppliers(JSON.parse(storedSuppliers));
-        } else {
-          localStorage.setItem("scl_suppliers", JSON.stringify(initialSuppliers));
-          setSuppliers(initialSuppliers);
-        }
+          if (storedOrders) {
+            setOrders(JSON.parse(storedOrders));
+          } else {
+            localStorage.setItem("scl_orders", JSON.stringify(initialOrders));
+            setOrders(initialOrders);
+          }
 
-        if (storedCoupons) {
-          setCoupons(JSON.parse(storedCoupons));
-        } else {
-          localStorage.setItem("scl_coupons", JSON.stringify(initialCoupons));
-          setCoupons(initialCoupons);
-        }
+          if (storedCustomers) {
+            setCustomers(JSON.parse(storedCustomers));
+          } else {
+            localStorage.setItem("scl_customers", JSON.stringify(initialCustomers));
+            setCustomers(initialCustomers);
+          }
 
-        if (storedSettings) {
-          setSettings(JSON.parse(storedSettings));
-        } else {
-          localStorage.setItem("scl_settings", JSON.stringify(defaultSettings));
-          setSettings(defaultSettings);
-        }
+          if (storedSuppliers) {
+            setSuppliers(JSON.parse(storedSuppliers));
+          } else {
+            localStorage.setItem("scl_suppliers", JSON.stringify(initialSuppliers));
+            setSuppliers(initialSuppliers);
+          }
 
-        if (storedActivities) {
-          setActivities(JSON.parse(storedActivities));
-        } else {
-          const defaultLogs: Activity[] = [
-            { id: "1", text: "Dashboard initialized in local mock database mode", time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) },
-            { id: "2", text: "Successfully loaded default system Catalogs", time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }
-          ];
-          localStorage.setItem("scl_activities", JSON.stringify(defaultLogs));
-          setActivities(defaultLogs);
+          if (storedCoupons) {
+            setCoupons(JSON.parse(storedCoupons));
+          } else {
+            localStorage.setItem("scl_coupons", JSON.stringify(initialCoupons));
+            setCoupons(initialCoupons);
+          }
+
+          if (storedSettings) {
+            setSettings(JSON.parse(storedSettings));
+          } else {
+            localStorage.setItem("scl_settings", JSON.stringify(defaultSettings));
+            setSettings(defaultSettings);
+          }
+
+          if (storedActivities) {
+            setActivities(JSON.parse(storedActivities));
+          } else {
+            const defaultLogs: Activity[] = [
+              { id: "1", text: "Dashboard initialized in local mock database mode", time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) },
+              { id: "2", text: "Successfully loaded default system Catalogs", time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }
+            ];
+            localStorage.setItem("scl_activities", JSON.stringify(defaultLogs));
+            setActivities(defaultLogs);
+          }
+        } catch (err) {
+          console.error("Failed to load mock data from localStorage", err);
+        } finally {
+          setLoading(false);
         }
-      } catch (err) {
-        console.error("Failed to load mock data from localStorage", err);
-      } finally {
-        setLoading(false);
       }
-    }
+    };
+
+    initData();
   }, []);
 
   const saveBlogs = (newBlogs: BlogPost[]) => {
@@ -340,6 +488,11 @@ export function useAdminState() {
     setSuppliers(newSuppliers);
     if (typeof window !== "undefined") {
       localStorage.setItem("scl_suppliers", JSON.stringify(newSuppliers));
+      if (isConfigured) {
+        newSuppliers.forEach((sup) => {
+          setDoc(doc(db, "suppliers", sup.id), sup).catch(console.error);
+        });
+      }
     }
   };
 
@@ -347,6 +500,17 @@ export function useAdminState() {
     setCoupons(newCoupons);
     if (typeof window !== "undefined") {
       localStorage.setItem("scl_coupons", JSON.stringify(newCoupons));
+      if (isConfigured) {
+        // Find deleted coupons to remove from Firestore
+        const deleted = coupons.filter(c => !newCoupons.some(nc => nc.id === c.id));
+        deleted.forEach(c => {
+          deleteDoc(doc(db, "coupons", c.id)).catch(console.error);
+        });
+        // Set all active coupons
+        newCoupons.forEach((cop) => {
+          setDoc(doc(db, "coupons", cop.id), cop).catch(console.error);
+        });
+      }
     }
   };
 
@@ -354,6 +518,9 @@ export function useAdminState() {
     setSettings(newSettings);
     if (typeof window !== "undefined") {
       localStorage.setItem("scl_settings", JSON.stringify(newSettings));
+      if (isConfigured) {
+        setDoc(doc(db, "settings", "general"), newSettings).catch(console.error);
+      }
     }
   };
 
@@ -371,6 +538,9 @@ export function useAdminState() {
       }
       return updated;
     });
+    if (isConfigured) {
+      setDoc(doc(db, "activities", newAct.id), newAct).catch(console.error);
+    }
   };
 
   // Blog CRUD actions
@@ -383,6 +553,9 @@ export function useAdminState() {
     const newBlog: BlogPost = { ...blog, id: generatedId };
     const updated = [newBlog, ...blogs];
     saveBlogs(updated);
+    if (isConfigured) {
+      setDoc(doc(db, "blogs", generatedId), newBlog).catch(console.error);
+    }
     addActivity(`Created blog post: "${newBlog.title}"`);
     return newBlog;
   };
@@ -391,6 +564,9 @@ export function useAdminState() {
     const updated = blogs.map((b) => (b.id === id ? { ...b, ...updatedFields } : b));
     saveBlogs(updated);
     const existing = blogs.find((b) => b.id === id);
+    if (isConfigured && existing) {
+      setDoc(doc(db, "blogs", id), { ...existing, ...updatedFields }).catch(console.error);
+    }
     addActivity(`Updated blog post: "${updatedFields.title || existing?.title}"`);
   };
 
@@ -398,6 +574,9 @@ export function useAdminState() {
     const existing = blogs.find((b) => b.id === id);
     const updated = blogs.filter((b) => b.id !== id);
     saveBlogs(updated);
+    if (isConfigured) {
+      deleteDoc(doc(db, "blogs", id)).catch(console.error);
+    }
     addActivity(`Deleted blog post: "${existing?.title || id}"`);
   };
 
@@ -411,6 +590,9 @@ export function useAdminState() {
     const newProduct: ShopProduct = { ...product, id: generatedId };
     const updated = [newProduct, ...products];
     saveProducts(updated);
+    if (isConfigured) {
+      setDoc(doc(db, "products", generatedId), newProduct).catch(console.error);
+    }
     addActivity(`Uploaded new product: "${newProduct.title}"`);
     return newProduct;
   };
@@ -419,6 +601,9 @@ export function useAdminState() {
     const updated = products.map((p) => (p.id === id ? { ...p, ...updatedFields } : p));
     saveProducts(updated);
     const existing = products.find((p) => p.id === id);
+    if (isConfigured && existing) {
+      setDoc(doc(db, "products", id), { ...existing, ...updatedFields }).catch(console.error);
+    }
     addActivity(`Updated product catalog: "${updatedFields.title || existing?.title}"`);
   };
 
@@ -426,6 +611,9 @@ export function useAdminState() {
     const existing = products.find((p) => p.id === id);
     const updated = products.filter((p) => p.id !== id);
     saveProducts(updated);
+    if (isConfigured) {
+      deleteDoc(doc(db, "products", id)).catch(console.error);
+    }
     addActivity(`Deleted product catalog item: "${existing?.title || id}"`);
   };
 
@@ -439,6 +627,9 @@ export function useAdminState() {
     };
     const updated = [newOrder, ...orders];
     saveOrders(updated);
+    if (isConfigured) {
+      setDoc(doc(db, "orders", orderId), newOrder).catch(console.error);
+    }
     addActivity(`Created manual order: ${orderId}`);
     return newOrder;
   };
@@ -467,6 +658,12 @@ export function useAdminState() {
       return o;
     });
     saveOrders(updated);
+    if (isConfigured) {
+      const target = updated.find(o => o.id === id);
+      if (target) {
+        setDoc(doc(db, "orders", id), target).catch(console.error);
+      }
+    }
     addActivity(`Updated Order status for ${id}`);
   };
 
@@ -475,6 +672,9 @@ export function useAdminState() {
     const updated = customers.map((c) => (c.id === id ? { ...c, ...updatedFields } : c));
     saveCustomers(updated);
     const existing = customers.find((c) => c.id === id);
+    if (isConfigured && existing) {
+      setDoc(doc(db, "customers", id), { ...existing, ...updatedFields }).catch(console.error);
+    }
     addActivity(`Updated Customer info for "${existing?.name}"`);
   };
 
@@ -488,6 +688,9 @@ export function useAdminState() {
     });
     saveProducts(updated);
     const target = products.find((p) => p.id === productId);
+    if (isConfigured && target) {
+      setDoc(doc(db, "products", productId), { ...target, stockStatus: status }).catch(console.error);
+    }
     addActivity(`Adjusted stock status of "${target?.title}" to ${status}`);
   };
 
@@ -523,6 +726,26 @@ export function useAdminState() {
       localStorage.setItem("scl_coupons", JSON.stringify(initialCoupons));
       localStorage.setItem("scl_settings", JSON.stringify(defaultSettings));
       localStorage.setItem("scl_activities", JSON.stringify(resetLog));
+
+      if (isConfigured) {
+        const resetCollections = async () => {
+          try {
+            const batch = writeBatch(db);
+            blogPostsData.forEach(b => batch.set(doc(db, "blogs", b.id), b));
+            shopProducts.forEach(p => batch.set(doc(db, "products", p.id), p));
+            initialOrders.forEach(o => batch.set(doc(db, "orders", o.id), o));
+            initialCustomers.forEach(c => batch.set(doc(db, "customers", c.id), c));
+            initialSuppliers.forEach(s => batch.set(doc(db, "suppliers", s.id), s));
+            initialCoupons.forEach(c => batch.set(doc(db, "coupons", c.id), c));
+            batch.set(doc(db, "settings", "general"), defaultSettings);
+            resetLog.forEach(l => batch.set(doc(db, "activities", l.id), l));
+            await batch.commit();
+          } catch (e) {
+            console.error("Firebase database reset failed", e);
+          }
+        };
+        resetCollections();
+      }
     }
   };
 

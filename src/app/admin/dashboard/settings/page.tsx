@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useAdminState } from "@/hooks/useAdminState";
 import { Database, ShieldAlert, CheckCircle, Cpu, ShieldCheck, Settings, Bell, DollarSign } from "lucide-react";
 import { useSearchParams } from "next/navigation";
+import { isConfigured, firebaseConfig } from "@/lib/firebase";
 
 type SettingsTab = "profile" | "configs" | "database" | "system";
 
@@ -333,36 +334,52 @@ export default function SettingsPage() {
       {activeTab === "database" && (
         <div className="bg-white p-6 md:p-8 rounded-2xl border border-slate-200 space-y-6 shadow-sm animate-scaleUp">
           <div className="flex items-center gap-3 border-b border-slate-100 pb-4">
-            <Database className="w-5 h-5 text-amber-500" />
-            <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider">Sandbox Database Emulator</h3>
+            <Database className="w-5 h-5 text-[#0F2C59]" />
+            <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider">Database Connection Status</h3>
           </div>
           
           <div className="space-y-4">
-            <div className="p-4 bg-amber-50 border border-amber-250 border-amber-200 rounded-2xl flex gap-3 text-xs text-amber-800 leading-relaxed font-semibold">
-              <ShieldAlert className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
-              <div>
-                <h4 className="font-bold text-amber-950 uppercase tracking-wider mb-1 text-[11px]">Database Connectivity Offline</h4>
-                <p className="text-[10px] text-amber-700 font-medium leading-relaxed">
-                  The database is operating in local sandboxed emulator mode. Changes and operations you perform inside the console (such as order status updates, creating promo coupons, or appending suppliers) will reside inside your browser cache.
-                </p>
+            {isConfigured ? (
+              <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-2xl flex gap-3 text-xs text-emerald-800 leading-relaxed font-semibold">
+                <CheckCircle className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
+                <div>
+                  <h4 className="font-bold text-emerald-950 uppercase tracking-wider mb-1 text-[11px]">Database Connectivity Online</h4>
+                  <p className="text-[10px] text-emerald-700 font-medium leading-relaxed">
+                    The console is connected to your live Google Firebase database project: <span className="font-mono bg-emerald-100 px-1.5 py-0.5 rounded text-emerald-900 font-bold select-all">{firebaseConfig.projectId}</span>. 
+                    All data updates (products, orders, blogs, coupons) are synced dynamically in real-time to Cloud Firestore.
+                  </p>
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className="p-4 bg-amber-50 border border-amber-200 rounded-2xl flex gap-3 text-xs text-amber-800 leading-relaxed font-semibold">
+                <ShieldAlert className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+                <div>
+                  <h4 className="font-bold text-amber-950 uppercase tracking-wider mb-1 text-[11px]">Database Operating in Local Fallrap / Fallback</h4>
+                  <p className="text-[10px] text-amber-700 font-medium leading-relaxed">
+                    The database is operating in local fallback mode because actual Firebase environment credentials are not fully configured in your <span className="font-mono bg-amber-100 px-1 py-0.5 rounded text-amber-900 font-bold">.env.local</span> file.
+                  </p>
+                  <p className="text-[10px] text-amber-650 mt-2 font-medium">
+                    To connect your database, copy the Firebase app settings from the Firebase Console for project <span className="font-bold text-amber-900 select-all">silicon-website-283da</span> and update the variables in your local environment file.
+                  </p>
+                </div>
+              </div>
+            )}
 
-            <div className="grid grid-cols-2 gap-4 py-2">
-              <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl text-center">
-                <span className="text-[9px] font-bold text-slate-500 uppercase tracking-wider">Sandbox Footprint</span>
-                <p className="text-sm font-extrabold text-slate-800 mt-1 font-mono">{dbSize}</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-2">
+              <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl">
+                <span className="text-[9px] font-bold text-slate-500 uppercase tracking-wider block">Storage Footprint</span>
+                <p className="text-sm font-extrabold text-slate-800 mt-1 font-mono">{isConfigured ? "Synced (Cloud Firestore)" : dbSize}</p>
               </div>
-              <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl text-center">
-                <span className="text-[9px] font-bold text-slate-500 uppercase tracking-wider">Diagnostics State</span>
-                <p className="text-sm font-extrabold text-emerald-600 mt-1 font-mono">Operational</p>
+              <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl">
+                <span className="text-[9px] font-bold text-slate-500 uppercase tracking-wider block">Active Project Node</span>
+                <p className="text-xs font-bold text-[#0F2C59] mt-1.5 font-mono select-all truncate">{firebaseConfig.projectId}</p>
               </div>
             </div>
 
             <div className="pt-4 border-t border-slate-150 border-slate-100 flex items-center justify-between">
               <div>
-                <h4 className="text-xs font-bold text-slate-800">Restore Original Mock Data</h4>
-                <p className="text-[10px] text-slate-500 mt-0.5">Flush sandboxed records and restore default HPE servers and blog listings</p>
+                <h4 className="text-xs font-bold text-slate-800">Sync Default Datasets</h4>
+                <p className="text-[10px] text-slate-500 mt-0.5">Restore and write default B2B catalogs, blogs, and configurations to target node</p>
               </div>
               <button
                 onClick={handleReset}
