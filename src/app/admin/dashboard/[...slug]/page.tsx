@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useAdminState } from "@/hooks/useAdminState";
 import {
@@ -24,8 +24,30 @@ import {
   MessageSquare,
   Star,
   Eye,
-  ArrowRight
+  ArrowRight,
+  User,
+  Paperclip,
+  Circle
 } from "lucide-react";
+
+interface ChatMessage {
+  id: string;
+  sender: "admin" | "user";
+  text: string;
+  timestamp: string;
+}
+
+interface ChatSession {
+  id: string;
+  userName: string;
+  userCompany: string;
+  userRole: string;
+  userStatus: "online" | "offline";
+  lastMessage: string;
+  lastMessageTime: string;
+  unreadCount: number;
+  messages: ChatMessage[];
+}
 
 export default function CatchAllDashboardPage() {
   const params = useParams();
@@ -115,6 +137,77 @@ export default function CatchAllDashboardPage() {
   // Generic Mock State
   const [genericToggle, setGenericToggle] = useState(true);
   const [genericText, setGenericText] = useState("");
+
+  // Live Chat States
+  const [chatSessions, setChatSessions] = useState<ChatSession[]>([
+    {
+      id: "chat-1",
+      userName: "Sumaya Islam",
+      userCompany: "BioTech Ltd",
+      userRole: "IT Procurement Lead",
+      userStatus: "online",
+      lastMessage: "Please let me know how soon we can receive the quote.",
+      lastMessageTime: "10:42 AM",
+      unreadCount: 2,
+      messages: [
+        { id: "m1", sender: "user", text: "Hello Silicon Computing team, we are looking to procure 10 Cisco SG350 switches. Can we get a custom pricing quote?", timestamp: "10:30 AM" },
+        { id: "m2", sender: "admin", text: "Hi Sumaya, welcome! Yes, we can certainly provide a volume discount for 10 units. I'll prepare a custom quote sheet for BioTech.", timestamp: "10:35 AM" },
+        { id: "m3", sender: "user", text: "That sounds great, thank you! Please let me know how soon we can receive the quote.", timestamp: "10:42 AM" }
+      ]
+    },
+    {
+      id: "chat-2",
+      userName: "Tanvir Ahmed",
+      userCompany: "Silicon Computing Ltd",
+      userRole: "Software Lead",
+      userStatus: "online",
+      lastMessage: "Yes, we did a traceroute. It seems the bottleneck is at the secondary uplink interface.",
+      lastMessageTime: "Yesterday",
+      unreadCount: 0,
+      messages: [
+        { id: "m4", sender: "user", text: "The latest server instance we deployed is encountering network latency spikes. Can you check if the router configuration needs updates?", timestamp: "Yesterday" },
+        { id: "m5", sender: "admin", text: "Hello Tanvir. Let's look at the active packet logs on the CCR1016. Have you verified the routing paths?", timestamp: "Yesterday" },
+        { id: "m6", sender: "user", text: "Yes, we did a traceroute. It seems the bottleneck is at the secondary uplink interface.", timestamp: "Yesterday" }
+      ]
+    },
+    {
+      id: "chat-3",
+      userName: "Md. Bayeazid",
+      userCompany: "Apex Energy",
+      userRole: "Infrastructure Head",
+      userStatus: "offline",
+      lastMessage: "Perfect. We appreciate the prompt dispatch. I'll keep you posted once we start installation.",
+      lastMessageTime: "2 days ago",
+      unreadCount: 0,
+      messages: [
+        { id: "m7", sender: "user", text: "Hi, our infrastructure upgrade starts tomorrow. Is the delivery for the HPE ProLiant boards on track?", timestamp: "2 days ago" },
+        { id: "m8", sender: "admin", text: "Hi Bayeazid! Yes, the shipment has left our warehouse and is scheduled for morning delivery at Apex Energy.", timestamp: "2 days ago" },
+        { id: "m9", sender: "user", text: "Perfect. We appreciate the prompt dispatch. I'll keep you posted once we start installation.", timestamp: "2 days ago" }
+      ]
+    }
+  ]);
+
+  const [activeChatId, setActiveChatId] = useState("chat-1");
+  const [chatInput, setChatInput] = useState("");
+  const [isTyping, setIsTyping] = useState<string | null>(null);
+
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Clear unread count when chat is active
+  useEffect(() => {
+    if (activeChatId) {
+      setChatSessions(prev =>
+        prev.map(session =>
+          session.id === activeChatId ? { ...session, unreadCount: 0 } : session
+        )
+      );
+    }
+  }, [activeChatId]);
+
+  // Scroll to bottom of active chat
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [chatSessions, activeChatId]);
 
   useEffect(() => {
     if (successMsg) {
@@ -942,6 +1035,279 @@ export default function CatchAllDashboardPage() {
     );
   };
 
+  const handleSendChatMessage = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!chatInput.trim()) return;
+
+    const messageText = chatInput.trim();
+    const timestampStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+    const newMsg: ChatMessage = {
+      id: `admin-msg-${Date.now()}`,
+      sender: "admin",
+      text: messageText,
+      timestamp: timestampStr
+    };
+
+    setChatSessions(prev =>
+      prev.map(session => {
+        if (session.id === activeChatId) {
+          return {
+            ...session,
+            lastMessage: messageText,
+            lastMessageTime: timestampStr,
+            messages: [...session.messages, newMsg]
+          };
+        }
+        return session;
+      })
+    );
+
+    setChatInput("");
+    addActivity(`Sent live chat message to ${chatSessions.find(c => c.id === activeChatId)?.userName}`);
+
+    const targetChatId = activeChatId;
+    const activeSession = chatSessions.find(c => c.id === targetChatId);
+    if (!activeSession) return;
+
+    setIsTyping(targetChatId);
+
+    setTimeout(() => {
+      let replyText = "";
+      if (activeSession.userName === "Sumaya Islam") {
+        const replies = [
+          "Received! I will share this with our finance team. Looking forward to the proposal.",
+          "Thank you for the quick update. We'd also like to request details on the post-purchase maintenance warranty.",
+          "Understood. We are hoping to finalize this order by the end of the week."
+        ];
+        const count = activeSession.messages.filter(m => m.sender === "admin").length;
+        replyText = replies[count % replies.length];
+      } else if (activeSession.userName === "Tanvir Ahmed") {
+        const replies = [
+          "Thanks, let me apply the configuration adjustment and monitor the traffic logs for the next hour.",
+          "Acknowledged. I've sent the updated traceroute output to your technical desk.",
+          "That resolved it! The latency is back to < 5ms. Thanks for the quick support."
+        ];
+        const count = activeSession.messages.filter(m => m.sender === "admin").length;
+        replyText = replies[count % replies.length];
+      } else if (activeSession.userName === "Md. Bayeazid") {
+        const replies = [
+          "Thank you! I will have our on-site team ready to receive the shipment.",
+          "Excellent service as always. We'll verify the hardware tags upon arrival.",
+          "We just finished unpacking, everything is in perfect condition."
+        ];
+        const count = activeSession.messages.filter(m => m.sender === "admin").length;
+        replyText = replies[count % replies.length];
+      } else {
+        replyText = "Thanks for the details. I will review this and get back to you shortly.";
+      }
+
+      const clientMsg: ChatMessage = {
+        id: `client-msg-${Date.now()}`,
+        sender: "user",
+        text: replyText,
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      };
+
+      setChatSessions(prev =>
+        prev.map(session => {
+          if (session.id === targetChatId) {
+            return {
+              ...session,
+              lastMessage: replyText,
+              lastMessageTime: clientMsg.timestamp,
+              unreadCount: activeChatId === targetChatId ? 0 : session.unreadCount + 1,
+              messages: [...session.messages, clientMsg]
+            };
+          }
+          return session;
+        })
+      );
+
+      setIsTyping(null);
+      addActivity(`Received live chat response from ${activeSession.userName}`);
+    }, 1500);
+  };
+
+  const renderLiveChat = () => {
+    const activeSession = chatSessions.find(c => c.id === activeChatId);
+
+    return (
+      <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden flex flex-col md:flex-row h-[580px]">
+        {/* Left Sidebar: Active Sessions */}
+        <div className="w-full md:w-80 border-r border-slate-200 flex flex-col h-full bg-slate-50/50">
+          <div className="p-4 border-b border-slate-200 flex items-center justify-between bg-white">
+            <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
+              <MessageSquare className="w-4 h-4 text-[#0F2C59]" />
+              Active Channels
+            </h3>
+            <span className="text-[9px] font-extrabold bg-[#0F2C59]/15 text-[#0F2C59] px-2 py-0.5 rounded-full uppercase">
+              Live
+            </span>
+          </div>
+
+          <div className="flex-1 overflow-y-auto divide-y divide-slate-100">
+            {chatSessions.map((session) => {
+              const isActive = session.id === activeChatId;
+              const isOnline = session.userStatus === "online";
+              return (
+                <button
+                  key={session.id}
+                  onClick={() => setActiveChatId(session.id)}
+                  className={`w-full text-left p-3.5 flex items-center gap-3 transition-all border-l-4 ${
+                    isActive
+                      ? "bg-[#0F2C59]/5 border-l-[#0F2C59] shadow-sm"
+                      : "hover:bg-slate-50 border-l-transparent"
+                  }`}
+                >
+                  {/* User Avatar with Status indicator */}
+                  <div className="relative shrink-0">
+                    <div className="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center text-slate-700 font-bold text-xs">
+                      {session.userName.split(" ").map(n => n[0]).join("")}
+                    </div>
+                    <span className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-white ${
+                      isOnline ? "bg-emerald-500" : "bg-slate-400"
+                    }`}></span>
+                  </div>
+
+                  {/* Session Text */}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold text-slate-800 truncate">{session.userName}</span>
+                      <span className="text-[9px] text-slate-400 font-medium shrink-0">{session.lastMessageTime}</span>
+                    </div>
+                    <span className="text-[10px] text-slate-500 font-medium block truncate mt-0.5">{session.userCompany}</span>
+                    <p className="text-[10px] text-slate-450 truncate mt-1">
+                      {isTyping === session.id ? (
+                        <span className="text-[#0F2C59] font-semibold italic">typing...</span>
+                      ) : (
+                        session.lastMessage
+                      )}
+                    </p>
+                  </div>
+
+                  {/* Unread Indicator */}
+                  {session.unreadCount > 0 && (
+                    <span className="w-5 h-5 rounded-full bg-[#0F2C59] text-white flex items-center justify-center text-[10px] font-bold shrink-0">
+                      {session.unreadCount}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Right Pane: Active Chat Window */}
+        <div className="flex-1 flex flex-col h-full bg-white">
+          {activeSession ? (
+            <>
+              {/* Chat Header */}
+              <div className="p-4 border-b border-slate-200 flex items-center justify-between bg-white">
+                <div className="flex items-center gap-3">
+                  <div className="relative">
+                    <div className="w-10 h-10 rounded-full bg-[#0F2C59]/10 text-[#0F2C59] flex items-center justify-center font-bold text-xs">
+                      {activeSession.userName.split(" ").map(n => n[0]).join("")}
+                    </div>
+                    <span className={`absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full border border-white ${
+                      activeSession.userStatus === "online" ? "bg-emerald-500" : "bg-slate-400"
+                    }`}></span>
+                  </div>
+                  <div>
+                    <h4 className="text-xs font-bold text-slate-900 leading-none">{activeSession.userName}</h4>
+                    <p className="text-[10px] text-slate-500 mt-1 font-semibold">
+                      {activeSession.userRole} @ <span className="text-slate-700 font-bold">{activeSession.userCompany}</span>
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className={`text-[8px] font-extrabold uppercase py-0.5 px-2 rounded-full ${
+                    activeSession.userStatus === "online" ? "bg-emerald-50 text-emerald-600 border border-emerald-100" : "bg-slate-100 text-slate-650"
+                  }`}>
+                    {activeSession.userStatus}
+                  </span>
+                </div>
+              </div>
+
+              {/* Message Thread */}
+              <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50/20">
+                {activeSession.messages.map((message) => {
+                  const isAdmin = message.sender === "admin";
+                  return (
+                    <div key={message.id} className={`flex flex-col ${isAdmin ? "items-end" : "items-start"}`}>
+                      <div className={`max-w-[70%] text-xs p-3 rounded-2xl ${
+                        isAdmin
+                          ? "bg-[#0F2C59] text-white rounded-tr-none shadow-sm"
+                          : "bg-white text-slate-800 border border-slate-200 rounded-tl-none shadow-sm"
+                      }`}>
+                        <p className="leading-relaxed font-medium whitespace-pre-wrap">{message.text}</p>
+                      </div>
+                      <span className="text-[8px] text-slate-400 font-bold mt-1 px-1">
+                        {isAdmin ? "You" : activeSession.userName} • {message.timestamp}
+                      </span>
+                    </div>
+                  );
+                })}
+
+                {/* Simulated Typing Indicator */}
+                {isTyping === activeSession.id && (
+                  <div className="flex flex-col items-start">
+                    <div className="bg-white text-slate-500 border border-slate-200 rounded-2xl rounded-tl-none p-3 shadow-sm flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
+                      <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
+                      <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
+                      <span className="text-[10px] text-slate-400 font-semibold ml-1">{activeSession.userName} is typing...</span>
+                    </div>
+                  </div>
+                )}
+
+                <div ref={messagesEndRef} />
+              </div>
+
+              {/* Footer Input */}
+              <div className="p-3 border-t border-slate-200 bg-slate-50/50">
+                <form onSubmit={handleSendChatMessage} className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    title="Attach Files"
+                    onClick={() => {
+                      setSuccessMsg("File uploads are disabled in simulation mode.");
+                      setTimeout(() => setSuccessMsg(""), 3000);
+                    }}
+                    className="p-2.5 hover:bg-slate-200 text-slate-400 hover:text-slate-650 rounded-xl transition-colors cursor-pointer border border-transparent hover:border-slate-300"
+                  >
+                    <Paperclip className="w-4 h-4" />
+                  </button>
+                  <input
+                    type="text"
+                    required
+                    placeholder={`Reply to ${activeSession.userName}...`}
+                    value={chatInput}
+                    onChange={(e) => setChatInput(e.target.value)}
+                    className="flex-1 bg-white border border-slate-250 border-slate-200 focus:border-[#0F2C59] rounded-xl px-4 py-2.5 text-xs text-slate-900 outline-none placeholder:text-slate-400 transition-all font-medium"
+                  />
+                  <button
+                    type="submit"
+                    title="Send Message"
+                    className="p-2.5 bg-[#0F2C59] hover:bg-[#0b2143] text-white rounded-xl transition-all cursor-pointer flex items-center justify-center shadow-md shadow-[#0F2C59]/10"
+                  >
+                    <Send className="w-4 h-4" />
+                  </button>
+                </form>
+              </div>
+            </>
+          ) : (
+            <div className="flex-1 flex flex-col items-center justify-center text-slate-400 p-8">
+              <MessageSquare className="w-12 h-12 text-slate-300 mb-3" />
+              <p className="text-xs font-semibold uppercase tracking-wider">No Active Conversation</p>
+              <p className="text-[11px] text-slate-400 text-center mt-1">Select a customer from the left panel to begin chatting.</p>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  };
+
   const getActiveView = () => {
     // AI Tools
     if (primarySection === "ai") {
@@ -960,6 +1326,10 @@ export default function CatchAllDashboardPage() {
     // Support Tickets
     if (primarySection === "support" && subSection === "tickets") {
       return renderSupportTickets();
+    }
+    // Support Live Chat
+    if (primarySection === "support" && subSection === "chat") {
+      return renderLiveChat();
     }
     // Fallback: Generic Mock
     return renderGeneric();

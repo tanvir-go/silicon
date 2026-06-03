@@ -222,6 +222,28 @@ const serviceData: Record<string, ServiceContent> = {
     ],
     parent: { name: "Application Services", slug: "application-services" }
   },
+  "uiux-design": {
+    heroTitle: "Premium UI/UX Design & User Research",
+    heroSub: "We design user-centric interfaces that are beautiful, intuitive, and drive conversions.",
+    featureTitle: "Human-Centered Design for Modern Interfaces",
+    featureText: "Our designers combine behavioral psychology, research, and interactive prototyping to build interfaces that users love.",
+    gridTitle: "Design Capabilities",
+    gridItems: [
+      { icon: <PenTool className="w-8 h-8 text-[#0F2C59]" />, text: "User Experience (UX) Research" },
+      { icon: <MonitorSmartphone className="w-8 h-8 text-[#0F2C59]" />, text: "User Interface (UI) Visual Design" },
+      { icon: <Settings className="w-8 h-8 text-[#0F2C59]" />, text: "High-Fidelity Prototyping" },
+      { icon: <Briefcase className="w-8 h-8 text-[#0F2C59]" />, text: "Custom Component Design Systems" }
+    ],
+    whyList: [
+      "Iterative Feedback Design Loops",
+      "Unique Modern Brand Identity",
+      "Accessible Interfaces (WCAG Aligned)",
+      "Multi-Device Responsive Mockups",
+      "Interactive Working Figma Prototypes"
+    ],
+    parent: { name: "Application Services", slug: "application-services" }
+  },
+
   "custom-software-solutions": {
     heroTitle: "Tailored Custom Software Solutions",
     heroSub: "Solve complex organizational challenges with bespoke software engineered from the ground up.",
@@ -632,6 +654,27 @@ const serviceData: Record<string, ServiceContent> = {
     parent: { name: "Managed IT & Consulting", slug: "managed-it-consulting" }
   },
   "24-7-remote-monitoring": {
+    heroTitle: "24/7 Remote Monitoring & NOC Support",
+    heroSub: "Maintain uninterrupted system uptime with continuous telemetry monitoring.",
+    featureTitle: "Proactive Remote Operations NOC Support",
+    featureText: "We configure monitoring metrics across servers, databases, and networks, reacting instantly to any anomaly alerts.",
+    gridTitle: "Monitoring Capabilities",
+    gridItems: [
+      { icon: <Server className="w-8 h-8 text-[#0F2C59]" />, text: "Continuous Server Metrics Scans" },
+      { icon: <Network className="w-8 h-8 text-[#0F2C59]" />, text: "Real-Time Network Latency Logs" },
+      { icon: <Settings className="w-8 h-8 text-[#0F2C59]" />, text: "Instant Incident Alert Dispatchers" },
+      { icon: <ShieldCheck className="w-8 h-8 text-[#0F2C59]" />, text: "Database Health System Checks" }
+    ],
+    whyList: [
+      "Uninterrupted Operation Continuity",
+      "Sub-Minute Incident Triage Times",
+      "Automated System Check Routines",
+      "Detailed Monthly Performance Files",
+      "Proactive Outage Avoidances"
+    ],
+    parent: { name: "Managed IT & Consulting", slug: "managed-it-consulting" }
+  },
+  "247-remote-monitoring": {
     heroTitle: "24/7 Remote Monitoring & NOC Support",
     heroSub: "Maintain uninterrupted system uptime with continuous telemetry monitoring.",
     featureTitle: "Proactive Remote Operations NOC Support",

@@ -88,6 +88,10 @@ export interface BlogPost {
     role: string;
     avatar: string;
   };
+  metaTitle?: string;
+  metaDescription?: string;
+  keywords?: string;
+  slug?: string;
 }
 
 export interface TimelineMilestone {

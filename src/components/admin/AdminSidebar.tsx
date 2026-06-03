@@ -160,15 +160,7 @@ export default function AdminSidebar({ isOpen, setIsOpen }: SidebarProps) {
     {
       name: "Settings",
       icon: Settings,
-      items: [
-        { name: "General Settings", href: "/admin/dashboard/settings?tab=general" },
-        { name: "Shipping Settings", href: "/admin/dashboard/settings?tab=shipping" },
-        { name: "Currency Settings", href: "/admin/dashboard/settings?tab=currency" },
-        { name: "Tax Settings", href: "/admin/dashboard/settings?tab=tax" },
-        { name: "Email Settings", href: "/admin/dashboard/settings?tab=email" },
-        { name: "Notification Settings", href: "/admin/dashboard/settings?tab=notifications" },
-        { name: "SEO Settings", href: "/admin/dashboard/settings?tab=seo" }
-      ]
+      href: "/admin/dashboard/settings"
     },
     {
       name: "Integrations",
