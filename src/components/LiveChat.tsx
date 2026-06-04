@@ -58,8 +58,17 @@ export default function LiveChat() {
         body: JSON.stringify({ messages: newMessages })
       });
 
-      const data = await response.json();
-      const replyText = data.text || "I apologize, I am experiencing temporary difficulties connecting to my systems. Please feel free to email our solutions team at sales@silicon.com.bd or call us at 09614556655.";
+      let replyText = "";
+      if (response.ok) {
+        try {
+          const data = await response.json();
+          replyText = data.text;
+        } catch (_) {}
+      }
+      
+      if (!replyText) {
+        replyText = "Thanks for writing to us. Please reach our customer support line directly at 09614556655 or email us at sales@silicon.com.bd.";
+      }
 
       setMessages((prev) => [
         ...prev,
