@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import ScrollProgress from "@/components/ScrollProgress";
 import BackToTop from "@/components/BackToTop";
 import LoadingScreen from "@/components/LoadingScreen";
+import LiveChat from "@/components/LiveChat";
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -30,6 +31,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
       <div className="flex-grow">{children}</div>
       <Footer />
       <BackToTop />
+      <LiveChat />
     </>
   );
 }
