@@ -35,7 +35,7 @@ export default function LiveChat() {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isTyping]);
 
-  const handleSendMessage = (e: React.FormEvent) => {
+  const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!inputValue.trim()) return;
 
@@ -46,24 +46,20 @@ export default function LiveChat() {
       timestamp: new Date(),
     };
 
-    setMessages((prev) => [...prev, userMsg]);
-    const userQuery = inputValue.trim().toLowerCase();
+    const newMessages = [...messages, userMsg];
+    setMessages(newMessages);
     setInputValue("");
     setIsTyping(true);
 
-    // Simulate smart B2B support agent responses
-    setTimeout(() => {
-      let replyText = "Thank you for reaching out! One of our Enterprise Solution Specialists will join this conversation shortly. For immediate assistance, feel free to call our support line at 09614556655.";
-      
-      if (userQuery.includes("server") || userQuery.includes("dell") || userQuery.includes("hpe")) {
-        replyText = "We offer a wide range of Dell PowerEdge and HPE ProLiant Rack Servers. Let us know your core count, RAM, and storage requirements so we can prepare a custom B2B quote for you!";
-      } else if (userQuery.includes("switch") || userQuery.includes("cisco") || userQuery.includes("aruba")) {
-        replyText = "We are an authorized reseller of Cisco Catalyst/Nexus and Aruba Instant On network switches. Could you specify if you need PoE support and the preferred port density (e.g., 24-port or 48-port)?";
-      } else if (userQuery.includes("vmware") || userQuery.includes("vsphere") || userQuery.includes("license")) {
-        replyText = "We specialize in VMware vSphere licensing, VCF Cloud Management, and backup software suites. Let us know if you require a new license key subscription or an upgrade/renewal.";
-      } else if (userQuery.includes("contact") || userQuery.includes("email") || userQuery.includes("phone")) {
-        replyText = "You can contact our sales team directly at sales@silicon.com.bd, call us at 09614556655, or submit an inquiry via our Contact form.";
-      }
+    try {
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages: newMessages })
+      });
+
+      const data = await response.json();
+      const replyText = data.text || "I apologize, I am experiencing temporary difficulties connecting to my systems. Please feel free to email our solutions team at sales@silicon.com.bd or call us at 09614556655.";
 
       setMessages((prev) => [
         ...prev,
@@ -74,8 +70,20 @@ export default function LiveChat() {
           timestamp: new Date(),
         },
       ]);
+    } catch (err) {
+      console.error("AI Chat Error:", err);
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: Math.random().toString(36).substring(7),
+          sender: "agent",
+          text: "Thanks for writing to us. Please reach our customer support line directly at 09614556655 or sales@silicon.com.bd.",
+          timestamp: new Date(),
+        },
+      ]);
+    } finally {
       setIsTyping(false);
-    }, 1500);
+    }
   };
 
   return (
