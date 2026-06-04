@@ -27,11 +27,24 @@ You represent senior solutions management, including Md Mizanur Rahman (Senior M
 Always reply professionally, concisely, and with premium enterprise tone. Emphasize B2B procurement, Dell/HPE Servers, Cisco/Aruba networking, VMware virtualization licensing, and corporate support contracts. Keep your answers brief (1-3 sentences maximum) suitable for a live chat popup window. Do not output markdown lists or bold tags where possible, keep it in conversational plain text.`
     });
 
+    // Format Gemini history. Constraints: first message MUST be 'user', and roles must alternate.
+    const rawHistory = messages.slice(0, -1);
+    const formattedHistory: any[] = [];
+    let expectedRole = "user";
+
+    for (const msg of rawHistory) {
+      const role = msg.sender === "user" ? "user" : "model";
+      if (role === expectedRole) {
+        formattedHistory.push({
+          role: role,
+          parts: [{ text: msg.text }]
+        });
+        expectedRole = expectedRole === "user" ? "model" : "user";
+      }
+    }
+
     const chat = model.startChat({
-      history: messages.slice(0, -1).map((msg: any) => ({
-        role: msg.sender === "user" ? "user" : "model",
-        parts: [{ text: msg.text }]
-      }))
+      history: formattedHistory
     });
 
     const lastMessage = messages[messages.length - 1]?.text || "";
