@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { shopProducts } from "@/data/mockProducts";
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY || process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "AIzaSyBn-zlc9qrnAIqcUVyu8VaPtVW_pU2lNtw";
 
@@ -59,15 +60,29 @@ Always reply professionally, concisely, and with premium enterprise tone. Emphas
     // Simulate smart B2B support agent responses as a fallback
     const lastMessage = messages[messages.length - 1]?.text || "";
     const userQuery = lastMessage.toLowerCase();
-    let replyText = "Thank you for reaching out! One of our Enterprise Solution Specialists will get back to you shortly. For immediate assistance, feel free to call our support line at 09614556655.";
     
-    if (userQuery.includes("server") || userQuery.includes("dell") || userQuery.includes("hpe")) {
+    // Check if user is asking about product availability
+    const matchedProduct = shopProducts.find(p => 
+      userQuery.includes(p.id) || 
+      userQuery.includes(p.title.toLowerCase()) ||
+      p.title.toLowerCase().split(" ").filter(w => w.length > 3).some(w => userQuery.includes(w))
+    );
+
+    let replyText = "Thank you for reaching out! One of our Enterprise Solution Specialists will get back to you shortly. For immediate assistance, feel free to call our support line at 09614556655.";
+
+    if (matchedProduct) {
+      replyText = `Yes, the ${matchedProduct.title} is available in our procurement catalog. The stock status is currently "${matchedProduct.stockStatus}". For customized configuration or pricing, please contact our team at sales@silicon.com.bd or call 09614556655.`;
+    } else if (userQuery.includes("available") || userQuery.includes("stock") || userQuery.includes("buy") || userQuery.includes("price")) {
+      replyText = "Many of our enterprise items (Dell PowerEdge, Cisco Switches, VMware licensing) are available and configured to order. Please tell us which specific product or model you are interested in!";
+    } else if (userQuery.includes("silicon") || userQuery.includes("company") || userQuery.includes("who are you") || userQuery.includes("about")) {
+      replyText = "Silicon Computing Ltd. (SCL) is a premier B2B IT infrastructure and Enterprise Solutions provider in Bangladesh, specializing in corporate servers, high-performance network switches, virtual machines, and cloud solutions.";
+    } else if (userQuery.includes("server") || userQuery.includes("dell") || userQuery.includes("hpe")) {
       replyText = "We offer a wide range of Dell PowerEdge and HPE ProLiant Rack Servers. Please share your required system specs (cores, RAM, storage) or email us at sales@silicon.com.bd for a custom B2B quote.";
     } else if (userQuery.includes("switch") || userQuery.includes("cisco") || userQuery.includes("aruba")) {
       replyText = "We specialize in Cisco Catalyst/Nexus and Aruba network switch deployments. Let us know if you require managed PoE solutions and we'll draft an inventory quotation for you.";
     } else if (userQuery.includes("vmware") || userQuery.includes("vsphere") || userQuery.includes("license")) {
       replyText = "Our licensing experts can assist you with VMware vSphere, VCF Cloud Automation, and backup virtualization renew/purchasing. Email us directly at sales@silicon.com.bd for license pricing.";
-    } else if (userQuery.includes("contact") || userQuery.includes("email") || userQuery.includes("phone") || userQuery.includes("address")) {
+    } else if (userQuery.includes("contact") || userQuery.includes("email") || userQuery.includes("phone") || userQuery.includes("address") || userQuery.includes("mizan")) {
       replyText = "You can contact our sales team at sales@silicon.com.bd, call us at 09614556655, or reach Md Mizanur Rahman (Senior Manager-Enterprise Solution).";
     }
 
