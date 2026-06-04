@@ -30,6 +30,11 @@ const executives: Member[] = [
     name: "MD Monjurul Islam",
     role: "Technical Advisor (Voluntarily)",
     image: "/MD Monjurul Islam.webp"
+  },
+  {
+    name: "Md Mizanur Rahman",
+    role: "Senior Manager-Enterprise Solution",
+    image: "/Md Mizanur Rahman.webp"
   }
 ];
 
@@ -58,15 +63,12 @@ export default function ManagementTeam() {
   const showControls = maxIndex > 0;
 
   const handlePrev = () => {
-    setCurrentIndex((prev) => Math.max(prev - 1, 0));
+    setCurrentIndex((prev) => (prev === 0 ? maxIndex : prev - 1));
   };
 
   const handleNext = () => {
-    setCurrentIndex((prev) => Math.min(prev + 1, maxIndex));
+    setCurrentIndex((prev) => (prev >= maxIndex ? 0 : prev + 1));
   };
-
-  const isLeftDisabled = currentIndex === 0;
-  const isRightDisabled = currentIndex >= maxIndex;
 
   return (
     <section id="team" className="relative w-full py-20 bg-white overflow-hidden border-b border-slate-100">
@@ -87,24 +89,14 @@ export default function ManagementTeam() {
             <>
               <button
                 onClick={handlePrev}
-                disabled={isLeftDisabled}
-                className={`absolute left-0 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center border border-slate-100 shadow-md transition-all duration-300 z-20 ${
-                  isLeftDisabled 
-                    ? "bg-slate-50 text-slate-300 cursor-not-allowed opacity-50" 
-                    : "bg-white text-[#0F2C59] hover:bg-slate-50 hover:scale-105 cursor-pointer"
-                }`}
+                className="absolute left-0 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center border border-slate-100 shadow-md transition-all duration-300 z-20 bg-white text-[#0F2C59] hover:bg-slate-50 hover:scale-105 cursor-pointer"
                 aria-label="Previous management member"
               >
                 <ChevronLeft className="w-5 h-5" />
               </button>
               <button
                 onClick={handleNext}
-                disabled={isRightDisabled}
-                className={`absolute right-0 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center border border-slate-100 shadow-md transition-all duration-300 z-20 ${
-                  isRightDisabled 
-                    ? "bg-slate-50 text-slate-300 cursor-not-allowed opacity-50" 
-                    : "bg-white text-[#0F2C59] hover:bg-slate-50 hover:scale-105 cursor-pointer"
-                }`}
+                className="absolute right-0 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center border border-slate-100 shadow-md transition-all duration-300 z-20 bg-white text-[#0F2C59] hover:bg-slate-50 hover:scale-105 cursor-pointer"
                 aria-label="Next management member"
               >
                 <ChevronRight className="w-5 h-5" />

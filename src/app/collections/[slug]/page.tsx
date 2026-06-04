@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import { useParams } from "next/navigation";
 import ContactSection from "@/sections/ContactSection";
-import { shopProducts } from "@/data/mockProducts";
+import { useAdminState } from "@/hooks/useAdminState";
 
 // Brands Metadata Dictionary
 const BRANDS_DATA: Record<string, { name: string; tag: string; desc: string; capabilities: string[] }> = {
@@ -180,11 +180,20 @@ const TYPES_DATA: Record<string, { title: string; category: "Compute" | "Network
 export default function ProductsDynamicPage() {
   const params = useParams();
   const slug = params.slug as string;
+  const { products, loading } = useAdminState();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#F5F7F9] pt-32 pb-24 flex items-center justify-center">
+        <div className="text-slate-500 font-extrabold text-sm animate-pulse">Loading Details...</div>
+      </div>
+    );
+  }
 
   // 1. BRAND PAGE ROUTING
   if (BRANDS_DATA[slug]) {
     const brand = BRANDS_DATA[slug];
-    const brandProducts = shopProducts.filter(p => p.brand.toLowerCase() === slug);
+    const brandProducts = products.filter(p => p.brand.toLowerCase() === slug);
 
     return (
       <main className="min-h-screen bg-[#F5F7F9] pt-32 pb-16 relative overflow-hidden">
@@ -308,7 +317,7 @@ export default function ProductsDynamicPage() {
     const type = TYPES_DATA[slug];
     
     // Filter products whose category matches or shortDesc matches type keywords
-    const categoryProducts = shopProducts.filter(p => 
+    const categoryProducts = products.filter(p => 
       p.category === type.category || 
       p.title.toLowerCase().includes(slug.split("-")[0]) ||
       p.shortDesc.toLowerCase().includes(slug.split("-")[0])
@@ -430,7 +439,7 @@ export default function ProductsDynamicPage() {
   }
 
   // 3. PRODUCT DETAILS ROUTING (FALLBACK)
-  const product = shopProducts.find(p => p.id === slug);
+  const product = products.find(p => p.id === slug);
 
   if (!product) {
     return (

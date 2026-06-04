@@ -23,6 +23,7 @@ export default function ProductsManagerPage() {
   const [crawlLoading, setCrawlLoading] = useState(false);
   const [crawlError, setCrawlError] = useState("");
   const [crawledData, setCrawledData] = useState<any>(null);
+  const [selectedCrawlIndices, setSelectedCrawlIndices] = useState<number[]>([]);
 
   // CSV Import States
   const [csvOpen, setCsvOpen] = useState(false);
@@ -128,6 +129,7 @@ export default function ProductsManagerPage() {
     setCrawlLoading(true);
     setCrawlError("");
     setCrawledData(null);
+    setSelectedCrawlIndices([]);
 
     try {
       const res = await fetch(`/api/crawl?url=${encodeURIComponent(crawlUrl.trim())}`);
@@ -136,6 +138,9 @@ export default function ProductsManagerPage() {
         throw new Error(data.error || "Failed to crawl target product link");
       }
       setCrawledData(data);
+      if (data.type === "multiple" && data.products) {
+        setSelectedCrawlIndices(data.products.map((_: any, idx: number) => idx));
+      }
     } catch (err: any) {
       setCrawlError(err.message || "Unable to scrap metadata. Please check the URL and try again.");
     } finally {
@@ -160,6 +165,29 @@ export default function ProductsManagerPage() {
 
     setCrawlerOpen(false);
     setModalOpen(true);
+  };
+
+  const handleBulkImportCrawled = () => {
+    if (!crawledData || !crawledData.products || selectedCrawlIndices.length === 0) return;
+
+    selectedCrawlIndices.forEach((idx: number) => {
+      const item = crawledData.products[idx];
+      addProduct({
+        title: item.title,
+        brand: item.brand,
+        price: Number(item.price),
+        category: item.category,
+        stockStatus: "In Stock",
+        shortDesc: item.shortDesc,
+        image: item.image,
+        rating: item.rating || 4.8,
+        features: item.features || []
+      });
+    });
+
+    setCrawlerOpen(false);
+    setCrawledData(null);
+    setSelectedCrawlIndices([]);
   };
 
   // CSV Importer Logic Helpers
@@ -722,7 +750,105 @@ export default function ProductsManagerPage() {
               </div>
             )}
 
-            {crawledData && (
+            {crawledData && crawledData.type === "multiple" && (
+              <div className="mt-6 space-y-4 text-left">
+                <div className="flex justify-between items-center border-b border-slate-200/60 pb-2">
+                  <h4 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+                    Detected Catalog Products ({crawledData.products.length})
+                  </h4>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (selectedCrawlIndices.length === crawledData.products.length) {
+                        setSelectedCrawlIndices([]);
+                      } else {
+                        setSelectedCrawlIndices(crawledData.products.map((_: any, idx: number) => idx));
+                      }
+                    }}
+                    className="text-[9px] font-bold text-[#0F2C59] hover:underline uppercase tracking-wider"
+                  >
+                    {selectedCrawlIndices.length === crawledData.products.length ? "Deselect All" : "Select All"}
+                  </button>
+                </div>
+
+                <div className="border border-slate-200 rounded-xl overflow-hidden max-h-56 overflow-y-auto no-scrollbar">
+                  <table className="w-full text-left border-collapse text-[10px]">
+                    <thead>
+                      <tr className="border-b border-slate-200 bg-slate-50 text-[9px] font-bold text-slate-500 uppercase tracking-wider">
+                        <th className="py-2 px-3 w-8">Select</th>
+                        <th className="py-2 px-3">Product</th>
+                        <th className="py-2 px-3">Brand</th>
+                        <th className="py-2 px-3">Category</th>
+                        <th className="py-2 px-3">Price</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100 bg-white">
+                      {crawledData.products.map((item: any, idx: number) => {
+                        const isSelected = selectedCrawlIndices.includes(idx);
+                        return (
+                          <tr key={idx} className="hover:bg-slate-50/50 cursor-pointer" onClick={() => {
+                            if (isSelected) {
+                              setSelectedCrawlIndices(selectedCrawlIndices.filter((i: number) => i !== idx));
+                            } else {
+                              setSelectedCrawlIndices([...selectedCrawlIndices, idx]);
+                            }
+                          }}>
+                            <td className="py-2 px-3 align-middle" onClick={(e) => e.stopPropagation()}>
+                              <input
+                                type="checkbox"
+                                checked={isSelected}
+                                onChange={(e) => {
+                                  if (e.target.checked) {
+                                    setSelectedCrawlIndices([...selectedCrawlIndices, idx]);
+                                  } else {
+                                    setSelectedCrawlIndices(selectedCrawlIndices.filter((i: number) => i !== idx));
+                                  }
+                                }}
+                                className="w-3.5 h-3.5 rounded border-slate-350 text-[#0F2C59] focus:ring-[#0F2C59] cursor-pointer"
+                              />
+                            </td>
+                            <td className="py-2 px-3 font-bold text-slate-800 flex items-center gap-2 max-w-[150px] truncate">
+                              <img src={item.image} alt={item.title} className="w-6 h-6 rounded object-cover border border-slate-200 bg-white" />
+                              <span className="truncate">{item.title}</span>
+                            </td>
+                            <td className="py-2 px-3 text-slate-600 font-medium">{item.brand}</td>
+                            <td className="py-2 px-3">
+                              <span className="text-[8px] bg-slate-100 text-slate-650 border border-slate-200 py-0.5 px-2 rounded-full uppercase font-bold">
+                                {item.category}
+                              </span>
+                            </td>
+                            <td className="py-2 px-3 font-semibold text-slate-808">৳{item.price.toLocaleString("en-BD")}</td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+
+                <div className="pt-2 flex justify-end gap-3.5 border-t border-slate-200/60 font-semibold">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setCrawledData(null);
+                      setSelectedCrawlIndices([]);
+                    }}
+                    className="text-[10px] font-bold text-slate-500 hover:text-slate-800 uppercase tracking-wider cursor-pointer"
+                  >
+                    Clear Selection
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleBulkImportCrawled}
+                    disabled={selectedCrawlIndices.length === 0}
+                    className="flex items-center gap-1.5 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white rounded-xl text-[10px] font-bold uppercase tracking-wider shadow-sm transition-colors cursor-pointer"
+                  >
+                    Import Selected ({selectedCrawlIndices.length})
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {crawledData && crawledData.type !== "multiple" && (
               <div className="mt-6 border border-slate-200 rounded-xl p-4 bg-slate-50/50 space-y-4 text-left">
                 <h4 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest border-b border-slate-200/60 pb-1.5">
                   Crawled Metadata Preview
@@ -764,12 +890,14 @@ export default function ProductsManagerPage() {
 
                 <div className="pt-2 flex justify-end gap-3.5 border-t border-slate-200/60 font-semibold">
                   <button
+                    type="button"
                     onClick={() => setCrawledData(null)}
                     className="text-[10px] font-bold text-slate-500 hover:text-slate-800 uppercase tracking-wider cursor-pointer"
                   >
                     Clear
                   </button>
                   <button
+                    type="button"
                     onClick={handleImportCrawled}
                     className="flex items-center gap-1.5 px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-[10px] font-bold uppercase tracking-wider shadow-sm transition-colors cursor-pointer"
                   >

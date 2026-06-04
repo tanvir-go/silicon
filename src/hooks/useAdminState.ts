@@ -87,7 +87,7 @@ export interface GeneralSettings {
 }
 
 // Initial Mock Data Sets
-const initialOrders: Order[] = [
+export const initialOrders: Order[] = [
   {
     id: "SCL-ORD-1001",
     customerName: "MD Nasir Feroz",
@@ -189,7 +189,7 @@ const initialOrders: Order[] = [
   }
 ];
 
-const initialCustomers: Customer[] = [
+export const initialCustomers: Customer[] = [
   { id: "cust-1", name: "MD Nasir Feroz", email: "nasir@silicon.com", phone: "+880 1711-223344", joinedDate: "2025-01-10", status: "Active", ordersCount: 1, totalSpent: 420000, loyaltyTier: "Platinum", loyaltyPoints: 4200, reviewsCount: 3, wishlistCount: 5 },
   { id: "cust-2", name: "Tasnim Rahman", email: "tasnim@gmail.com", phone: "+880 1822-998877", joinedDate: "2025-02-15", status: "Active", ordersCount: 1, totalSpent: 342000, loyaltyTier: "Gold", loyaltyPoints: 3420, reviewsCount: 1, wishlistCount: 2 },
   { id: "cust-3", name: "Anik Hasan", email: "anik@outlook.com", phone: "+880 1912-345678", joinedDate: "2025-03-01", status: "Active", ordersCount: 1, totalSpent: 504000, loyaltyTier: "Platinum", loyaltyPoints: 5040, reviewsCount: 0, wishlistCount: 8 },
@@ -197,21 +197,21 @@ const initialCustomers: Customer[] = [
   { id: "cust-5", name: "Naila Zaman", email: "naila@silicon.com", phone: "+880 1777-665544", joinedDate: "2025-04-05", status: "Active", ordersCount: 1, totalSpent: 1020000, loyaltyTier: "Platinum", loyaltyPoints: 10200, reviewsCount: 4, wishlistCount: 12 }
 ];
 
-const initialSuppliers: Supplier[] = [
+export const initialSuppliers: Supplier[] = [
   { id: "sup-1", name: "HP Enterprise Bangladesh", contactPerson: "Masud Rana", email: "masud@hpe.com.bd", phone: "+880 1711-889900", productsSupplied: ["Compute", "Storage"], status: "Active" },
   { id: "sup-2", name: "Cisco Systems Asia", contactPerson: "Sarah Connor", email: "sarah@cisco.com", phone: "+65 6778-9900", productsSupplied: ["Networking"], status: "Active" },
   { id: "sup-3", name: "Dell Technologies BD", contactPerson: "Imran Khan", email: "imran@dell.com.bd", phone: "+880 1911-778899", productsSupplied: ["Compute"], status: "Active" }
 ];
 
-const initialCoupons: Coupon[] = [
+export const initialCoupons: Coupon[] = [
   { id: "cop-1", code: "SILICON10", discountType: "percentage", value: 10, expiryDate: "2026-12-31", status: "Active", usageCount: 42 },
   { id: "cop-2", code: "SERVER50K", discountType: "fixed", value: 50000, expiryDate: "2026-09-30", status: "Active", usageCount: 12 },
   { id: "cop-3", code: "WELCOME5", discountType: "percentage", value: 5, expiryDate: "2026-06-30", status: "Active", usageCount: 85 }
 ];
 
-const defaultSettings: GeneralSettings = {
+export const defaultSettings: GeneralSettings = {
   siteName: "Silicon Computing Ltd",
-  siteEmail: "info@silicon.com.bd",
+  siteEmail: "sales@silicon.com.bd",
   currency: "BDT",
   taxRate: 15,
   shippingFee: 2000,
@@ -257,18 +257,28 @@ export function useAdminState() {
 
             // 2. Products Real-time Sync
             const unsubProducts = onSnapshot(collection(db, "products"), (snap) => {
-              if (snap.empty) {
+              const firebaseProducts: ShopProduct[] = [];
+              snap.forEach((d) => firebaseProducts.push(d.data() as ShopProduct));
+              
+              const firebaseIds = new Set(firebaseProducts.map(p => p.id));
+              const missing = shopProducts.filter(p => !firebaseIds.has(p.id));
+              
+              if (missing.length > 0) {
                 const batch = writeBatch(db);
-                shopProducts.forEach((prod) => {
+                missing.forEach((prod) => {
                   batch.set(doc(db, "products", prod.id), prod);
                 });
                 batch.commit().catch(console.error);
-              } else {
-                const firebaseProducts: ShopProduct[] = [];
-                snap.forEach((d) => firebaseProducts.push(d.data() as ShopProduct));
-                setProducts(firebaseProducts);
-                localStorage.setItem("scl_products", JSON.stringify(firebaseProducts));
               }
+              
+              const allProducts = [...firebaseProducts];
+              missing.forEach(p => {
+                if (!allProducts.some(ap => ap.id === p.id)) {
+                  allProducts.push(p);
+                }
+              });
+              setProducts(allProducts);
+              localStorage.setItem("scl_products", JSON.stringify(allProducts));
             });
             unsubscribes.push(unsubProducts);
 
@@ -406,7 +416,16 @@ export function useAdminState() {
           }
 
           if (storedProducts) {
-            setProducts(JSON.parse(storedProducts));
+            const parsed = JSON.parse(storedProducts) as ShopProduct[];
+            const parsedIds = new Set(parsed.map((p) => p.id));
+            const missing = shopProducts.filter((p) => !parsedIds.has(p.id));
+            if (missing.length > 0) {
+              const combined = [...parsed, ...missing];
+              localStorage.setItem("scl_products", JSON.stringify(combined));
+              setProducts(combined);
+            } else {
+              setProducts(parsed);
+            }
           } else {
             localStorage.setItem("scl_products", JSON.stringify(shopProducts));
             setProducts(shopProducts);
