@@ -35,8 +35,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`h-full antialiased ${openSans.variable} ${quicksand.variable}`}>
-      <body className="min-h-full flex flex-col bg-white text-slate-800 selection:bg-primary-500 selection:text-white transition-colors duration-300 font-sans">
+    <html lang="en" className={`h-full antialiased ${openSans.variable} ${quicksand.variable}`} suppressHydrationWarning>
+      <body className="min-h-full flex flex-col bg-white text-slate-800 selection:bg-primary-500 selection:text-white transition-colors duration-300 font-sans" suppressHydrationWarning>
         <MainLayout>{children}</MainLayout>
       </body>
     </html>

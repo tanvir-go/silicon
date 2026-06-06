@@ -5,8 +5,10 @@ import { shopProducts } from "@/data/mockProducts";
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY || process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "AIzaSyBn-zlc9qrnAIqcUVyu8VaPtVW_pU2lNtw";
 
 export async function POST(req: Request) {
+  let messages: any[] = [];
   try {
-    const { messages } = await req.json();
+    const body = await req.json();
+    messages = body.messages;
 
     if (!messages || !Array.isArray(messages)) {
       return NextResponse.json({ error: "Invalid messages array" }, { status: 400 });
