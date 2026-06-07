@@ -90,32 +90,32 @@ const industries: SolutionCard[] = [
   {
     title: "Banking, Financial Services & Insurance",
     desc: "Scale transaction telemetry with multi-region active-active database partitioning, end-to-end encryption pipelines, and automated real-time fraud auditing routines.",
-    link: "/industries/banking-and-finance"
+    link: "/solution-by-industry/banking-and-finance"
   },
   {
     title: "Healthcare & Life Sciences",
     desc: "Integrate deep neural classifier networks trained on secure patient registries. Deploy hardened HIPAA-compliant EHR data pipelines and clinical diagnostic engines.",
-    link: "/industries/healthcare"
+    link: "/solution-by-industry/healthcare"
   },
   {
     title: "Energy & SCADA Utilities",
     desc: "Protect power grids, water utilities, and SCADA controllers. Configure cryptographic edge boundary shields, zero-trust firewalls, and active SOC log tracking.",
-    link: "/industries/energy-and-scada-utilities"
+    link: "/solution-by-industry/energy-and-scada-utilities"
   },
   {
     title: "Retail & Omni-Channel Logistics",
     desc: "Synchronize multi-national inventory shifts with high-throughput event-driven message brokers. Compute dynamic shipping routes and optimize fleet routing.",
-    link: "/industries/retail"
+    link: "/solution-by-industry/retail"
   },
   {
     title: "Telecommunications & Networking",
     desc: "Unify geographically dispersed corporate centers, remote terminals, and call nodes. Optimize WAN communication with fiber failover lines and SD-WAN routing.",
-    link: "/industries/telecommunications"
+    link: "/solution-by-industry/telecommunications"
   },
   {
     title: "Government & Public Sector",
     desc: "Secure public sector directories, establish zero-trust directory services, design sovereign cloud transitions, and deliver robust business continuity strategies.",
-    link: "/industries/public-sector"
+    link: "/solution-by-industry/public-sector"
   }
 ];
 

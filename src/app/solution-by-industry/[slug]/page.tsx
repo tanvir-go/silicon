@@ -177,7 +177,7 @@ export default function IndustriesDynamicPage() {
         <div className="flex items-center gap-2 text-xs font-semibold text-slate-400 mb-6 uppercase tracking-wider">
           <Link href="/" className="hover:text-primary-600 transition-colors">Home</Link>
           <ChevronRight className="w-3.5 h-3.5" />
-          <Link href="/industries" className="hover:text-primary-600 transition-colors">Industries</Link>
+          <Link href="/solution-by-industry" className="hover:text-primary-600 transition-colors">Industries</Link>
           <ChevronRight className="w-3.5 h-3.5" />
           <span className="text-primary-600 font-bold">{formatTitle(slug)}</span>
         </div>
