@@ -157,7 +157,7 @@ export default function Hero() {
               </button>
             </Link>
             
-            <Link href="/solutions">
+            <Link href="/solution-by-product">
               <button className="px-6.5 py-4 rounded-md border border-white/20 hover:border-white hover:bg-white/10 text-white font-black text-[11px] tracking-widest uppercase transition-all duration-300 cursor-pointer flex items-center gap-2">
                 <Play className="w-3 h-3 text-[#D32F2F] fill-current" />
                 DISCOVER SOLUTIONS

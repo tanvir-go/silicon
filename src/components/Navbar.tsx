@@ -16,7 +16,7 @@ interface NavLink {
 }
 
 const navLinks: NavLink[] = [
-  { label: "Solutions", href: "/solutions", hasDropdown: true },
+  { label: "Solutions", href: "#", hasDropdown: true },
   { label: "Products", href: "/collections/product", hasDropdown: true },
   { label: "Services", href: "/services", hasDropdown: true },
   { label: "Industries", href: "/industries" },
@@ -48,7 +48,7 @@ export default function Navbar() {
 
   // Determine active link state to prevent shared layoutId collisions
   const getIsActive = (label: string): boolean => {
-    if (label === "Solutions") return pathname === "/solutions";
+    if (label === "Solutions") return pathname === "/solution-by-product";
     if (label === "Services") return pathname === "/services";
     if (label === "Products") return pathname === "/collections/product";
     if (label === "Industries") return pathname === "/industries";
@@ -69,13 +69,13 @@ export default function Navbar() {
         <ul className="flex flex-col gap-2.5 text-xs text-slate-500 font-semibold">
           {["Compute", "Storage", "Network", "Security", "Software", "Database", "Supercomputing"].map((item) => (
             <li key={item}>
-              <Link href={`/solutions/${getSlug(item)}`} onClick={() => setHoveredMenu(null)} className="hover:text-[#D32F2F] transition-colors">
+              <Link href={`/solution-by-product/${getSlug(item)}`} onClick={() => setHoveredMenu(null)} className="hover:text-[#D32F2F] transition-colors">
                 {item}
               </Link>
             </li>
           ))}
           <li className="mt-1">
-            <Link href="/solutions" onClick={() => setHoveredMenu(null)} className="text-[#D32F2F] hover:underline flex items-center gap-1 font-bold">
+            <Link href="/solution-by-product" onClick={() => setHoveredMenu(null)} className="text-[#D32F2F] hover:underline flex items-center gap-1 font-bold">
               &gt; View All
             </Link>
           </li>
@@ -100,13 +100,13 @@ export default function Navbar() {
             "IT Service Management (ITSM)"
           ].map((item) => (
             <li key={item}>
-              <Link href={`/solutions/${getSlug(item)}`} onClick={() => setHoveredMenu(null)} className="hover:text-[#D32F2F] transition-colors">
+              <Link href={`/solution-by-product/${getSlug(item)}`} onClick={() => setHoveredMenu(null)} className="hover:text-[#D32F2F] transition-colors">
                 {item}
               </Link>
             </li>
           ))}
           <li className="mt-1">
-            <Link href="/solutions" onClick={() => setHoveredMenu(null)} className="text-[#D32F2F] hover:underline flex items-center gap-1 font-bold">
+            <Link href="/solution-by-product" onClick={() => setHoveredMenu(null)} className="text-[#D32F2F] hover:underline flex items-center gap-1 font-bold">
               &gt; View All
             </Link>
           </li>
@@ -201,7 +201,7 @@ export default function Navbar() {
         <ul className="flex flex-col gap-2.5 text-xs text-[#0F2C59] font-black">
           {[
             { label: "Product types", href: "/collections/product" },
-            { label: "Solutions by topic", href: "/solutions" },
+            { label: "Solutions by topic", href: "/solution-by-product" },
             { label: "Industries", href: "/industries" }
           ].map((item) => (
             <li key={item.label}>
@@ -528,8 +528,8 @@ export default function Navbar() {
                         >
                           {link.label === "Solutions" && (
                             <>
-                              <Link href="/solutions" onClick={() => setIsMobileMenuOpen(false)} className="text-xs text-slate-500 font-bold">Solutions by Product</Link>
-                              <Link href="/solutions" onClick={() => setIsMobileMenuOpen(false)} className="text-xs text-slate-500 font-bold">Solutions by Use Case</Link>
+                              <Link href="/solution-by-product" onClick={() => setIsMobileMenuOpen(false)} className="text-xs text-slate-500 font-bold">Solutions by Product</Link>
+                              <Link href="/solution-by-product" onClick={() => setIsMobileMenuOpen(false)} className="text-xs text-slate-500 font-bold">Solutions by Use Case</Link>
                               <Link href="/industries" onClick={() => setIsMobileMenuOpen(false)} className="text-xs text-slate-500 font-bold">Solutions by Industries</Link>
                             </>
                           )}
