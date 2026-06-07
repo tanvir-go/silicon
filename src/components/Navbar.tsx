@@ -100,13 +100,13 @@ export default function Navbar() {
             "IT Service Management (ITSM)"
           ].map((item) => (
             <li key={item}>
-              <Link href={`/solution-by-product/${getSlug(item)}`} onClick={() => setHoveredMenu(null)} className="hover:text-[#D32F2F] transition-colors">
+              <Link href={`/solution-by-use-case/${getSlug(item)}`} onClick={() => setHoveredMenu(null)} className="hover:text-[#D32F2F] transition-colors">
                 {item}
               </Link>
             </li>
           ))}
           <li className="mt-1">
-            <Link href="/solution-by-product" onClick={() => setHoveredMenu(null)} className="text-[#D32F2F] hover:underline flex items-center gap-1 font-bold">
+            <Link href="/solution-by-use-case" onClick={() => setHoveredMenu(null)} className="text-[#D32F2F] hover:underline flex items-center gap-1 font-bold">
               &gt; View All
             </Link>
           </li>
