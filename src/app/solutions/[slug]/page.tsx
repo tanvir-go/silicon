@@ -426,8 +426,24 @@ export default function SolutionsDynamicPage() {
   const slug = params.slug as string;
   const content = solutionsContent[slug] || getFallbackData(slug);
   
-  // Filter relevant blog posts for this solution
-  const relevantPosts = blogPostsData.slice(0, 12); // Show top blogs for premium news/resources section
+  // Filter relevant blog posts for this solution dynamically by category
+  const getRelevantPosts = (slugString: string) => {
+    const norm = (slugString || "").toLowerCase();
+    let targetCat = "";
+    if (norm.includes("ai") || norm.includes("artificial") || norm.includes("machine") || norm.includes("cognitive")) {
+      targetCat = "AI & Innovation";
+    } else if (norm.includes("security") || norm.includes("protection") || norm.includes("sec")) {
+      targetCat = "Cyber Security";
+    } else {
+      targetCat = "Cloud Operations";
+    }
+    const matched = blogPostsData.filter(
+      (post) => post.category.toLowerCase() === targetCat.toLowerCase()
+    );
+    return matched.length > 0 ? matched : blogPostsData;
+  };
+
+  const relevantPosts = getRelevantPosts(slug);
 
   return (
     <main className="min-h-screen bg-[#F8FAFC] pt-32 pb-16 relative overflow-hidden font-sans text-slate-800">
