@@ -289,15 +289,31 @@ export default function IndustriesPage() {
                 </div>
 
                 {/* Discuss portal CTA */}
-                <Link 
-                  href={`/contact?industry=${encodeURIComponent(currentIndustry.title)}`}
-                  className="mt-2"
-                >
-                  <button className="w-full py-4 rounded-xl bg-[#0F2C59] hover:bg-[#0b1d3a] text-white font-extrabold text-xs tracking-wider uppercase transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer shadow-lg">
-                    Inquire for Sector Deployment
-                    <ArrowRight className="w-4 h-4" />
-                  </button>
-                </Link>
+                <div className="grid sm:grid-cols-2 gap-4 mt-2">
+                  <Link 
+                    href={`/industries/${
+                      currentIndustry.id === "bfsi" ? "banking-and-finance" :
+                      currentIndustry.id === "logistics" ? "retail" :
+                      currentIndustry.id === "telecom" ? "telecommunications-and-networking" :
+                      currentIndustry.id === "government" ? "public-sector" :
+                      currentIndustry.id
+                    }`}
+                  >
+                    <button className="w-full py-4 rounded-xl border-2 border-[#0F2C59] text-[#0F2C59] hover:bg-[#0F2C59] hover:text-white font-extrabold text-xs tracking-wider uppercase transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer">
+                      View Full Solution Blueprint
+                      <ArrowRight className="w-4 h-4" />
+                    </button>
+                  </Link>
+
+                  <Link 
+                    href={`/contact?industry=${encodeURIComponent(currentIndustry.title)}`}
+                  >
+                    <button className="w-full py-4 rounded-xl bg-[#0F2C59] hover:bg-[#0b1d3a] text-white font-extrabold text-xs tracking-wider uppercase transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer shadow-lg">
+                      Inquire for Sector Deployment
+                      <ArrowRight className="w-4 h-4" />
+                    </button>
+                  </Link>
+                </div>
 
               </motion.div>
             </AnimatePresence>
