@@ -19,7 +19,7 @@ const navLinks: NavLink[] = [
   { label: "Solutions", href: "#", hasDropdown: true },
   { label: "Products", href: "/collections/product", hasDropdown: true },
   { label: "Services", href: "/services", hasDropdown: true },
-  { label: "Industries", href: "/solution-by-industry" },
+  { label: "Industries", href: "/industries" },
   { label: "Blogs", href: "/blog" },
   { label: "Company", href: "/about", hasDropdown: true },
   { label: "Contact us", href: "/contact" },
@@ -51,7 +51,7 @@ export default function Navbar() {
     if (label === "Solutions") return pathname === "/solution-by-product";
     if (label === "Services") return pathname === "/services";
     if (label === "Products") return pathname === "/collections/product";
-    if (label === "Industries") return pathname === "/solution-by-industry";
+    if (label === "Industries") return pathname === "/industries";
     if (label === "Blogs") return pathname === "/blog";
     if (label === "Company") return pathname === "/about" || pathname === "/team";
     if (label === "Contact us") return pathname === "/contact";
@@ -202,7 +202,7 @@ export default function Navbar() {
           {[
             { label: "Product types", href: "/collections/product" },
             { label: "Solutions by topic", href: "/solution-by-product" },
-            { label: "Industries", href: "/solution-by-industry" }
+            { label: "Industries", href: "/industries" }
           ].map((item) => (
             <li key={item.label}>
               <Link href={item.href} onClick={() => setHoveredMenu(null)} className="hover:text-[#D32F2F] transition-colors">
@@ -529,7 +529,7 @@ export default function Navbar() {
                           {link.label === "Solutions" && (
                             <>
                               <Link href="/solution-by-product" onClick={() => setIsMobileMenuOpen(false)} className="text-xs text-slate-500 font-bold">Solutions by Product</Link>
-                              <Link href="/solution-by-product" onClick={() => setIsMobileMenuOpen(false)} className="text-xs text-slate-500 font-bold">Solutions by Use Case</Link>
+                              <Link href="/solution-by-use-case" onClick={() => setIsMobileMenuOpen(false)} className="text-xs text-slate-500 font-bold">Solutions by Use Case</Link>
                               <Link href="/solution-by-industry" onClick={() => setIsMobileMenuOpen(false)} className="text-xs text-slate-500 font-bold">Solutions by Industries</Link>
                             </>
                           )}
