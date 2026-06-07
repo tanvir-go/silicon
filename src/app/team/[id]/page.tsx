@@ -75,7 +75,7 @@ export default function TeamMemberDetailPage() {
             <h1 className="text-xl sm:text-2xl font-black text-[#0F2C59] mb-1.5 leading-tight">
               {member.name}
             </h1>
-            <p className="text-xs font-black text-[#00B074] uppercase tracking-wider mb-4">
+            <p className="text-xs font-black text-[#000072] uppercase tracking-wider mb-4">
               {member.role}
             </p>
 

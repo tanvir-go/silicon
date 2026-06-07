@@ -155,7 +155,7 @@ export default function TeamPage() {
                       <h3 className="text-base font-extrabold text-[#0F2C59] mb-1.5 leading-snug">
                         {member.name}
                       </h3>
-                      <p className="text-[11px] font-black text-[#00B074] uppercase tracking-wider leading-relaxed">
+                      <p className="text-[11px] font-black text-[#000072] uppercase tracking-wider leading-relaxed">
                         {member.role}
                       </p>
                     </div>
