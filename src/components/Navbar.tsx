@@ -145,7 +145,7 @@ export default function Navbar() {
 
   // PRODUCTS Mega Menu content
   const renderProductsMenu = () => (
-    <div className="grid grid-cols-4 gap-6">
+    <div className="grid grid-cols-3 gap-6">
       {/* Column 1: Product types */}
       <div className="flex flex-col gap-4 text-left border-r border-slate-100 pr-3">
         <h4 className="text-xs font-black text-[#0F2C59] uppercase tracking-wider">
@@ -193,33 +193,7 @@ export default function Navbar() {
         </ul>
       </div>
 
-      {/* Column 3: Featured products */}
-      <div className="flex flex-col gap-4 text-left border-r border-slate-100 pr-3">
-        <h4 className="text-xs font-black text-[#0F2C59] uppercase tracking-wider">
-          Featured products
-        </h4>
-        <ul className="flex flex-col gap-3 text-xs text-slate-500 font-semibold">
-          {[
-            { title: "HPE ProLiant DL380 Gen10 Server", id: "hpe-proliant-dl380" },
-            { title: "Cisco Catalyst 9300 Switch", id: "cisco-catalyst-9300" },
-            { title: "Dell PowerEdge R750 Server", id: "dell-poweredge-r750" },
-            { title: "Mikrotik CCR1016-12G Router", id: "mikrotik-ccr1016" }
-          ].map((item, idx) => (
-            <li key={idx}>
-              <Link href={`/collections/${item.id}`} onClick={() => setHoveredMenu(null)} className="hover:text-[#D32F2F] transition-colors block leading-tight">
-                {item.title}
-              </Link>
-            </li>
-          ))}
-          <li className="mt-1">
-            <Link href="/collections/product" onClick={() => setHoveredMenu(null)} className="text-[#D32F2F] hover:underline flex items-center gap-1 font-bold">
-              &gt; View All
-            </Link>
-          </li>
-        </ul>
-      </div>
-
-      {/* Column 4: All products and solutions */}
+      {/* Column 3: All products and solutions */}
       <div className="flex flex-col gap-4 text-left">
         <h4 className="text-xs font-black text-[#0F2C59] uppercase tracking-wider">
           All products and solutions
