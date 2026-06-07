@@ -65,7 +65,7 @@ interface SolutionData {
 // Predefined rich content for Solution by Product pages
 const solutionsContent: Record<string, SolutionData> = {
   "compute": {
-    title: "Silicon Computing Ltd. Compute",
+    title: "Compute",
     subtitle: "Compute / Solutions",
     description: "Optimize workloads and scale your infrastructure with our state-of-the-art compute solutions. We deliver high-fidelity, zero-trust integrated architectures engineered for performance, scalability, and robust security.",
     heroImage: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&q=80&w=800",
@@ -107,7 +107,7 @@ const solutionsContent: Record<string, SolutionData> = {
     ]
   },
   "storage": {
-    title: "Silicon Computing Ltd. Storage",
+    title: "Storage",
     subtitle: "Storage / Solutions",
     description: "Deploy resilient, high-speed, and petabyte-scale storage infrastructures. Secure your corporate memory with automated tiering, robust encryption, and multi-zone backups.",
     heroImage: "https://images.unsplash.com/photo-1600132806370-bf17e65e942f?auto=format&fit=crop&q=80&w=800",
@@ -149,7 +149,7 @@ const solutionsContent: Record<string, SolutionData> = {
     ]
   },
   "network": {
-    title: "Silicon Computing Ltd. Network",
+    title: "Network",
     subtitle: "Network / Solutions",
     description: "Build fast, secure, and resilient enterprise networking. Integrate software-defined boundaries, global load balancing, and low-latency routing for distributed offices.",
     heroImage: "https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&q=80&w=800",
@@ -191,7 +191,7 @@ const solutionsContent: Record<string, SolutionData> = {
     ]
   },
   "security": {
-    title: "Silicon Computing Ltd. Security",
+    title: "Security",
     subtitle: "Security / Solutions",
     description: "Harden your endpoints, secure your transactions, and protect your intellectual capital. We implement zero-trust access, continuous threat monitoring, and automated incident containment.",
     heroImage: "https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&q=80&w=800",
@@ -233,7 +233,7 @@ const solutionsContent: Record<string, SolutionData> = {
     ]
   },
   "software": {
-    title: "Silicon Computing Ltd. Software",
+    title: "Software",
     subtitle: "Software / Solutions",
     description: "Deliver intuitive, modern, and scalable software architectures. We build bespoke SaaS portals, API-first integrations, and event-driven microservices engineered for business outcomes.",
     heroImage: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800",
@@ -275,7 +275,7 @@ const solutionsContent: Record<string, SolutionData> = {
     ]
   },
   "database": {
-    title: "Silicon Computing Ltd. Database",
+    title: "Database",
     subtitle: "Database / Solutions",
     description: "Architect high-performance database environments. We deliver multi-region replication, sub-millisecond query optimization, and secure point-in-time data recovery.",
     heroImage: "https://images.unsplash.com/photo-1544383835-bda2bc66a55d?auto=format&fit=crop&q=80&w=800",
@@ -317,7 +317,7 @@ const solutionsContent: Record<string, SolutionData> = {
     ]
   },
   "supercomputing": {
-    title: "Silicon Computing Ltd. Supercomputing",
+    title: "Supercomputing",
     subtitle: "Supercomputing / Solutions",
     description: "Unleash extreme computing capacity. We design cluster computing systems, high-speed interconnect matrices, and liquid-cooled configurations for scientific and AI workloads.",
     heroImage: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=800",
@@ -364,7 +364,7 @@ const solutionsContent: Record<string, SolutionData> = {
 const getFallbackData = (slug: string): SolutionData => {
   const title = formatTitle(slug);
   return {
-    title: `Silicon Computing Ltd. ${title}`,
+    title: title,
     subtitle: `${title} / Solutions`,
     description: `Optimize, automate, and protect your corporate processes with our industry-leading ${title.toLowerCase()} configurations. We build high-fidelity architectures designed to match enterprise-level efficiency and scalability parameters.`,
     heroImage: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=800",
