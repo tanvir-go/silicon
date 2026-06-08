@@ -499,10 +499,11 @@ export default function SolutionsDynamicPage() {
 
       {/* BRANDS ROW */}
       <div className="w-full py-16 bg-white border-b border-slate-100 relative z-10">
-        <div className="max-w-7xl mx-auto px-6 text-center">
-          <h2 className="text-xs font-black tracking-widest text-[#0F2C59] uppercase mb-8">
+        <div className="max-w-7xl mx-auto px-6 text-center mb-16">
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-[#0F2C59] tracking-tight">
             Brands Partnered
           </h2>
+          <div className="h-1 w-16 bg-[#D32F2F] mx-auto mt-4 rounded mb-8" />
           <div className="flex flex-wrap items-center justify-center gap-8 md:gap-12 lg:gap-16">
             {BrandLogos.map((brand, idx) => (
               <div key={idx} className="px-6 py-3 rounded-xl border border-slate-100 shadow-sm bg-white hover:border-slate-300 hover:shadow-md transition-all duration-300 select-none">
