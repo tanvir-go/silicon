@@ -33,21 +33,21 @@ export default function ContactPage() {
               icon: HeartHandshake, 
               title: "Sales &amp; Partnerships", 
               email: "sales@silicon.com.bd", 
-              phone: "09614556655 Ext: 101",
+              phone: "09614556655",
               desc: "Enterprise AI implementations, cloud migrations, and digital roadmap scoping inquiries." 
             },
             { 
               icon: ShieldCheck, 
               title: "Technical Operations", 
-              email: "ops@silicon.com.bd", 
-              phone: "09614556655 Ext: 102",
+              email: "sales@silicon.com.bd", 
+              phone: "09614556655",
               desc: "Active client deployment support, SCADA grid security monitoring, and server credentials setup." 
             },
             { 
               icon: FileText, 
               title: "Executive Board Desk", 
-              email: "board@silicon.com.bd", 
-              phone: "09614556655 Ext: 100",
+              email: "sales@silicon.com.bd", 
+              phone: "09614556655",
               desc: "Strategic investments, global partnerships, press releases, and executive advisory desk." 
             }
           ].map((dept, idx) => (
