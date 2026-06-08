@@ -221,30 +221,7 @@ export default function AdminLoginPage() {
             </form>
           )}
 
-          {/* Quick Login Helper Panel */}
-          {!success && (
-            <div className="mt-8 pt-6 border-t border-slate-100 text-center">
-              <div className="bg-slate-50 rounded-xl p-3.5 border border-slate-200/60 flex flex-col items-center justify-center">
-                <span className="text-[10px] uppercase font-bold tracking-widest text-[#0F2C59] mb-1">
-                  Development Mode
-                </span>
-                <p className="text-[11px] text-slate-500 mb-2">
-                  Use mock administrator credentials:
-                </p>
-                <div className="text-[11px] font-mono text-slate-700 select-all mb-3 bg-white py-1 px-3 rounded border border-slate-200 shadow-sm">
-                  admin@silicon.com / admin123
-                </div>
-                <button
-                  type="button"
-                  onClick={handleAutofill}
-                  className="text-xs font-semibold text-[#0F2C59] hover:text-[#0b2143] hover:underline flex items-center gap-1 transition-colors cursor-pointer"
-                >
-                  <Terminal className="w-3.5 h-3.5" />
-                  Autofill Credentials
-                </button>
-              </div>
-            </div>
-          )}
+
         </div>
 
         {/* Footer info */}
