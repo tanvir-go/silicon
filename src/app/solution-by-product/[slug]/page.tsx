@@ -408,38 +408,107 @@ const getFallbackData = (slug: string): SolutionData => {
 };
 
 // Sleek Brand Logo lists
-const DefaultBrandLogos = [
-  { name: "Cisco", logo: "CISCO", logoUrl: "https://www.vectorlogo.zone/logos/cisco/cisco-icon.svg" },
-  { name: "Dell", logo: "DELL", logoUrl: "https://www.vectorlogo.zone/logos/dell/dell-icon.svg" },
+const ComputeBrandLogos = [
+  { name: "Sangfor", logo: "Sangfor", logoUrl: "https://www.sangfor.com/themes/custom/sangfor/logo.png" },
+  { name: "Dell Technologies", logo: "DELL", logoUrl: "https://www.vectorlogo.zone/logos/dell/dell-icon.svg" },
   { name: "HPE", logo: "HPE", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/a/ad/Hewlett_Packard_Enterprise_logo.svg" },
-  { name: "IBM", logo: "IBM", logoUrl: "https://www.vectorlogo.zone/logos/ibm/ibm-icon.svg" },
-  { name: "Huawei", logo: "HUAWEI", logoUrl: "https://www.vectorlogo.zone/logos/huawei/huawei-icon.svg" },
-  { name: "Broadcom", logo: "BROADCOM", logoUrl: "https://www.vectorlogo.zone/logos/broadcom/broadcom-icon.svg" },
-  { name: "Micron", logo: "MICRON", logoUrl: "https://www.vectorlogo.zone/logos/micron/micron-icon.svg" },
+  { name: "Supermicro", logo: "Supermicro", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/b/b3/Super_Micro_Computer_Logo.svg" },
   { name: "Lenovo", logo: "LENOVO", logoUrl: "https://www.vectorlogo.zone/logos/lenovo/lenovo-icon.svg" },
-  { name: "Intel", logo: "intel", logoUrl: "https://www.vectorlogo.zone/logos/intel/intel-icon.svg" },
-  { name: "Oracle", logo: "ORACLE", logoUrl: "https://www.vectorlogo.zone/logos/oracle/oracle-icon.svg" }
+  { name: "Virtuozzo", logo: "Virtuozzo", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/e/ec/Virtuozzo_logo.svg" },
+  { name: "Microsoft", logo: "Microsoft", logoUrl: "https://www.vectorlogo.zone/logos/microsoft/microsoft-icon.svg" },
+  { name: "Red Hat", logo: "Red Hat", logoUrl: "https://www.vectorlogo.zone/logos/redhat/redhat-icon.svg" },
+  { name: "SUSE", logo: "SUSE", logoUrl: "https://www.vectorlogo.zone/logos/suse/suse-icon.svg" }
 ];
 
 const StorageBrandLogos = [
-  { name: "Sangfor", logo: "Sangfor", logoUrl: "https://www.sangfor.com/themes/custom/sangfor/logo.png" },
-  { name: "Dell", logo: "Dell", logoUrl: "https://www.vectorlogo.zone/logos/dell/dell-icon.svg" },
-  { name: "HPE", logo: "HPE", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/a/ad/Hewlett_Packard_Enterprise_logo.svg" },
   { name: "QSAN", logo: "QSAN", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/e/ec/QSAN_Registered_Logo.png" },
-  { name: "Virtuozzo", logo: "Virtuozzo", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/e/ec/Virtuozzo_logo.svg" },
+  { name: "Dell Technologies", logo: "DELL", logoUrl: "https://www.vectorlogo.zone/logos/dell/dell-icon.svg" },
+  { name: "HPE", logo: "HPE", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/a/ad/Hewlett_Packard_Enterprise_logo.svg" },
   { name: "Veeam", logo: "Veeam", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/4/4e/Veeam_Logo.svg" },
-  { name: "Supermicro", logo: "Supermicro", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/b/b3/Super_Micro_Computer_Logo.svg" },
-  { name: "Microsoft", logo: "Microsoft", logoUrl: "https://www.vectorlogo.zone/logos/microsoft/microsoft-icon.svg" },
-  { name: "Redhat", logo: "Red Hat", logoUrl: "https://www.vectorlogo.zone/logos/redhat/redhat-icon.svg" },
-  { name: "Suse", logo: "SUSE", logoUrl: "https://www.vectorlogo.zone/logos/suse/suse-icon.svg" }
+  { name: "Sangfor", logo: "Sangfor", logoUrl: "https://www.sangfor.com/themes/custom/sangfor/logo.png" },
+  { name: "Acronis", logo: "Acronis", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/d/da/Acronis_Logo.svg" },
+  { name: "Virtuozzo", logo: "Virtuozzo", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/e/ec/Virtuozzo_logo.svg" },
+  { name: "Huawei", logo: "Huawei", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/0/0f/Huawei_logo.svg" },
+  { name: "Synology", logo: "Synology", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/c/cd/Synology_Logo.svg" }
 ];
+
+const NetworkBrandLogos = [
+  { name: "Cisco", logo: "Cisco", logoUrl: "https://www.vectorlogo.zone/logos/cisco/cisco-icon.svg" },
+  { name: "Juniper", logo: "Juniper", logoUrl: "https://www.vectorlogo.zone/logos/juniper/juniper-icon.svg" },
+  { name: "Aruba", logo: "Aruba", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/e/e0/Aruba_Networks_logo.svg" },
+  { name: "Cambium Networks", logo: "Cambium", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/7/7b/Cambium_Networks_logo.svg" },
+  { name: "Alcatel-Lucent Enterprise", logo: "Alcatel-Lucent", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/6/6a/Alcatel-Lucent_Enterprise_Logo.svg" },
+  { name: "R&M", logo: "R&M", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/2/23/Reichle_%26_De-Massari_Logo.svg" },
+  { name: "ZKTeco", logo: "ZKTeco", logoUrl: "https://www.zkteco.com/themes/new_zkteco/assets/images/logo.png" }
+];
+
+const SecurityBrandLogos = [
+  { name: "Fortinet", logo: "Fortinet", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/1/12/Fortinet_logo.svg" },
+  { name: "Sophos", logo: "Sophos", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/b/b3/Sophos_Logo.svg" },
+  { name: "Cisco Security", logo: "Cisco Security", logoUrl: "https://www.vectorlogo.zone/logos/cisco/cisco-icon.svg" },
+  { name: "Juniper Security", logo: "Juniper Security", logoUrl: "https://www.vectorlogo.zone/logos/juniper/juniper-icon.svg" },
+  { name: "Barracuda", logo: "Barracuda", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/0/00/Barracuda_Networks_Logo.svg" },
+  { name: "Entrust", logo: "Entrust", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/f/f0/Entrust_logo.svg" },
+  { name: "Kaspersky", logo: "Kaspersky", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/8/87/Kaspersky_logo_2019.svg" },
+  { name: "F5", logo: "F5", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/e/e7/F5_Networks_logo.svg" },
+  { name: "Wazuh", logo: "Wazuh", logoUrl: "https://wazuh.com/brand-assets/Wazuh-Logo.svg" },
+  { name: "Sangfor", logo: "Sangfor", logoUrl: "https://www.sangfor.com/themes/custom/sangfor/logo.png" },
+  { name: "Acronis", logo: "Acronis", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/d/da/Acronis_Logo.svg" }
+];
+
+const SoftwareBrandLogos = [
+  { name: "Microsoft", logo: "Microsoft", logoUrl: "https://www.vectorlogo.zone/logos/microsoft/microsoft-icon.svg" },
+  { name: "Red Hat", logo: "Red Hat", logoUrl: "https://www.vectorlogo.zone/logos/redhat/redhat-icon.svg" },
+  { name: "SUSE", logo: "SUSE", logoUrl: "https://www.vectorlogo.zone/logos/suse/suse-icon.svg" },
+  { name: "Adobe", logo: "Adobe", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/f/f0/Adobe_Corporate_Logo.svg" },
+  { name: "GitLab", logo: "GitLab", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/1/18/GitLab_Logo.svg" },
+  { name: "Kubernetes", logo: "Kubernetes", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/3/39/Kubernetes_logo_without_workmark.svg" },
+  { name: "Grafana", logo: "Grafana", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/a/a1/Grafana_logo.svg" },
+  { name: "Atlassian", logo: "Atlassian", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/0/01/Atlassian_logo.svg" },
+  { name: "Freshworks", logo: "Freshworks", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/4/4f/Freshworks_logo.svg" },
+  { name: "Silicon (Own Solutions)", logo: "Silicon", logoUrl: "/silicon.webp" }
+];
+
+const DatabaseBrandLogos = [
+  { name: "Oracle", logo: "Oracle", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/5/50/Oracle_logo.svg" },
+  { name: "EnterpriseDB (EDB)", logo: "EDB", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/f/f9/EDB_Postgres_Logo.svg" },
+  { name: "MySQL", logo: "MySQL", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/0/0a/MySQL_textlogo.svg" },
+  { name: "Supabase", logo: "Supabase", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/e/e0/Supabase_logo.svg" },
+  { name: "Microsoft SQL Server", logo: "MSSQL", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/3/38/Microsoft_SQL_Server_logo.svg" },
+  { name: "PostgreSQL", logo: "PostgreSQL", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/2/29/PostgreSQL_logo.svg" },
+  { name: "MongoDB", logo: "MongoDB", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/9/93/MongoDB_Logo.svg" }
+];
+
+const SupercomputingBrandLogos = [
+  { name: "NVIDIA", logo: "NVIDIA", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/2/21/Nvidia_logo.svg" },
+  { name: "Dell Technologies", logo: "DELL", logoUrl: "https://www.vectorlogo.zone/logos/dell/dell-icon.svg" },
+  { name: "HPE", logo: "HPE", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/a/ad/Hewlett_Packard_Enterprise_logo.svg" },
+  { name: "Supermicro", logo: "Supermicro", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/b/b3/Super_Micro_Computer_Logo.svg" },
+  { name: "Lenovo", logo: "LENOVO", logoUrl: "https://www.vectorlogo.zone/logos/lenovo/lenovo-icon.svg" },
+  { name: "Red Hat", logo: "Red Hat", logoUrl: "https://www.vectorlogo.zone/logos/redhat/redhat-icon.svg" },
+  { name: "SUSE", logo: "SUSE", logoUrl: "https://www.vectorlogo.zone/logos/suse/suse-icon.svg" },
+  { name: "Kubernetes", logo: "Kubernetes", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/3/39/Kubernetes_logo_without_workmark.svg" },
+  { name: "AWS", logo: "AWS", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/9/93/Amazon_Web_Services_Logo.svg" },
+  { name: "Microsoft Azure", logo: "Azure", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/f/fa/Microsoft_Azure.svg" },
+  { name: "Google Cloud", logo: "GCP", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/5/51/Google_Cloud_logo.svg" }
+];
+
 
 
 export default function SolutionsDynamicPage() {
   const params = useParams();
   const slug = params.slug as string;
   const content = solutionsContent[slug] || getFallbackData(slug);
-  const brands = slug === "storage" ? StorageBrandLogos : DefaultBrandLogos;
+  
+  // Resolve brands partnered dynamically per product category
+  let brands = ComputeBrandLogos;
+  if (slug === "storage") brands = StorageBrandLogos;
+  else if (slug === "network") brands = NetworkBrandLogos;
+  else if (slug === "security") brands = SecurityBrandLogos;
+  else if (slug === "software") brands = SoftwareBrandLogos;
+  else if (slug === "database") brands = DatabaseBrandLogos;
+  else if (slug === "supercomputing") brands = SupercomputingBrandLogos;
+
   
   // Filter relevant blog posts for this solution dynamically by category
   const getRelevantPosts = (slugString: string) => {
