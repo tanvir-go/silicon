@@ -497,6 +497,24 @@ export default function SolutionsDynamicPage() {
         </div>
       </div>
 
+      {/* BRANDS ROW */}
+      <div className="w-full py-16 bg-white border-b border-slate-100 relative z-10">
+        <div className="max-w-7xl mx-auto px-6 text-center">
+          <h2 className="text-xs font-black tracking-widest text-[#0F2C59] uppercase mb-8">
+            Brands Partnered
+          </h2>
+          <div className="flex flex-wrap items-center justify-center gap-8 md:gap-12 lg:gap-16">
+            {BrandLogos.map((brand, idx) => (
+              <div key={idx} className="px-6 py-3 rounded-xl border border-slate-100 shadow-sm bg-white hover:border-slate-300 hover:shadow-md transition-all duration-300 select-none">
+                <span className="text-xs md:text-sm font-black text-slate-400 hover:text-slate-600 transition-colors uppercase tracking-widest">
+                  {brand.logo}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
       {/* 2. BENEFITS SECTION */}
       <div className="w-full py-20 bg-white border-y border-slate-100 relative z-10">
         <div className="max-w-7xl mx-auto px-6">
@@ -613,23 +631,7 @@ export default function SolutionsDynamicPage() {
         </div>
       </div>
 
-      {/* 7. BRANDS ROW */}
-      <div className="w-full py-16 bg-white border-b border-slate-100 relative z-10">
-        <div className="max-w-7xl mx-auto px-6 text-center">
-          <h2 className="text-xs font-black tracking-widest text-[#0F2C59] uppercase mb-8">
-            Brands Partnered
-          </h2>
-          <div className="flex flex-wrap items-center justify-center gap-8 md:gap-12 lg:gap-16">
-            {BrandLogos.map((brand, idx) => (
-              <div key={idx} className="px-6 py-3 rounded-xl border border-slate-100 shadow-sm bg-white hover:border-slate-300 hover:shadow-md transition-all duration-300 select-none">
-                <span className="text-xs md:text-sm font-black text-slate-400 hover:text-slate-600 transition-colors uppercase tracking-widest">
-                  {brand.logo}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
+
 
       {/* 8. GET STARTED CALLOUT */}
       <div className="max-w-7xl mx-auto px-6 py-16 relative z-10">
