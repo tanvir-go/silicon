@@ -407,24 +407,39 @@ const getFallbackData = (slug: string): SolutionData => {
   };
 };
 
-// Sleek Brand Logo icons/renderers
-const BrandLogos = [
-  { name: "Cisco", logo: "CISCO" },
-  { name: "Dell", logo: "DELL" },
-  { name: "HPE", logo: "HPE" },
-  { name: "IBM", logo: "IBM" },
-  { name: "Huawei", logo: "HUAWEI" },
-  { name: "Broadcom", logo: "BROADCOM" },
-  { name: "Micron", logo: "MICRON" },
-  { name: "Lenovo", logo: "LENOVO" },
-  { name: "Intel", logo: "intel" },
-  { name: "Oracle", logo: "ORACLE" }
+// Sleek Brand Logo lists
+const DefaultBrandLogos = [
+  { name: "Cisco", logo: "CISCO", logoUrl: "https://www.vectorlogo.zone/logos/cisco/cisco-icon.svg" },
+  { name: "Dell", logo: "DELL", logoUrl: "https://www.vectorlogo.zone/logos/dell/dell-icon.svg" },
+  { name: "HPE", logo: "HPE", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/a/ad/Hewlett_Packard_Enterprise_logo.svg" },
+  { name: "IBM", logo: "IBM", logoUrl: "https://www.vectorlogo.zone/logos/ibm/ibm-icon.svg" },
+  { name: "Huawei", logo: "HUAWEI", logoUrl: "https://www.vectorlogo.zone/logos/huawei/huawei-icon.svg" },
+  { name: "Broadcom", logo: "BROADCOM", logoUrl: "https://www.vectorlogo.zone/logos/broadcom/broadcom-icon.svg" },
+  { name: "Micron", logo: "MICRON", logoUrl: "https://www.vectorlogo.zone/logos/micron/micron-icon.svg" },
+  { name: "Lenovo", logo: "LENOVO", logoUrl: "https://www.vectorlogo.zone/logos/lenovo/lenovo-icon.svg" },
+  { name: "Intel", logo: "intel", logoUrl: "https://www.vectorlogo.zone/logos/intel/intel-icon.svg" },
+  { name: "Oracle", logo: "ORACLE", logoUrl: "https://www.vectorlogo.zone/logos/oracle/oracle-icon.svg" }
 ];
+
+const StorageBrandLogos = [
+  { name: "Sangfor", logo: "Sangfor", logoUrl: "https://www.sangfor.com/themes/custom/sangfor/logo.png" },
+  { name: "Dell", logo: "Dell", logoUrl: "https://www.vectorlogo.zone/logos/dell/dell-icon.svg" },
+  { name: "HPE", logo: "HPE", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/a/ad/Hewlett_Packard_Enterprise_logo.svg" },
+  { name: "QSAN", logo: "QSAN", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/e/ec/QSAN_Registered_Logo.png" },
+  { name: "Virtuozzo", logo: "Virtuozzo", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/e/ec/Virtuozzo_logo.svg" },
+  { name: "Veeam", logo: "Veeam", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/4/4e/Veeam_Logo.svg" },
+  { name: "Supermicro", logo: "Supermicro", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/b/b3/Super_Micro_Computer_Logo.svg" },
+  { name: "Microsoft", logo: "Microsoft", logoUrl: "https://www.vectorlogo.zone/logos/microsoft/microsoft-icon.svg" },
+  { name: "Redhat", logo: "Red Hat", logoUrl: "https://www.vectorlogo.zone/logos/redhat/redhat-icon.svg" },
+  { name: "Suse", logo: "SUSE", logoUrl: "https://www.vectorlogo.zone/logos/suse/suse-icon.svg" }
+];
+
 
 export default function SolutionsDynamicPage() {
   const params = useParams();
   const slug = params.slug as string;
   const content = solutionsContent[slug] || getFallbackData(slug);
+  const brands = slug === "storage" ? StorageBrandLogos : DefaultBrandLogos;
   
   // Filter relevant blog posts for this solution dynamically by category
   const getRelevantPosts = (slugString: string) => {
@@ -504,12 +519,20 @@ export default function SolutionsDynamicPage() {
             Brands Partnered
           </h2>
           <div className="h-1 w-16 bg-[#D32F2F] mx-auto mt-4 rounded mb-8" />
-          <div className="flex flex-wrap items-center justify-center gap-8 md:gap-12 lg:gap-16">
-            {BrandLogos.map((brand, idx) => (
-              <div key={idx} className="px-6 py-3 rounded-xl border border-slate-100 shadow-sm bg-white hover:border-slate-300 hover:shadow-md transition-all duration-300 select-none">
-                <span className="text-xs md:text-sm font-black text-slate-400 hover:text-slate-600 transition-colors uppercase tracking-widest">
-                  {brand.logo}
-                </span>
+          <div className="flex flex-wrap items-center justify-center gap-6 md:gap-8 lg:gap-10">
+            {brands.map((brand, idx) => (
+              <div key={idx} className="px-5 py-4 rounded-xl border border-slate-100 shadow-sm bg-white hover:border-slate-300 hover:shadow-md transition-all duration-300 select-none flex items-center justify-center w-36 h-16">
+                {brand.logoUrl ? (
+                  <img 
+                    src={brand.logoUrl} 
+                    alt={brand.name} 
+                    className="h-8 max-w-full object-contain filter grayscale hover:grayscale-0 opacity-70 hover:opacity-100 transition-all duration-300"
+                  />
+                ) : (
+                  <span className="text-xs md:text-sm font-black text-slate-400 hover:text-slate-600 transition-colors uppercase tracking-widest">
+                    {brand.logo}
+                  </span>
+                )}
               </div>
             ))}
           </div>
