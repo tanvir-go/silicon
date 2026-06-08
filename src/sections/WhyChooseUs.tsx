@@ -76,9 +76,14 @@ export default function WhyChooseUs() {
                 <ArrowRight className="w-4 h-4" />
               </button>
             </Link>
-            <Link href="/contact" className="text-xs font-bold text-[#D32F2F] hover:text-red-700 hover:underline transition-all">
-              GET SCOPED NOW &rarr;
-            </Link>
+            <a 
+              href="/Silicon computing Ltd Company Profile (v2).pdf" 
+              download 
+              target="_blank" 
+              className="px-6 py-3 rounded-lg border-2 border-[#D32F2F] hover:bg-red-50 text-[#D32F2F] font-extrabold text-xs tracking-wider uppercase transition-all duration-300 flex items-center gap-2 cursor-pointer shadow-sm hover:shadow-md"
+            >
+              COMPANY PROFILE &darr;
+            </a>
           </div>
         </div>
 
