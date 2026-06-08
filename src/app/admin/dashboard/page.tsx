@@ -30,6 +30,7 @@ export default function OverviewPage() {
     coupons,
     customers,
     addActivity,
+    updateOrder,
     loading
   } = useAdminState();
 
@@ -38,6 +39,8 @@ export default function OverviewPage() {
     { id: "RFD-001", customer: "Anik Hasan", item: "Mikrotik Router CCR1016", amount: 78000, reason: "Firmware incompatibilities", status: "Pending" },
     { id: "RFD-002", customer: "Tasnim Rahman", item: "Cisco Catalyst 9300 Switch", amount: 165000, reason: "Duplicate purchase order", status: "Pending" }
   ]);
+
+  const [bidReplies, setBidReplies] = useState<Record<string, string>>({});
 
   const handleRefundAction = (id: string, action: "Approve" | "Reject") => {
     setRefundRequests((prev) =>
@@ -254,6 +257,99 @@ export default function OverviewPage() {
                   </div>
                 </div>
               ))}
+            </div>
+          </div>
+
+          {/* Widget 5.5: B2B Corporate Bid Requests */}
+          <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+            <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
+              <TrendingUp className="w-5 h-5 text-[#0F2C59]" />
+              <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex-1">B2B Corporate Bid Queue</h3>
+              <span className="text-[10px] font-black bg-[#0F2C59]/10 text-[#0F2C59] px-2 py-0.5 rounded-full">
+                {orders.filter(o => o.paymentMethod === 'Corporate Bid').length} Bids
+              </span>
+            </div>
+
+            <div className="space-y-4">
+              {orders.filter(o => o.paymentMethod === 'Corporate Bid').length === 0 ? (
+                <p className="text-xs text-slate-400 py-4 text-center font-bold">No active B2B corporate bid requests</p>
+              ) : (
+                orders.filter(o => o.paymentMethod === 'Corporate Bid').map((bid) => {
+                  const hasReply = bid.timeline.some((t: any) => t.status === "Admin Reply");
+                  const latestReply = [...bid.timeline].reverse().find((t: any) => t.status === "Admin Reply");
+
+                  return (
+                    <div key={bid.id} className="p-4 border border-slate-200 rounded-xl space-y-3 text-xs text-left">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <span className="font-bold text-slate-900">{bid.customerName}</span>
+                            <span className="font-mono text-[9px] text-slate-400 uppercase tracking-wide">{bid.id}</span>
+                          </div>
+                          <p className="text-slate-550 text-slate-500 text-[10px] font-medium">{bid.customerEmail} | {bid.customerPhone}</p>
+                        </div>
+                        <span className={`text-[9px] font-extrabold uppercase py-0.5 px-2 rounded-full ${
+                          hasReply ? "bg-emerald-50 text-emerald-600 border border-emerald-100" : "bg-amber-50 text-amber-600 border border-amber-100"
+                        }`}>
+                          {hasReply ? "Replied" : "Awaiting Quote"}
+                        </span>
+                      </div>
+
+                      <div className="bg-slate-50 p-3 rounded-lg border border-slate-150/50 space-y-1.5">
+                        <span className="text-[9px] font-black text-slate-400 uppercase tracking-wider block">Requested Items</span>
+                        {bid.items.map((item: any, idx: number) => (
+                          <div key={idx} className="flex justify-between font-semibold text-slate-700">
+                            <span>{item.title}</span>
+                            <span className="text-[#0F2C59]">Qty: {item.quantity} | Total: ৳ {(item.price * item.quantity).toLocaleString()}</span>
+                          </div>
+                        ))}
+                        <div className="pt-1.5 border-t border-slate-200 mt-1">
+                          <span className="text-[9px] font-black text-slate-400 uppercase tracking-wider block">Custom Specs / Notes</span>
+                          <p className="text-[11px] text-slate-600 font-medium italic mt-0.5">"{bid.shippingAddress}"</p>
+                        </div>
+                      </div>
+
+                      {hasReply && latestReply && (
+                        <div className="bg-emerald-55/10 bg-emerald-50 p-3 rounded-lg border border-emerald-100 space-y-1 text-slate-700">
+                          <span className="text-[9px] font-black text-emerald-600 uppercase tracking-wider block">Your Reply / Bid Offer ({latestReply.time})</span>
+                          <p className="text-[11px] font-medium">{latestReply.note}</p>
+                        </div>
+                      )}
+
+                      <div className="flex flex-col gap-2 pt-1">
+                        <textarea
+                          placeholder={hasReply ? "Send a follow-up reply or counter-offer..." : "Type official bid pricing offer, implementation SLA, and discounts..."}
+                          rows={2}
+                          value={bidReplies[bid.id] || ""}
+                          onChange={(e) => setBidReplies(prev => ({ ...prev, [bid.id]: e.target.value }))}
+                          className="w-full px-3 py-2 rounded-lg border border-slate-250 border-slate-200 bg-white outline-none focus:border-[#0F2C59] text-xs resize-none"
+                        />
+                        <button
+                          onClick={() => {
+                            const replyText = bidReplies[bid.id];
+                            if (!replyText) return;
+                            updateOrder(bid.id, {
+                              timeline: [
+                                ...bid.timeline,
+                                {
+                                  status: "Admin Reply",
+                                  time: new Date().toLocaleString(),
+                                  note: replyText
+                                }
+                              ]
+                            });
+                            addActivity(`Replied to Corporate Bid ${bid.id} for ${bid.customerName}`);
+                            setBidReplies(prev => ({ ...prev, [bid.id]: "" }));
+                          }}
+                          className="self-end px-4 py-2 bg-[#0F2C59] hover:bg-[#0b2143] text-white font-extrabold uppercase tracking-wider rounded-lg text-[9px] cursor-pointer border-0"
+                        >
+                          Send Official Reply
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })
+              )}
             </div>
           </div>
         </div>

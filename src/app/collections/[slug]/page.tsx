@@ -5,7 +5,7 @@ import Link from "next/link";
 import { 
   ArrowLeft, ArrowRight, CheckCircle2, Shield, Star, Tag, Server, Check, 
   Building2, Layers, Cpu, Database, Network, Globe, Box, Award, ShieldCheck,
-  Share2, Phone, MessageSquare, Plus, Minus, Info, ChevronDown
+  Share2, Phone, MessageSquare, Plus, Minus, Info, ChevronDown, X
 } from "lucide-react";
 import { useParams } from "next/navigation";
 import ContactSection from "@/sections/ContactSection";
@@ -181,13 +181,16 @@ const TYPES_DATA: Record<string, { title: string; category: "Compute" | "Network
 export default function ProductsDynamicPage() {
   const params = useParams();
   const slug = params.slug as string;
-  const { products, loading } = useAdminState();
+  const { products, addOrder, loading } = useAdminState();
 
   // States for interactive UI elements
   const [quantity, setQuantity] = React.useState(1);
   const [activeTab, setActiveTab] = React.useState<"overview" | "specs" | "comparison">("overview");
   const [activeImage, setActiveImage] = React.useState("");
   const [copiedLink, setCopiedLink] = React.useState(false);
+  const [showBidModal, setShowBidModal] = React.useState(false);
+  const [bidSubmitted, setBidSubmitted] = React.useState(false);
+  const [bidForm, setBidForm] = React.useState({ name: "", email: "", phone: "", notes: "" });
   const [accordionOpen, setAccordionOpen] = React.useState<Record<string, boolean>>({
     general: true,
     performance: false,
@@ -557,6 +560,41 @@ export default function ProductsDynamicPage() {
 
   const productSpecs = getSpecs();
 
+  const handleBidSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!bidForm.name || !bidForm.email || !bidForm.phone) {
+      alert("Please fill in Name, Email, and Phone fields.");
+      return;
+    }
+    
+    addOrder({
+      customerName: bidForm.name,
+      customerEmail: bidForm.email,
+      customerPhone: bidForm.phone,
+      date: new Date().toISOString(),
+      total: product.price * quantity,
+      paymentMethod: "Corporate Bid",
+      paymentStatus: "Pending",
+      fulfillmentStatus: "Unfulfilled",
+      shippingAddress: bidForm.notes || "No special configuration requirements.",
+      items: [
+        {
+          productId: product.id,
+          title: product.title,
+          price: product.price,
+          quantity: quantity
+        }
+      ]
+    });
+    
+    setBidSubmitted(true);
+    setTimeout(() => {
+      setBidSubmitted(false);
+      setShowBidModal(false);
+      setBidForm({ name: "", email: "", phone: "", notes: "" });
+    }, 3000);
+  };
+
   return (
     <main className="min-h-screen bg-[#F8FAFC] pt-32 pb-24 relative overflow-hidden font-sans">
       {/* Visual background enhancements */}
@@ -749,15 +787,14 @@ export default function ProductsDynamicPage() {
 
               {/* B2B Action Buttons */}
               <div className="flex flex-col gap-3 mb-6">
-                <Link href={`/contact?inquiry=${encodeURIComponent(`Quotation Request: ${product.title} (Qty: ${quantity})`)}`} className="w-full">
-                  <button 
-                    disabled={product.stockStatus === "Out of Stock"}
-                    className="w-full py-4 rounded-xl bg-gradient-to-r from-[#000072] to-[#000072]/80 hover:from-[#000072]/90 hover:to-[#000072]/75 text-white font-extrabold text-xs uppercase tracking-wider shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 cursor-pointer border-0"
-                  >
-                    <ArrowRight className="w-4 h-4" />
-                    Request Corporate Bid
-                  </button>
-                </Link>
+                <button 
+                  onClick={() => setShowBidModal(true)}
+                  disabled={product.stockStatus === "Out of Stock"}
+                  className="w-full py-4 rounded-xl bg-gradient-to-r from-[#000072] to-[#000072]/80 hover:from-[#000072]/90 hover:to-[#000072]/75 text-white font-extrabold text-xs uppercase tracking-wider shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 cursor-pointer border-0"
+                >
+                  <ArrowRight className="w-4 h-4" />
+                  Request Corporate Bid
+                </button>
 
                 <a 
                   href={`tel:+8801700000000`}
@@ -1078,6 +1115,96 @@ export default function ProductsDynamicPage() {
 
       </div>
       <ContactSection />
+
+      {showBidModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+          <div className="bg-[#F0F4F7] w-full max-w-lg rounded-3xl p-6 sm:p-8 shadow-2xl relative overflow-hidden border border-slate-200">
+            {/* Close Button */}
+            <button 
+              onClick={() => setShowBidModal(false)}
+              className="absolute top-4 right-4 p-2 rounded-full hover:bg-slate-200 text-slate-500 hover:text-slate-800 transition-colors cursor-pointer border-0"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            {!bidSubmitted ? (
+              <form onSubmit={handleBidSubmit} className="flex flex-col gap-4 text-left text-xs sm:text-sm text-slate-700">
+                <div className="border-b border-slate-200 pb-3">
+                  <span className="text-[10px] font-black text-[#000072] uppercase tracking-widest">B2B Request</span>
+                  <h3 className="text-lg font-black text-[#0F2C59] mt-1">Request Corporate Bid</h3>
+                  <p className="text-[11px] text-slate-500 mt-0.5">Submit custom bidding specs for <strong className="text-slate-700">{product.title}</strong> (Qty: {quantity})</p>
+                </div>
+
+                <div className="flex flex-col gap-1.5">
+                  <label className="font-extrabold text-xs text-slate-700">Full Name <span className="text-red-500">*</span></label>
+                  <input 
+                    type="text" 
+                    required 
+                    placeholder="Contact Person Name"
+                    value={bidForm.name} 
+                    onChange={e => setBidForm(prev => ({ ...prev, name: e.target.value }))}
+                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white outline-none focus:border-[#000072]"
+                  />
+                </div>
+
+                <div className="flex flex-col gap-1.5">
+                  <label className="font-extrabold text-xs text-slate-700">Corporate Email <span className="text-red-500">*</span></label>
+                  <input 
+                    type="email" 
+                    required 
+                    placeholder="company@email.com"
+                    value={bidForm.email} 
+                    onChange={e => setBidForm(prev => ({ ...prev, email: e.target.value }))}
+                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white outline-none focus:border-[#000072]"
+                  />
+                </div>
+
+                <div className="flex flex-col gap-1.5">
+                  <label className="font-extrabold text-xs text-slate-700">Phone Number <span className="text-red-500">*</span></label>
+                  <input 
+                    type="text" 
+                    required 
+                    placeholder="01xxxxxxxxx"
+                    value={bidForm.phone} 
+                    onChange={e => setBidForm(prev => ({ ...prev, phone: e.target.value }))}
+                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white outline-none focus:border-[#000072]"
+                  />
+                </div>
+
+                <div className="flex flex-col gap-1.5">
+                  <label className="font-extrabold text-xs text-slate-700">Special Specifications / Custom Requirements</label>
+                  <textarea 
+                    rows={3} 
+                    placeholder="Describe any custom RAM, storage, warranty configurations..."
+                    value={bidForm.notes} 
+                    onChange={e => setBidForm(prev => ({ ...prev, notes: e.target.value }))}
+                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white outline-none focus:border-[#000072] resize-none"
+                  />
+                </div>
+
+                <button 
+                  type="submit" 
+                  className="w-full py-3 bg-gradient-to-r from-[#000072] to-[#000072]/85 hover:from-[#000072]/90 text-white font-extrabold uppercase tracking-wider rounded-xl shadow-lg mt-2 cursor-pointer border-0"
+                >
+                  Submit Corporate Bid Request
+                </button>
+              </form>
+            ) : (
+              <div className="py-12 flex flex-col items-center justify-center text-center gap-5">
+                <div className="w-16 h-16 rounded-full bg-emerald-500/10 text-emerald-500 flex items-center justify-center shadow-lg border border-emerald-500/20">
+                  <CheckCircle2 className="w-10 h-10 animate-bounce" />
+                </div>
+                <div>
+                  <h3 className="font-extrabold text-xl text-slate-800">Bid Registered Successfully</h3>
+                  <p className="text-xs text-slate-500 mt-2 max-w-[280px] mx-auto leading-relaxed">
+                    Your request has been cataloged under B2B Bids. You can monitor and expect replies on the admin dashboard.
+                  </p>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </main>
   );
 }
