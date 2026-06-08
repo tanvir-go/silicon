@@ -588,14 +588,14 @@ export default function SolutionsDynamicPage() {
             Brands Partnered
           </h2>
           <div className="h-1 w-16 bg-[#D32F2F] mx-auto mt-4 rounded mb-8" />
-          <div className="flex flex-wrap items-center justify-center gap-6 md:gap-8 lg:gap-10">
+          <div className="flex flex-wrap justify-center gap-6 max-w-6xl mx-auto">
             {brands.map((brand, idx) => (
-              <div key={idx} className="px-4 py-2 rounded-xl border border-slate-100 shadow-sm bg-white hover:border-slate-300 hover:shadow-md transition-all duration-300 select-none flex items-center justify-center w-36 h-16">
+              <div key={idx} className="px-5 py-3 rounded-xl border border-slate-100 shadow-sm bg-white hover:border-slate-300 hover:shadow-md transition-all duration-300 select-none flex items-center justify-center w-[190px] h-20">
                 {brand.logoUrl ? (
                   <img 
                     src={brand.logoUrl} 
                     alt={brand.name} 
-                    className="max-h-11 max-w-[90%] object-contain filter grayscale hover:grayscale-0 opacity-75 hover:opacity-100 transition-all duration-300"
+                    className="max-h-12 max-w-[85%] object-contain filter grayscale hover:grayscale-0 opacity-75 hover:opacity-100 transition-all duration-300"
                   />
                 ) : (
                   <span className="text-xs md:text-sm font-black text-slate-400 hover:text-slate-600 transition-colors uppercase tracking-widest">

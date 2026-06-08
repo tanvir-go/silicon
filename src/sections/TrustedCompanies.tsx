@@ -10,37 +10,38 @@ interface LogoInfo {
 
 const allCompanies: LogoInfo[] = [
   { name: "Beximco Pharmaceuticals Ltd.", shortName: "Beximco", logoUrl: "/images/logos/logo_r1_1.png" },
-  { name: "Popular Diagnostic Centre Ltd.", shortName: "PDC", logoUrl: "/images/logos/logo_r1_4.png" },
-  { name: "Popular Medical College & Hospital Ltd.", shortName: "PMC", logoUrl: "/images/logos/logo_r1_4.png" },
-  { name: "KiDO DHAKA Co., Ltd.", shortName: "KiDO", logoUrl: "/images/logos/logo_r1_5.png" },
-  { name: "Crowne Plaza Dhaka Gulshan by IHG", shortName: "Crowne Plaza", logoUrl: "/images/logos/logo_r2_7.png" },
-  { name: "Leading University", shortName: "LU", logoUrl: "/images/logos/logo_r2_6.png" },
-  { name: "Counter Terrorism & Transnational Crime, DMP", shortName: "CTTC", logoUrl: "/images/logos/logo_r2_4.png" },
-  { name: "Bangladesh Football Federation", shortName: "BFF", logoUrl: "/images/logos/logo_r1_5.png" },
-  { name: "BAIUST", shortName: "BAIUST", logoUrl: "/images/logos/logo_r2_6.png" },
-  { name: "MJL Bangladesh", shortName: "MJL", logoUrl: "/images/logos/logo_r2_3.png" },
-  { name: "Divine Mercy Hospital Ltd.", shortName: "DMH", logoUrl: "/images/logos/logo_r1_3.png" },
-  { name: "NASSA Group", shortName: "NASSA", logoUrl: "/images/logos/logo_r1_6.png" },
-  { name: "Bangladesh Ainjeebe Shahakari Samity", shortName: "BASS", logoUrl: "/images/logos/logo_r2_8.png" },
-  { name: "Bangladesh Development Bank Ltd.", shortName: "BDBL", logoUrl: "/images/logos/logo_r1_2.png" },
-  { name: "Office of the Registrar General, BDR", shortName: "BDR", logoUrl: "/images/logos/logo_r2_5.png" },
-  { name: "BRTA", shortName: "BRTA", logoUrl: "/images/logos/logo_r2_3.png" },
-  { name: "BGMEA University of Fashion and Technology", shortName: "BUFT", logoUrl: "/images/logos/logo_r2_6.png" },
-  { name: "CPTU", shortName: "CPTU", logoUrl: "/images/logos/logo_r2_5.png" },
-  { name: "Crossline Knit and Fabric Ltd", shortName: "Crossline", logoUrl: "/images/logos/logo_r1_6.png" },
-  { name: "Daffodil International University", shortName: "DIU", logoUrl: "/images/logos/logo_r2_6.png" },
-  { name: "Divine Mercy General Hospital", shortName: "DMGH", logoUrl: "/images/logos/logo_r1_3.png" },
-  { name: "Dr. Fazlul Haque Colorectal Hospital Limited", shortName: "FHCH", logoUrl: "/images/logos/logo_r1_3.png" },
-  { name: "Hannan Group", shortName: "Hannan", logoUrl: "/images/logos/logo_r1_6.png" },
-  { name: "Ibn Sina Pharmaceuticals Ltd", shortName: "Ibn Sina", logoUrl: "/images/logos/logo_r2_2.png" },
+  { name: "Popular Diagnostic Centre Ltd.", shortName: "PDC", logoUrl: "/Customer/Popular Diagnostic Centre Ltd..jpg" },
+  { name: "Popular Medical College & Hospital Ltd.", shortName: "PMC", logoUrl: "/Customer/Popular Medical College & Hospital Ltd.png" },
+  { name: "KiDO DHAKA Co., Ltd.", shortName: "KiDO", logoUrl: "/Customer/KiDO DHAKA Co., Ltd..jpg" },
+  { name: "Crowne Plaza Dhaka Gulshan by IHG", shortName: "Crowne Plaza", logoUrl: "/Customer/Crowne Plaza Dhaka Gulshan by IHG.svg" },
+  { name: "Leading University", shortName: "LU", logoUrl: "/Customer/Leading University.png" },
+  { name: "Counter Terrorism & Transnational Crime, DMP", shortName: "CTTC", logoUrl: "/Customer/Counter Terrorism & Transnational Crime, DMP.png" },
+  { name: "Bangladesh Football Federation", shortName: "BFF", logoUrl: "/Customer/Bangladesh Football Federation.png" },
+  { name: "BAIUST", shortName: "BAIUST", logoUrl: "/Customer/Bangladesh Army International University of Science and Technology (BAIUST).png" },
+  { name: "MJL Bangladesh", shortName: "MJL", logoUrl: "/Customer/MJL Bangladesh.webp" },
+  { name: "Divine Mercy Hospital Ltd.", shortName: "DMH", logoUrl: "/Customer/Divine Mercy Hospital Ltd..jpg" },
+  { name: "NASSA Group", shortName: "NASSA", logoUrl: "/Customer/NASSA Group.png" },
+  { name: "Bangladesh Ainjeebe Shahakari Samity", shortName: "BASS", logoUrl: "/Customer/Bangladesh Ainjeebe Shahakari Samity.png" },
+  { name: "Bangladesh Development Bank Ltd.", shortName: "BDBL", logoUrl: "/Customer/Bangladesh Development Bank Ltd..png" },
+  { name: "Office of the Registrar General, BDR", shortName: "BDR", logoUrl: "/Customer/Office of the Registrar General, Birth and Death Registration.png" },
+  { name: "BRTA", shortName: "BRTA", logoUrl: "/Customer/BRTA.svg" },
+  { name: "BGMEA University of Fashion and Technology", shortName: "BUFT", logoUrl: "/Customer/BGMEA University of Fashion and Technology.png" },
+  { name: "CPTU", shortName: "CPTU", logoUrl: "/Customer/CPTU.jpg" },
+  { name: "Crossline Knit and Fabric Ltd", shortName: "Crossline", logoUrl: "/Customer/Crossline Knit and Fabric Ltd.jpg" },
+  { name: "Daffodil International University", shortName: "DIU", logoUrl: "/Customer/Daffodil International University.png" },
+  { name: "Divine Mercy General Hospital", shortName: "DMGH", logoUrl: "/Customer/Divine Mercy General Hospital.jpg" },
+  { name: "Dr. Fazlul Haque Colorectal Hospital Limited", shortName: "FHCH", logoUrl: "/Customer/Dr. Fazlul Haque Colorectal Hospital Limited.png" },
+  { name: "Hannan Group", shortName: "Hannan", logoUrl: "/Customer/Hannan Group.png" },
+  { name: "Ibn Sina Pharmaceuticals Ltd", shortName: "Ibn Sina", logoUrl: "/Customer/Ibn Sina Pharmaceuticals Ltd.png" },
   { name: "Eskayef Pharmaceuticals Ltd.", shortName: "SK+F", logoUrl: "/images/logos/logo_r1_8.png" },
   { name: "Nuvista Pharma Limited", shortName: "Nuvista", logoUrl: "/images/logos/logo_r1_7.png" },
   { name: "Mutual Trust Bank Securities", shortName: "MTB", logoUrl: "/images/logos/logo_r2_1.png" },
   { name: "TVS Auto Bangladesh Ltd.", shortName: "TVS", logoUrl: "/images/logos/logo_r2_3.png" }
 ];
 
-const row1 = allCompanies.slice(0, 14);
-const row2 = allCompanies.slice(14, 28);
+const row1 = allCompanies.slice(0, 10);
+const row2 = allCompanies.slice(10, 19);
+const row3 = allCompanies.slice(19, 28);
 
 export default function TrustedCompanies() {
   return (
@@ -108,6 +109,26 @@ export default function TrustedCompanies() {
               {[...row2, ...row2].map((logo, idx) => (
                 <div 
                   key={`r2-${idx}`}
+                  className="group relative w-36 h-20 sm:w-44 sm:h-24 rounded-2xl bg-white border border-slate-100 shadow-sm hover:shadow-md transition-all duration-300 flex items-center justify-center p-3 select-none overflow-hidden shrink-0 cursor-pointer"
+                >
+                  <div className="w-full h-full flex items-center justify-center group-hover:scale-105 transition-transform duration-300 shrink-0">
+                    <img 
+                      src={logo.logoUrl} 
+                      alt={logo.name} 
+                      className="max-w-[85%] max-h-[85%] object-contain transition-all duration-300"
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Row 3 (Scrolls Left) */}
+          <div className="flex whitespace-nowrap overflow-hidden">
+            <div className="flex animate-scroll-left pause-on-hover w-max gap-6 px-3">
+              {[...row3, ...row3].map((logo, idx) => (
+                <div 
+                  key={`r3-${idx}`}
                   className="group relative w-36 h-20 sm:w-44 sm:h-24 rounded-2xl bg-white border border-slate-100 shadow-sm hover:shadow-md transition-all duration-300 flex items-center justify-center p-3 select-none overflow-hidden shrink-0 cursor-pointer"
                 >
                   <div className="w-full h-full flex items-center justify-center group-hover:scale-105 transition-transform duration-300 shrink-0">
