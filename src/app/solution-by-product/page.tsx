@@ -14,22 +14,22 @@ const productTypes: SolutionCard[] = [
   {
     title: "Artificial Intelligence (AI)",
     desc: "Artificial Intelligence is transforming how organizations operate, compete, and innovate. Silicon Computing Ltd delivers scalable AI-ready infrastructure and solutions that help businesses build, deploy, and manage AI workloads efficiently—turning data into actionable intelligence faster.",
-    link: "/solutions/artificial-intelligence-ai"
+    link: "/solution-by-product/artificial-intelligence-ai"
   },
   {
     title: "Compute",
     desc: "Power your digital transformation with high-performance, reliable compute solutions from Silicon Computing Ltd. Our workload-optimized servers and compute platforms are designed to support modern applications, virtualization, and hybrid IT environments from edge to core.",
-    link: "/solutions/compute"
+    link: "/solution-by-product/compute"
   },
   {
     title: "Private Cloud",
     desc: "Build secure and flexible private cloud environments across data centers, edge locations, and colocation facilities. Silicon Computing Ltd enables seamless workload mobility and centralized management, giving you full control of your infrastructure while maintaining cloud-like agility.",
-    link: "/solutions/security"
+    link: "/solution-by-product/security"
   },
   {
     title: "Networking",
     desc: "Enable high-speed, secure, and intelligent connectivity from edge to cloud. Silicon Computing Ltd offers enterprise-grade networking solutions designed to deliver consistent performance, enhanced security, and superior user experiences for today's connected world.",
-    link: "/solutions/network"
+    link: "/solution-by-product/network"
   },
   {
     title: "Services",
@@ -39,17 +39,17 @@ const productTypes: SolutionCard[] = [
   {
     title: "Software",
     desc: "Unlock the full potential of your data with innovative software solutions from Silicon Computing Ltd. Our software portfolio supports hybrid and edge environments, enabling better visibility, automation, and data-driven decision-making across your IT landscape.",
-    link: "/solutions/software"
+    link: "/solution-by-product/software"
   },
   {
     title: "Storage",
     desc: "Modernize your data infrastructure with scalable and secure storage solutions. Silicon Computing Ltd simplifies data storage, management, and protection across on-premises and hybrid cloud environments—ensuring performance, reliability, and business continuity.",
-    link: "/solutions/storage"
+    link: "/solution-by-product/storage"
   },
   {
     title: "High-Performance Computing (HPC)",
     desc: "Drive advanced research, analytics, and AI workloads with high-performance computing solutions from Silicon Computing Ltd. Our HPC platforms are built to deliver faster insights, higher efficiency, and scalable performance for compute-intensive applications.",
-    link: "/solutions/supercomputing"
+    link: "/solution-by-product/supercomputing"
   }
 ];
 
@@ -57,32 +57,32 @@ const solutionsByTopic: SolutionCard[] = [
   {
     title: "Enterprise ERP & CRM Operations",
     desc: "Unify your corporate data structures, financial ledger divisions, and customer communication pathways. Our customized enterprise platforms eliminate operational silos, automate billing gateways, and provide real-time reporting metrics.",
-    link: "/solutions/erp-crm"
+    link: "/solution-by-product/erp-crm"
   },
   {
     title: "Zero-Trust Cybersecurity & Threat Isolation",
     desc: "Protect your organization's intellectual capital and transaction paths from high-velocity cyber threats. We implement zero-trust network boundaries, configure hardware-secured cryptoprocessors, and establish containment protocols.",
-    link: "/solutions/security"
+    link: "/solution-by-product/security"
   },
   {
     title: "Cognitive Machine Learning & Deep Vision",
     desc: "Leverage the power of custom neural networks trained on secure organizational registries. We deploy machine vision models, natural language database querying tools, and predictive analytics layers.",
-    link: "/solutions/artificial-intelligence-ai"
+    link: "/solution-by-product/artificial-intelligence-ai"
   },
   {
     title: "High-Availability Cloud & Kubernetes",
     desc: "Deploy high-performance, fault-tolerant infrastructure designed to maintain uninterrupted corporate presence. We structure multi-region active-active clusters on secure clouds.",
-    link: "/solutions/compute"
+    link: "/solution-by-product/compute"
   },
   {
     title: "Unified Telecom & SD-WAN Design",
     desc: "Connect geographically dispersed operations, factories, and corporate offices with secure, high-speed telecom lines. We provide automated SD-WAN edge structures and redundant fiber routing.",
-    link: "/solutions/network"
+    link: "/solution-by-product/network"
   },
   {
     title: "Omni-Channel Retail Logistics & Supply Chain",
     desc: "Optimize global supply flows with sub-second inventory sync and dynamic fleet routing. We build high-throughput tracking dashboards and event-driven message brokers.",
-    link: "/solutions/software"
+    link: "/solution-by-product/software"
   }
 ];
 
