@@ -62,8 +62,79 @@ interface SolutionData {
   }[]; // 3 items
 }
 
+const getAccurateHeroImage = (slug: string) => {
+  const s = slug.toLowerCase();
+  if (s.includes("ai") || s.includes("intelligence") || s.includes("machine") || s.includes("ml")) {
+    return "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&q=80&w=800";
+  }
+  if (s.includes("storage") || s.includes("nas") || s.includes("san") || s.includes("disk")) {
+    return "https://images.unsplash.com/photo-1600132806370-bf17e65e942f?auto=format&fit=crop&q=80&w=800";
+  }
+  if (s.includes("network") || s.includes("switch") || s.includes("sd-wan") || s.includes("routing")) {
+    return "https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&q=80&w=800";
+  }
+  if (s.includes("security") || s.includes("cyber") || s.includes("firewall") || s.includes("trust") || s.includes("private")) {
+    return "https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&q=80&w=800";
+  }
+  if (s.includes("database") || s.includes("sql") || s.includes("oracle") || s.includes("postgres")) {
+    return "https://images.unsplash.com/photo-1544383835-bda2bc66a55d?auto=format&fit=crop&q=80&w=800";
+  }
+  if (s.includes("software") || s.includes("code") || s.includes("app") || s.includes("saas")) {
+    return "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=800";
+  }
+  if (s.includes("supercompute") || s.includes("hpc") || s.includes("cluster")) {
+    return "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=800";
+  }
+  if (s.includes("cloud") || s.includes("hybrid")) {
+    return "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=800";
+  }
+  return "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&q=80&w=800";
+};
+
 // Predefined rich content for Solution by Product pages
 const solutionsContent: Record<string, SolutionData> = {
+  "artificial-intelligence-ai": {
+    title: "Artificial Intelligence (AI)",
+    subtitle: "AI / Solutions",
+    description: "Build, train, and deploy advanced machine learning pipelines and neural classifiers. We deliver GPU-accelerated computing nodes, parallel low-latency storage, and high-performance interconnects built for AI workloads.",
+    heroImage: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&q=80&w=800",
+    benefits: [
+      { title: "Hardware-Accelerated Training", desc: "Accelerate deep learning loops using high-density GPU nodes and tensor processing modules." },
+      { title: "Optimized Parallel Data Pipelines", desc: "Feed training nodes with high-throughput parallel data pipelines to maximize accelerator usage." },
+      { title: "Flexible Deployment Models", desc: "Deploy final models to regional cloud systems or secure local edge devices depending on compliance requirements." },
+      { title: "Model Inference Telemetry", desc: "Monitor query speed, accuracy metrics, and node load from a unified panel." }
+    ],
+    banner: {
+      title: "Scale Your AI Infrastructure turn-key",
+      desc: "Deploy pre-configured model training clusters, MLOps orchestration systems, and zero-trust database bridges.",
+      image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=1200"
+    },
+    featured: [
+      { title: "GPU-Accelerated Computing", desc: "Deploy enterprise server hardware loaded with high-density GPU accelerators." },
+      { title: "Parallel Storage Pools", desc: "Feed analytical data directly to processors using low-latency filesystems." },
+      { title: "MLOps Orchestration", desc: "Manage containerized training configurations and version controls dynamically." },
+      { title: "Secure Model APIs", desc: "Expose finished models via verified API gateways protecting source databases." }
+    ],
+    portfolio: [
+      { title: "High-density GPU racks", desc: "Configure server racks loaded with Nvidia Tensor Core computing hardware." },
+      { title: "Lustre parallel filesystems", desc: "Deploy high-speed storage pools to deliver training files to compute nodes." },
+      { title: "Docker & Kubernetes setup", desc: "Orchestrate containers to scale machine learning environments dynamically." },
+      { title: "Model inference API gateways", desc: "Host model API ports with built-in access credentials and billing tracking." },
+      { title: "Jupyter server environments", desc: "Provide developers with interactive sandbox systems linked to new compute nodes." },
+      { title: "Neural network model versioning", desc: "Track model configurations, parameter weights, and training histories safely." },
+      { title: "Automated labeling pipelines", desc: "Pre-process raw customer telemetry data to prepare training sets dynamically." },
+      { title: "Hardware-secured API endpoints", desc: "Isolate client inference requests using HSM cryptographic keys." },
+      { title: "Low-power edge analytics modules", desc: "Run analytical models directly on small hardware devices to lower cloud bandwidth fees." },
+      { title: "Dynamic processor scheduling", desc: "Prioritize compute workloads to balance training runs with real-time app requests." },
+      { title: "Model accuracy metrics logs", desc: "Track query success levels to alert developers of configuration drift." },
+      { title: "Certified consulting services", desc: "Work with systems architects to design custom computing infrastructures." }
+    ],
+    edgeToCloud: [
+      { title: "Unified Management Console", desc: "Monitor training progress, server temperatures, and api requests from one panel." },
+      { title: "Hybrid bursting pipelines", desc: "Burst heavy computing queues to public cloud instances when local systems are busy." },
+      { title: "Sovereign data security", desc: "Protect client registers by keeping raw training files inside geographic boundaries." }
+    ]
+  },
   "compute": {
     title: "Compute",
     subtitle: "Compute / Solutions",
@@ -236,7 +307,7 @@ const solutionsContent: Record<string, SolutionData> = {
     title: "Software",
     subtitle: "Software / Solutions",
     description: "Deliver intuitive, modern, and scalable software architectures. We build bespoke SaaS portals, API-first integrations, and event-driven microservices engineered for business outcomes.",
-    heroImage: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800",
+    heroImage: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=800",
     benefits: [
       { title: "API-First Architecture", desc: "Ensure your systems are ready to connect with third-party vendors and client tools." },
       { title: "Rapid CI/CD Pipelines", desc: "Automate code testing and deployment to reduce release cycles from months to hours." },
@@ -255,8 +326,8 @@ const solutionsContent: Record<string, SolutionData> = {
       { title: "Headless CMS Platforms", desc: "Decouple editorial content from display layers to speed up content delivery." }
     ],
     portfolio: [
-      { title: "Bespoke customer databases", desc: "Structure user records with custom fields and rapid querying indices." },
-      { title: "Automated billing gateways", desc: "Integrate Stripe or Adyen payment structures with automated invoicing." },
+      { title: "Bespoke customer databases", desc: "Structure user records with custom fields and data indexing templates." },
+      { title: "Automated billing gateways", desc: "Integrate Stripe or Adyen payment structures with automated invoicing rules." },
       { title: "Real-time chat channels", desc: "Add collaborative chat tools to customer portals using WebSockets." },
       { title: "Data translation pipelines", desc: "Convert file structures (XML, CSV, JSON) automatically between systems." },
       { title: "Developer testing suites", desc: "Run comprehensive unit, integration, and end-to-end tests automatically." },
@@ -367,7 +438,7 @@ const getFallbackData = (slug: string): SolutionData => {
     title: title,
     subtitle: `${title} / Solutions`,
     description: `Optimize, automate, and protect your corporate processes with our industry-leading ${title.toLowerCase()} configurations. We build high-fidelity architectures designed to match enterprise-level efficiency and scalability parameters.`,
-    heroImage: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=800",
+    heroImage: getAccurateHeroImage(slug),
     benefits: [
       { title: "High Scalability", desc: "Instantly scale your operations to meet enterprise demand without compromising on speed or reliability." },
       { title: "Zero-Trust Security", desc: "Enforce comprehensive security parameters across your entire stack to protect critical corporate assets." },
@@ -533,34 +604,34 @@ export default function SolutionsDynamicPage() {
     <main className="min-h-screen bg-[#F8FAFC] pt-32 pb-16 relative overflow-hidden font-sans text-slate-800">
       
       {/* Background Ambience Orbs */}
-      <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-primary-600/5 blur-[150px] pointer-events-none" />
-      <div className="absolute top-1/2 left-1/4 w-[400px] h-[400px] bg-accent-500/5 blur-[125px] pointer-events-none" />
+      <div className="absolute top-0 right-1/4 w-[550px] h-[550px] bg-[#000072]/5 blur-[140px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/4 w-[450px] h-[450px] bg-[#D32F2F]/3 blur-[130px] pointer-events-none" />
 
       {/* 1. HERO SECTION */}
-      <div className="max-w-7xl mx-auto px-6 pt-8 pb-16 relative z-10">
+      <div className="max-w-7xl mx-auto px-6 pt-8 pb-20 relative z-10">
         
         {/* Breadcrumb */}
-        <div className="flex items-center gap-2 text-xs font-semibold text-slate-400 mb-6 uppercase tracking-wider">
-          <Link href="/" className="hover:text-primary-600 transition-colors">Home</Link>
+        <div className="flex items-center gap-2 text-[10px] md:text-xs font-bold text-slate-400 mb-8 uppercase tracking-wider">
+          <Link href="/" className="hover:text-[#000072] transition-colors">Home</Link>
           <ChevronRight className="w-3.5 h-3.5" />
-          <Link href="/solution-by-product" className="hover:text-primary-600 transition-colors">Solutions</Link>
+          <Link href="/solution-by-product" className="hover:text-[#000072] transition-colors">Solutions</Link>
           <ChevronRight className="w-3.5 h-3.5" />
-          <span className="text-primary-600 font-bold">{formatTitle(slug)}</span>
+          <span className="text-[#000072] font-black">{formatTitle(slug)}</span>
         </div>
 
-        <div className="flex flex-col lg:flex-row gap-12 items-center">
+        <div className="flex flex-col lg:flex-row gap-12 lg:gap-16 items-center">
           <div className="flex-1 text-left">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary-500/10 text-[#000072] text-xs font-black tracking-wider uppercase mb-4">
-              Enterprise Solutions
+            <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#000072]/10 text-[#000072] text-[10px] md:text-xs font-black tracking-wider uppercase mb-6">
+              Enterprise Product Solutions
             </span>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-[#0F2C59] leading-[1.15]">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-[#0F2C59] leading-[1.12]">
               {content.title}
             </h1>
-            <p className="text-slate-500 mt-6 text-sm sm:text-base leading-relaxed max-w-2xl">
+            <p className="text-slate-500 mt-6 text-sm sm:text-base leading-relaxed max-w-2xl font-medium">
               {content.description}
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-4">
-              <Link href="/contact" className="px-6 py-3.5 rounded-xl bg-gradient-to-r from-[#000072] to-[#000072]/85 hover:from-[#000072]/90 hover:to-[#000072]/75 text-white font-extrabold text-xs tracking-wide shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-2 cursor-pointer">
+              <Link href="/contact" className="px-6 py-3.5 rounded-xl bg-[#000072] hover:bg-[#000072]/90 text-white font-extrabold text-xs tracking-wide shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-2 cursor-pointer">
                 Deploy Now <ArrowRight className="w-4 h-4" />
               </Link>
               <Link href="/contact" className="px-6 py-3.5 rounded-xl bg-white border border-slate-200 text-[#0F2C59] font-extrabold text-xs tracking-wide hover:bg-slate-50 shadow-sm transition-all duration-300 flex items-center gap-2 cursor-pointer">
@@ -569,8 +640,10 @@ export default function SolutionsDynamicPage() {
             </div>
           </div>
           
-          <div className="flex-1 w-full max-w-xl">
-            <div className="rounded-3xl bg-white shadow-xl p-3 relative overflow-hidden aspect-[4/3] flex items-center justify-center border border-slate-100">
+          <div className="flex-1 w-full max-w-xl relative">
+            {/* Tech frame overlay */}
+            <div className="absolute -inset-1.5 bg-gradient-to-r from-[#000072]/20 to-[#D32F2F]/20 rounded-[32px] blur opacity-40 pointer-events-none" />
+            <div className="rounded-3xl bg-white shadow-xl p-3 relative overflow-hidden aspect-[4/3] flex items-center justify-center border border-slate-100 z-10">
               <img 
                 src={content.heroImage} 
                 alt={content.title}
@@ -583,22 +656,23 @@ export default function SolutionsDynamicPage() {
 
       {/* BRANDS ROW */}
       <div className="w-full py-16 bg-white border-b border-slate-100 relative z-10">
-        <div className="max-w-7xl mx-auto px-6 text-center mb-16">
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-[#0F2C59] tracking-tight">
-            Brands Partnered
+        <div className="max-w-7xl mx-auto px-6 text-center">
+          <span className="text-[10px] uppercase font-black text-[#D32F2F] tracking-widest block mb-2">Technology Partners</span>
+          <h2 className="text-3xl font-black text-[#0F2C59] tracking-tight">
+            Integrated Global Brands
           </h2>
-          <div className="h-1 w-16 bg-[#D32F2F] mx-auto mt-4 rounded mb-8" />
+          <div className="h-1 w-12 bg-[#D32F2F] mx-auto mt-4 rounded mb-10" />
           <div className="flex flex-wrap justify-center gap-6 max-w-6xl mx-auto">
             {brands.map((brand, idx) => (
-              <div key={idx} className="px-5 py-3 rounded-xl border border-slate-100 shadow-sm bg-white hover:border-slate-300 hover:shadow-md transition-all duration-300 select-none flex items-center justify-center w-[190px] h-20">
+              <div key={idx} className="px-5 py-3 rounded-2xl border border-slate-100 shadow-sm bg-white hover:border-[#000072]/20 hover:shadow-md transition-all duration-300 select-none flex items-center justify-center w-[180px] h-20 group">
                 {brand.logoUrl ? (
                   <img 
                     src={brand.logoUrl} 
                     alt={brand.name} 
-                    className="max-h-12 max-w-[85%] object-contain filter grayscale hover:grayscale-0 opacity-75 hover:opacity-100 transition-all duration-300"
+                    className="max-h-10 max-w-[85%] object-contain filter grayscale group-hover:grayscale-0 opacity-75 group-hover:opacity-100 transition-all duration-300"
                   />
                 ) : (
-                  <span className="text-xs md:text-sm font-black text-slate-400 hover:text-slate-600 transition-colors uppercase tracking-widest">
+                  <span className="text-xs md:text-sm font-black text-slate-400 group-hover:text-[#0F2C59] transition-colors uppercase tracking-widest">
                     {brand.logo}
                   </span>
                 )}
@@ -612,20 +686,21 @@ export default function SolutionsDynamicPage() {
       <div className="w-full py-20 bg-white border-y border-slate-100 relative z-10">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-[#0F2C59] tracking-tight">
+            <span className="text-[10px] uppercase font-black text-[#D32F2F] tracking-widest block mb-2">Value Realization</span>
+            <h2 className="text-3xl font-black text-[#0F2C59] tracking-tight">
               Benefits of Silicon {formatTitle(slug)}
             </h2>
-            <div className="h-1 w-16 bg-[#D32F2F] mx-auto mt-4 rounded" />
+            <div className="h-1 w-12 bg-[#D32F2F] mx-auto mt-4 rounded" />
           </div>
           
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {content.benefits.map((benefit, idx) => (
-              <div key={idx} className="p-8 rounded-3xl bg-[#F8FAFC] border border-slate-100 shadow-sm flex flex-col gap-4 hover:shadow-md hover:border-slate-200 transition-all duration-300">
-                <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center shrink-0">
+              <div key={idx} className="p-8 rounded-3xl bg-[#F8FAFC] border border-slate-100 shadow-sm flex flex-col gap-4 hover:shadow-lg hover:-translate-y-1 hover:border-slate-200 transition-all duration-300 text-left group">
+                <div className="w-10 h-10 rounded-xl bg-[#000072]/5 text-[#000072] group-hover:bg-[#000072] group-hover:text-white flex items-center justify-center shrink-0 transition-colors duration-300">
                   <CheckCircle2 className="w-5.5 h-5.5" />
                 </div>
                 <h3 className="font-extrabold text-base text-[#0F2C59] leading-snug">{benefit.title}</h3>
-                <p className="text-xs text-slate-500 leading-relaxed">
+                <p className="text-xs text-slate-500 leading-relaxed font-medium">
                   {benefit.desc}
                 </p>
               </div>
@@ -640,13 +715,13 @@ export default function SolutionsDynamicPage() {
         <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-900/95 to-slate-950/80 pointer-events-none" />
         
         <div className="max-w-7xl mx-auto px-6 relative z-10 text-center flex flex-col items-center">
-          <div className="w-16 h-16 rounded-2xl bg-amber-500/10 text-amber-500 flex items-center justify-center border border-amber-500/20 mb-6">
-            <Shield className="w-8 h-8" />
+          <div className="w-14 h-14 rounded-2xl bg-white/5 text-[#D32F2F] flex items-center justify-center border border-white/10 mb-6">
+            <Shield className="w-7 h-7" />
           </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight max-w-3xl">
+          <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight max-w-3xl leading-snug">
             {content.banner.title}
           </h2>
-          <p className="text-slate-400 mt-4 text-sm sm:text-base leading-relaxed max-w-2xl">
+          <p className="text-slate-400 mt-4 text-xs sm:text-sm leading-relaxed max-w-2xl font-medium">
             {content.banner.desc}
           </p>
         </div>
@@ -656,20 +731,21 @@ export default function SolutionsDynamicPage() {
       <div className="w-full py-20 relative z-10 bg-[#F8FAFC]">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-[#0F2C59] tracking-tight">
+            <span className="text-[10px] uppercase font-black text-[#D32F2F] tracking-widest block mb-2">Core Offerings</span>
+            <h2 className="text-3xl font-black text-[#0F2C59] tracking-tight">
               Featured {formatTitle(slug)} Solutions
             </h2>
-            <div className="h-1 w-16 bg-[#D32F2F] mx-auto mt-4 rounded" />
+            <div className="h-1 w-12 bg-[#D32F2F] mx-auto mt-4 rounded" />
           </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {content.featured.map((sol, idx) => (
-              <div key={idx} className="p-8 rounded-3xl bg-white border border-slate-150 shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col gap-4">
-                <div className="w-10 h-10 rounded-xl bg-primary-500/10 text-primary-600 flex items-center justify-center">
+              <div key={idx} className="p-8 rounded-3xl bg-white border border-slate-150 shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col gap-4 text-left group">
+                <div className="w-10 h-10 rounded-xl bg-red-50 text-[#D32F2F] flex items-center justify-center group-hover:bg-[#D32F2F] group-hover:text-white transition-colors duration-300">
                   <Sparkles className="w-5 h-5" />
                 </div>
                 <h3 className="font-extrabold text-base text-[#0F2C59] leading-tight">{sol.title}</h3>
-                <p className="text-xs text-slate-500 leading-relaxed">
+                <p className="text-xs text-slate-500 leading-relaxed font-medium">
                   {sol.desc}
                 </p>
               </div>
@@ -682,17 +758,18 @@ export default function SolutionsDynamicPage() {
       <div className="w-full py-20 bg-white border-y border-slate-100 relative z-10">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-[#0F2C59] tracking-tight">
-              Additional {formatTitle(slug).toLowerCase()} portfolio
+            <span className="text-[10px] uppercase font-black text-[#D32F2F] tracking-widest block mb-2">Product Capabilities</span>
+            <h2 className="text-3xl font-black text-[#0F2C59] tracking-tight">
+              Additional {formatTitle(slug)} Portfolio
             </h2>
-            <div className="h-1 w-16 bg-[#D32F2F] mx-auto mt-4 rounded" />
+            <div className="h-1 w-12 bg-[#D32F2F] mx-auto mt-4 rounded" />
           </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {content.portfolio.map((item, idx) => (
-              <div key={idx} className="p-8 rounded-3xl bg-[#F8FAFC] border border-slate-100 hover:border-slate-200 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col gap-3">
+              <div key={idx} className="p-8 rounded-3xl bg-[#F8FAFC] border border-slate-100 hover:border-slate-200 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col gap-3 text-left">
                 <h3 className="font-extrabold text-base text-[#0F2C59] leading-tight">{item.title}</h3>
-                <p className="text-xs text-slate-500 leading-relaxed">
+                <p className="text-xs text-slate-500 leading-relaxed font-medium">
                   {item.desc}
                 </p>
               </div>
@@ -705,17 +782,18 @@ export default function SolutionsDynamicPage() {
       <div className="w-full py-20 bg-[#F8FAFC] relative z-10">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16">
-            <h2 className="text-3xl font-extrabold text-[#0F2C59]">
-              {formatTitle(slug)} solutions across edge to cloud
+            <span className="text-[10px] uppercase font-black text-[#D32F2F] tracking-widest block mb-2">Deployment Architectures</span>
+            <h2 className="text-3xl font-black text-[#0F2C59] tracking-tight">
+              {formatTitle(slug)} Solutions Across Edge to Cloud
             </h2>
-            <div className="h-1 w-16 bg-[#D32F2F] mx-auto mt-4 rounded" />
+            <div className="h-1 w-12 bg-[#D32F2F] mx-auto mt-4 rounded" />
           </div>
 
           <div className="grid md:grid-cols-3 gap-6">
             {content.edgeToCloud.map((item, idx) => (
-              <div key={idx} className="p-8 rounded-3xl bg-white border border-slate-150 shadow-sm flex flex-col gap-3">
+              <div key={idx} className="p-8 rounded-3xl bg-white border border-slate-150 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col gap-3 text-left">
                 <h3 className="font-extrabold text-base text-[#0F2C59] leading-tight">{item.title}</h3>
-                <p className="text-xs text-slate-500 leading-relaxed">
+                <p className="text-xs text-slate-500 leading-relaxed font-medium">
                   {item.desc}
                 </p>
               </div>
@@ -724,17 +802,15 @@ export default function SolutionsDynamicPage() {
         </div>
       </div>
 
-
-
       {/* 8. GET STARTED CALLOUT */}
       <div className="max-w-7xl mx-auto px-6 py-16 relative z-10">
-        <div className="rounded-3xl bg-gradient-to-tr from-[#0F2C59] to-[#000072] text-white p-10 md:p-12 shadow-2xl relative overflow-hidden">
+        <div className="rounded-[32px] bg-gradient-to-tr from-[#0F2C59] to-[#000072] text-white p-10 md:p-14 shadow-2xl relative overflow-hidden">
           <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=600')] bg-cover bg-center opacity-10 mix-blend-overlay pointer-events-none" />
           <div className="relative z-10 max-w-2xl text-left">
-            <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
+            <h2 className="text-2xl sm:text-3.5xl font-black tracking-tight leading-tight">
               Get Started with Silicon {formatTitle(slug)}
             </h2>
-            <p className="text-slate-300 mt-4 text-xs sm:text-sm leading-relaxed">
+            <p className="text-slate-300 mt-4 text-xs sm:text-sm leading-relaxed font-medium">
               Ready to optimize your {formatTitle(slug).toLowerCase()} infrastructure? Reach out to our solutions architects today to discuss your technical requirements and custom operational pipelines.
             </p>
             <div className="mt-8">
@@ -750,15 +826,16 @@ export default function SolutionsDynamicPage() {
       <div className="w-full py-20 bg-[#F8FAFC] border-t border-slate-100 relative z-10">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16">
-            <h2 className="text-3xl font-extrabold text-[#0F2C59] tracking-tight">
-              {formatTitle(slug)} news and resources
+            <span className="text-[10px] uppercase font-black text-[#D32F2F] tracking-widest block mb-2">Resource Library</span>
+            <h2 className="text-3xl font-black text-[#0F2C59] tracking-tight">
+              {formatTitle(slug)} News and Resources
             </h2>
-            <div className="h-1 w-16 bg-[#D32F2F] mx-auto mt-4 rounded" />
+            <div className="h-1 w-12 bg-[#D32F2F] mx-auto mt-4 rounded" />
           </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {relevantPosts.map((post) => (
-              <article key={post.id} className="rounded-3xl bg-white border border-slate-150 overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col justify-between group">
+              <article key={post.id} className="rounded-3xl bg-white border border-slate-150 overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group">
                 <div>
                   <div className="aspect-[16/9] relative overflow-hidden bg-slate-100">
                     <img 
@@ -767,12 +844,12 @@ export default function SolutionsDynamicPage() {
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                   </div>
-                  <div className="p-6">
+                  <div className="p-6 text-left">
                     <span className="text-[10px] font-black uppercase text-[#D32F2F] tracking-widest">{post.category}</span>
                     <h3 className="font-extrabold text-base text-[#0F2C59] leading-snug mt-2.5 group-hover:text-[#D32F2F] transition-colors line-clamp-2">
                       {post.title}
                     </h3>
-                    <p className="text-xs text-slate-500 leading-relaxed mt-2.5 line-clamp-3">
+                    <p className="text-xs text-slate-500 leading-relaxed mt-2.5 line-clamp-3 font-medium">
                       {post.excerpt}
                     </p>
                   </div>
@@ -798,3 +875,4 @@ export default function SolutionsDynamicPage() {
     </main>
   );
 }
+

@@ -2,54 +2,66 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { ArrowRight, Cpu, Server, Shield, Network, Settings, Code, Database, Zap, Heart, Globe, Building } from "lucide-react";
+import { 
+  ArrowRight, Cpu, Server, Shield, Network, Settings, Code, Database, Zap, 
+  Heart, Globe, Building, Cloud, Sparkles, Briefcase, BarChart3, Activity, Users, ShoppingCart, Radio
+} from "lucide-react";
 
 interface SolutionCard {
   title: string;
   desc: string;
   link: string;
+  iconName: string;
 }
 
 const productTypes: SolutionCard[] = [
   {
     title: "Artificial Intelligence (AI)",
     desc: "Artificial Intelligence is transforming how organizations operate, compete, and innovate. Silicon Computing Ltd delivers scalable AI-ready infrastructure and solutions that help businesses build, deploy, and manage AI workloads efficiently—turning data into actionable intelligence faster.",
-    link: "/solution-by-product/artificial-intelligence-ai"
+    link: "/solution-by-product/artificial-intelligence-ai",
+    iconName: "Cpu"
   },
   {
     title: "Compute",
     desc: "Power your digital transformation with high-performance, reliable compute solutions from Silicon Computing Ltd. Our workload-optimized servers and compute platforms are designed to support modern applications, virtualization, and hybrid IT environments from edge to core.",
-    link: "/solution-by-product/compute"
+    link: "/solution-by-product/compute",
+    iconName: "Server"
   },
   {
     title: "Private Cloud",
     desc: "Build secure and flexible private cloud environments across data centers, edge locations, and colocation facilities. Silicon Computing Ltd enables seamless workload mobility and centralized management, giving you full control of your infrastructure while maintaining cloud-like agility.",
-    link: "/solution-by-product/security"
+    link: "/solution-by-product/security",
+    iconName: "Cloud"
   },
   {
     title: "Networking",
     desc: "Enable high-speed, secure, and intelligent connectivity from edge to cloud. Silicon Computing Ltd offers enterprise-grade networking solutions designed to deliver consistent performance, enhanced security, and superior user experiences for today's connected world.",
-    link: "/solution-by-product/network"
+    link: "/solution-by-product/network",
+    iconName: "Network"
   },
   {
     title: "Services",
     desc: "From strategy and design to deployment and ongoing support, Silicon Computing Ltd provides end-to-end IT services. Our experts help you optimize operations, modernize infrastructure, and maximize the value of your technology investments.",
-    link: "/services"
+    link: "/services",
+    iconName: "Settings"
   },
   {
     title: "Software",
     desc: "Unlock the full potential of your data with innovative software solutions from Silicon Computing Ltd. Our software portfolio supports hybrid and edge environments, enabling better visibility, automation, and data-driven decision-making across your IT landscape.",
-    link: "/solution-by-product/software"
+    link: "/solution-by-product/software",
+    iconName: "Code"
   },
   {
     title: "Storage",
     desc: "Modernize your data infrastructure with scalable and secure storage solutions. Silicon Computing Ltd simplifies data storage, management, and protection across on-premises and hybrid cloud environments—ensuring performance, reliability, and business continuity.",
-    link: "/solution-by-product/storage"
+    link: "/solution-by-product/storage",
+    iconName: "Database"
   },
   {
     title: "High-Performance Computing (HPC)",
     desc: "Drive advanced research, analytics, and AI workloads with high-performance computing solutions from Silicon Computing Ltd. Our HPC platforms are built to deliver faster insights, higher efficiency, and scalable performance for compute-intensive applications.",
-    link: "/solution-by-product/supercomputing"
+    link: "/solution-by-product/supercomputing",
+    iconName: "Zap"
   }
 ];
 
@@ -57,32 +69,38 @@ const solutionsByTopic: SolutionCard[] = [
   {
     title: "Enterprise ERP & CRM Operations",
     desc: "Unify your corporate data structures, financial ledger divisions, and customer communication pathways. Our customized enterprise platforms eliminate operational silos, automate billing gateways, and provide real-time reporting metrics.",
-    link: "/solution-by-product/erp-crm"
+    link: "/solution-by-product/erp-crm",
+    iconName: "Building"
   },
   {
     title: "Zero-Trust Cybersecurity & Threat Isolation",
     desc: "Protect your organization's intellectual capital and transaction paths from high-velocity cyber threats. We implement zero-trust network boundaries, configure hardware-secured cryptoprocessors, and establish containment protocols.",
-    link: "/solution-by-product/security"
+    link: "/solution-by-product/security",
+    iconName: "Shield"
   },
   {
     title: "Cognitive Machine Learning & Deep Vision",
     desc: "Leverage the power of custom neural networks trained on secure organizational registries. We deploy machine vision models, natural language database querying tools, and predictive analytics layers.",
-    link: "/solution-by-product/artificial-intelligence-ai"
+    link: "/solution-by-product/artificial-intelligence-ai",
+    iconName: "Sparkles"
   },
   {
     title: "High-Availability Cloud & Kubernetes",
     desc: "Deploy high-performance, fault-tolerant infrastructure designed to maintain uninterrupted corporate presence. We structure multi-region active-active clusters on secure clouds.",
-    link: "/solution-by-product/compute"
+    link: "/solution-by-product/compute",
+    iconName: "Cloud"
   },
   {
     title: "Unified Telecom & SD-WAN Design",
     desc: "Connect geographically dispersed operations, factories, and corporate offices with secure, high-speed telecom lines. We provide automated SD-WAN edge structures and redundant fiber routing.",
-    link: "/solution-by-product/network"
+    link: "/solution-by-product/network",
+    iconName: "Globe"
   },
   {
     title: "Omni-Channel Retail Logistics & Supply Chain",
     desc: "Optimize global supply flows with sub-second inventory sync and dynamic fleet routing. We build high-throughput tracking dashboards and event-driven message brokers.",
-    link: "/solution-by-product/software"
+    link: "/solution-by-product/software",
+    iconName: "Briefcase"
   }
 ];
 
@@ -90,36 +108,68 @@ const industries: SolutionCard[] = [
   {
     title: "Banking, Financial Services & Insurance",
     desc: "Scale transaction telemetry with multi-region active-active database partitioning, end-to-end encryption pipelines, and automated real-time fraud auditing routines.",
-    link: "/industries/banking-and-finance"
+    link: "/industries/banking-and-finance",
+    iconName: "BarChart3"
   },
   {
     title: "Healthcare & Life Sciences",
     desc: "Integrate deep neural classifier networks trained on secure patient registries. Deploy hardened HIPAA-compliant EHR data pipelines and clinical diagnostic engines.",
-    link: "/industries/healthcare"
+    link: "/industries/healthcare",
+    iconName: "Heart"
   },
   {
     title: "Energy & SCADA Utilities",
     desc: "Protect power grids, water utilities, and SCADA controllers. Configure cryptographic edge boundary shields, zero-trust firewalls, and active SOC log tracking.",
-    link: "/industries/energy-and-scada-utilities"
+    link: "/industries/energy-and-scada-utilities",
+    iconName: "Activity"
   },
   {
     title: "Retail & Omni-Channel Logistics",
     desc: "Synchronize multi-national inventory shifts with high-throughput event-driven message brokers. Compute dynamic shipping routes and optimize fleet routing.",
-    link: "/industries/retail"
+    link: "/industries/retail",
+    iconName: "ShoppingCart"
   },
   {
     title: "Telecommunications & Networking",
     desc: "Unify geographically dispersed corporate centers, remote terminals, and call nodes. Optimize WAN communication with fiber failover lines and SD-WAN routing.",
-    link: "/industries/telecommunications"
+    link: "/industries/telecommunications",
+    iconName: "Radio"
   },
   {
     title: "Government & Public Sector",
     desc: "Secure public sector directories, establish zero-trust directory services, design sovereign cloud transitions, and deliver robust business continuity strategies.",
-    link: "/industries/public-sector"
+    link: "/industries/public-sector",
+    iconName: "Users"
   }
 ];
 
 type TabType = "productTypes" | "solutionsByTopic" | "industries";
+
+const getCardIcon = (name: string) => {
+  switch (name) {
+    case "Cpu": return <Cpu className="w-6 h-6 text-[#D32F2F]" />;
+    case "Server": return <Server className="w-6 h-6 text-[#000072]" />;
+    case "Cloud": return <Cloud className="w-6 h-6 text-sky-500" />;
+    case "Network": return <Network className="w-6 h-6 text-indigo-500" />;
+    case "Settings": return <Settings className="w-6 h-6 text-slate-500" />;
+    case "Code": return <Code className="w-6 h-6 text-[#0F2C59]" />;
+    case "Database": return <Database className="w-6 h-6 text-teal-500" />;
+    case "Zap": return <Zap className="w-6 h-6 text-amber-500" />;
+    case "Building": return <Building className="w-6 h-6 text-cyan-500" />;
+    case "Shield": return <Shield className="w-6 h-6 text-emerald-500" />;
+    case "Sparkles": return <Sparkles className="w-6 h-6 text-purple-500" />;
+    case "Globe": return <Globe className="w-6 h-6 text-blue-500" />;
+    case "Briefcase": return <Briefcase className="w-6 h-6 text-amber-600" />;
+    case "BarChart3": return <BarChart3 className="w-6 h-6 text-emerald-600" />;
+    case "Heart": return <Heart className="w-6 h-6 text-red-500" />;
+    case "Activity": return <Activity className="w-6 h-6 text-orange-500" />;
+    case "ShoppingCart": return <ShoppingCart className="w-6 h-6 text-violet-500" />;
+    case "Radio": return <Radio className="w-6 h-6 text-[#0F2C59]" />;
+    case "Users": return <Users className="w-6 h-6 text-slate-600" />;
+    default: return <Settings className="w-6 h-6 text-slate-400" />;
+  }
+};
+
 
 export default function SolutionsPage() {
   const [activeTab, setActiveTab] = useState<TabType>("productTypes");
@@ -261,10 +311,15 @@ export default function SolutionsPage() {
               className="p-8 rounded-3xl bg-white border border-slate-150 shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col justify-between text-left group cursor-pointer"
             >
               <div>
-                <h3 className="font-extrabold text-lg text-[#0F2C59] group-hover:text-[#000072] transition-colors leading-snug">
-                  {card.title}
-                </h3>
-                <p className="text-xs sm:text-sm text-slate-500 leading-relaxed mt-4 font-medium">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-12 h-12 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center shadow-sm group-hover:bg-[#000072]/5 group-hover:border-[#000072]/20 transition-all duration-300">
+                    {getCardIcon(card.iconName)}
+                  </div>
+                  <h3 className="font-extrabold text-lg text-[#0F2C59] group-hover:text-[#000072] transition-colors leading-snug">
+                    {card.title}
+                  </h3>
+                </div>
+                <p className="text-xs sm:text-sm text-slate-500 leading-relaxed mt-2 font-medium">
                   {card.desc}
                 </p>
               </div>

@@ -22,7 +22,8 @@ import {
   Sparkles,
   LogOut,
   ChevronDown,
-  ShieldCheck
+  ShieldCheck,
+  Briefcase
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -111,7 +112,7 @@ export default function AdminSidebar({ isOpen, setIsOpen }: SidebarProps) {
       items: [
         { name: "Homepage Banner", href: "/admin/dashboard/content/banner" },
         { name: "Sliders", href: "/admin/dashboard/content/sliders" },
-        { name: "Pages", href: "/admin/dashboard/content/pages" },
+        { name: "Pages", href: "/admin/dashboard/pages" },
         { name: "Blog Management", href: "/admin/dashboard/blogs" },
         { name: "FAQ", href: "/admin/dashboard/content/faq" }
       ]
@@ -149,6 +150,14 @@ export default function AdminSidebar({ isOpen, setIsOpen }: SidebarProps) {
       ]
     },
     {
+      name: "Hiring",
+      icon: Briefcase,
+      items: [
+        { name: "Recruitment Board", href: "/admin/dashboard/hiring" },
+        { name: "View Career Page", href: "/career" }
+      ]
+    },
+    {
       name: "Security",
       icon: ShieldAlert,
       items: [
@@ -156,6 +165,11 @@ export default function AdminSidebar({ isOpen, setIsOpen }: SidebarProps) {
         { name: "Two Factor Authentication", href: "/admin/dashboard/security/tfa" },
         { name: "Backup & Restore", href: "/admin/dashboard/security/backup" }
       ]
+    },
+    {
+      name: "SEO & Pages",
+      icon: Globe,
+      href: "/admin/dashboard/pages"
     },
     {
       name: "Settings",
