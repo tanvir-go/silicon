@@ -66,7 +66,7 @@ function ProductsContent() {
 
   // Derive unique categories and brands for the sidebar
   const categories = useMemo(() => Array.from(new Set(products.map(p => p.category))), [products]);
-  const brands = useMemo(() => Array.from(new Set(products.map(p => p.brand))), [products]);
+  const brands = ["HPE", "Dell", "Lenovo", "Cisco", "Huawei", "Broadcom", "IBM", "Intel", "Micron", "Oracle"];
 
   // Filter Logic
   const filteredProducts = useMemo(() => {
@@ -352,11 +352,11 @@ function ProductsContent() {
 
                 {/* Pagination Controls */}
                 {totalPages > 1 && (
-                  <div className="flex items-center justify-center gap-2 mt-12 pb-6">
+                  <div className="flex items-center justify-center gap-3 mt-12 pb-6">
                     {currentPage > 1 && (
                       <button 
                         onClick={() => { setCurrentPage(prev => Math.max(prev - 1, 1)); window.scrollTo({ top: 0, behavior: "smooth" }); }}
-                        className="w-10 h-10 rounded-xl bg-white border border-slate-200 text-slate-600 hover:bg-[#000072] hover:text-white hover:border-[#000072] flex items-center justify-center transition-all duration-300 font-black cursor-pointer shadow-sm text-sm"
+                        className="w-12 h-12 rounded-2xl bg-white border border-slate-100/80 text-[#0F2C59] hover:bg-slate-50 flex items-center justify-center transition-all duration-300 font-extrabold cursor-pointer shadow-sm text-sm"
                       >
                         &lt;
                       </button>
@@ -364,7 +364,7 @@ function ProductsContent() {
                     {getPageNumbers().map((page, idx) => {
                       if (page === "...") {
                         return (
-                          <span key={idx} className="w-10 h-10 flex items-center justify-center text-slate-400 font-bold text-sm">
+                          <span key={idx} className="w-12 h-12 flex items-center justify-center text-slate-400 font-bold text-sm tracking-widest">
                             ...
                           </span>
                         );
@@ -374,10 +374,10 @@ function ProductsContent() {
                           key={idx}
                           onClick={() => { setCurrentPage(Number(page)); window.scrollTo({ top: 0, behavior: "smooth" }); }}
                           className={cn(
-                            "w-10 h-10 rounded-xl font-extrabold text-sm flex items-center justify-center transition-all duration-300 cursor-pointer shadow-sm",
+                            "w-12 h-12 rounded-2xl font-black text-sm flex items-center justify-center transition-all duration-300 cursor-pointer shadow-sm",
                             currentPage === page
-                              ? "bg-[#000072] text-white border border-[#000072]"
-                              : "bg-white border border-slate-200 text-slate-600 hover:bg-slate-50"
+                              ? "bg-[#000066] text-white border-0"
+                              : "bg-white border border-slate-100/80 text-[#0F2C59] hover:bg-slate-50"
                           )}
                         >
                           {page}
@@ -387,7 +387,7 @@ function ProductsContent() {
                     {currentPage < totalPages && (
                       <button 
                         onClick={() => { setCurrentPage(prev => Math.min(prev + 1, totalPages)); window.scrollTo({ top: 0, behavior: "smooth" }); }}
-                        className="w-10 h-10 rounded-xl bg-white border border-slate-200 text-slate-600 hover:bg-[#000072] hover:text-white hover:border-[#000072] flex items-center justify-center transition-all duration-300 font-black cursor-pointer shadow-sm text-sm"
+                        className="w-12 h-12 rounded-2xl bg-white border border-slate-100/80 text-[#0F2C59] hover:bg-slate-50 flex items-center justify-center transition-all duration-300 font-extrabold cursor-pointer shadow-sm text-sm"
                       >
                         &gt;
                       </button>

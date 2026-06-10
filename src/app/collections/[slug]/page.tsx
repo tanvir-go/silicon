@@ -10,6 +10,7 @@ import {
 import { useParams } from "next/navigation";
 import ContactSection from "@/sections/ContactSection";
 import { useAdminState } from "@/hooks/useAdminState";
+import { cn } from "@/lib/utils";
 
 // Brands Metadata Dictionary
 const BRANDS_DATA: Record<string, { name: string; tag: string; desc: string; capabilities: string[] }> = {
@@ -196,6 +197,7 @@ export default function ProductsDynamicPage() {
     performance: false,
     warranty: false,
   });
+  const [currentBrandPage, setCurrentBrandPage] = React.useState(1);
 
   // Sync active image when product loads
   React.useEffect(() => {
@@ -282,38 +284,112 @@ export default function ProductsDynamicPage() {
             </h2>
 
             {brandProducts.length > 0 ? (
-              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {brandProducts.map((product) => (
-                  <div key={product.id} className="bg-white rounded-2xl border border-slate-100 overflow-hidden shadow-sm flex flex-col hover:shadow-lg transition-shadow duration-300">
-                    <Link href={`/collections/${product.id}`} className="h-44 bg-slate-50 relative overflow-hidden block">
-                      <img src={product.image} alt={product.title} className="w-full h-full object-cover" />
-                      <span className="absolute top-3 left-3 bg-[#0F2C59] text-white text-[9px] font-black uppercase px-2 py-1 rounded shadow-sm">
-                        {product.category}
-                      </span>
-                    </Link>
-                    <div className="p-5 flex flex-col flex-1">
-                      <Link href={`/collections/${product.id}`}>
-                        <h3 className="font-extrabold text-[#0F2C59] text-base leading-tight hover:text-[#000072] transition-colors mb-2 line-clamp-2">
-                          {product.title}
-                        </h3>
-                      </Link>
-                      <p className="text-xs text-slate-500 font-semibold mb-4 line-clamp-2 leading-relaxed">
-                        {product.shortDesc}
-                      </p>
-                      <div className="mt-auto flex items-center justify-between">
-                        <span className="text-[9px] font-black uppercase tracking-wider text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">
-                          {product.stockStatus}
-                        </span>
-                        <Link href={`/contact?inquiry=${encodeURIComponent(product.title)}`}>
-                          <button className="px-4 py-2 rounded-lg bg-[#000072] text-white font-extrabold text-[10px] uppercase tracking-wide hover:bg-[#000072]/90 transition-colors cursor-pointer border-0">
-                            Get Quote
-                          </button>
-                        </Link>
+              <>
+                {(() => {
+                  const itemsPerPageBrand = 12;
+                  const totalBrandPages = Math.ceil(brandProducts.length / itemsPerPageBrand);
+                  const startIdx = (currentBrandPage - 1) * itemsPerPageBrand;
+                  const visibleBrandProducts = brandProducts.slice(startIdx, startIdx + itemsPerPageBrand);
+                  
+                  const getBrandPageNumbers = () => {
+                    const pages: (number | string)[] = [];
+                    const maxVisible = 5;
+                    if (totalBrandPages <= maxVisible) {
+                      for (let i = 1; i <= totalBrandPages; i++) pages.push(i);
+                    } else {
+                      if (currentBrandPage <= 3) {
+                        pages.push(1, 2, 3, 4, "...", totalBrandPages);
+                      } else if (currentBrandPage >= totalBrandPages - 2) {
+                        pages.push(1, "...", totalBrandPages - 3, totalBrandPages - 2, totalBrandPages - 1, totalBrandPages);
+                      } else {
+                        pages.push(1, "...", currentBrandPage - 1, currentBrandPage, currentBrandPage + 1, "...", totalBrandPages);
+                      }
+                    }
+                    return pages;
+                  };
+
+                  return (
+                    <>
+                      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {visibleBrandProducts.map((product) => (
+                          <div key={product.id} className="bg-white rounded-2xl border border-slate-100 overflow-hidden shadow-sm flex flex-col hover:shadow-lg transition-shadow duration-300">
+                            <Link href={`/collections/${product.id}`} className="h-44 bg-slate-50 relative overflow-hidden block">
+                              <img src={product.image} alt={product.title} className="w-full h-full object-cover" />
+                              <span className="absolute top-3 left-3 bg-[#0F2C59] text-white text-[9px] font-black uppercase px-2 py-1 rounded shadow-sm">
+                                {product.category}
+                              </span>
+                            </Link>
+                            <div className="p-5 flex flex-col flex-1">
+                              <Link href={`/collections/${product.id}`}>
+                                <h3 className="font-extrabold text-[#0F2C59] text-base leading-tight hover:text-[#000072] transition-colors mb-2 line-clamp-2">
+                                  {product.title}
+                                </h3>
+                              </Link>
+                              <p className="text-xs text-slate-500 font-semibold mb-4 line-clamp-2 leading-relaxed">
+                                {product.shortDesc}
+                              </p>
+                              <div className="mt-auto flex items-center justify-between">
+                                <span className="text-[9px] font-black uppercase tracking-wider text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">
+                                  {product.stockStatus}
+                                </span>
+                                <Link href={`/contact?inquiry=${encodeURIComponent(product.title)}`}>
+                                  <button className="px-4 py-2 rounded-lg bg-[#000072] text-white font-extrabold text-[10px] uppercase tracking-wide hover:bg-[#000072]/90 transition-colors cursor-pointer border-0">
+                                    Get Quote
+                                  </button>
+                                </Link>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
                       </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+
+                      {totalBrandPages > 1 && (
+                        <div className="flex items-center justify-center gap-3 mt-12 pb-6">
+                          {currentBrandPage > 1 && (
+                            <button 
+                              onClick={() => { setCurrentBrandPage(prev => Math.max(prev - 1, 1)); window.scrollTo({ top: 0, behavior: "smooth" }); }}
+                              className="w-12 h-12 rounded-2xl bg-white border border-slate-100/80 text-[#0F2C59] hover:bg-slate-50 flex items-center justify-center transition-all duration-300 font-extrabold cursor-pointer shadow-sm text-sm"
+                            >
+                              &lt;
+                            </button>
+                          )}
+                          {getBrandPageNumbers().map((page, idx) => {
+                            if (page === "...") {
+                              return (
+                                <span key={idx} className="w-12 h-12 flex items-center justify-center text-slate-400 font-bold text-sm tracking-widest">
+                                  ...
+                                </span>
+                              );
+                            }
+                            return (
+                              <button
+                                key={idx}
+                                onClick={() => { setCurrentBrandPage(Number(page)); window.scrollTo({ top: 0, behavior: "smooth" }); }}
+                                className={cn(
+                                  "w-12 h-12 rounded-2xl font-black text-sm flex items-center justify-center transition-all duration-300 cursor-pointer shadow-sm",
+                                  currentBrandPage === page
+                                    ? "bg-[#000066] text-white border-0"
+                                    : "bg-white border border-slate-100/80 text-[#0F2C59] hover:bg-slate-50"
+                                )}
+                              >
+                                {page}
+                              </button>
+                            );
+                          })}
+                          {currentBrandPage < totalBrandPages && (
+                            <button 
+                              onClick={() => { setCurrentBrandPage(prev => Math.min(prev + 1, totalBrandPages)); window.scrollTo({ top: 0, behavior: "smooth" }); }}
+                              className="w-12 h-12 rounded-2xl bg-white border border-slate-100/80 text-[#0F2C59] hover:bg-slate-50 flex items-center justify-center transition-all duration-300 font-extrabold cursor-pointer shadow-sm text-sm"
+                            >
+                              &gt;
+                            </button>
+                          )}
+                        </div>
+                      )}
+                    </>
+                  );
+                })()}
+              </>
             ) : (
               <div className="bg-white rounded-2xl border border-slate-100 p-8 sm:p-12 text-center shadow-sm flex flex-col items-center justify-center">
                 <Box className="w-12 h-12 text-slate-350 mb-4 animate-pulse" />
