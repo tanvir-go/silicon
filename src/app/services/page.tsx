@@ -95,12 +95,12 @@ const getServiceIcon = (name: string, isHovered = false) => {
 
 const getIconBgClass = (name: string) => {
   switch (name) {
-    case "Cloud": return "bg-sky-50 border-sky-105 group-hover:bg-sky-100/80 group-hover:border-sky-200";
-    case "ShieldCheck": return "bg-rose-50 border-rose-105 group-hover:bg-rose-100/80 group-hover:border-rose-200";
-    case "Code": return "bg-blue-50 border-blue-105 group-hover:bg-blue-100/80 group-hover:border-blue-200";
-    case "Network": return "bg-indigo-50 border-indigo-105 group-hover:bg-indigo-100/80 group-hover:border-indigo-200";
-    case "Cpu": return "bg-red-50 border-red-105 group-hover:bg-red-100/80 group-hover:border-red-200";
-    default: return "bg-teal-50 border-teal-105 group-hover:bg-teal-100/80 group-hover:border-teal-200";
+    case "Cloud": return "bg-sky-50/60 border-sky-100 group-hover:bg-sky-100/80 group-hover:border-sky-200";
+    case "ShieldCheck": return "bg-rose-50/60 border-rose-100 group-hover:bg-rose-100/80 group-hover:border-rose-200";
+    case "Code": return "bg-blue-50/60 border-blue-100 group-hover:bg-blue-100/80 group-hover:border-blue-200";
+    case "Network": return "bg-indigo-50/60 border-indigo-100 group-hover:bg-indigo-100/80 group-hover:border-indigo-200";
+    case "Cpu": return "bg-red-50/60 border-red-100 group-hover:bg-red-100/80 group-hover:border-red-200";
+    default: return "bg-teal-50/60 border-teal-100 group-hover:bg-teal-100/80 group-hover:border-teal-200";
   }
 };
 
@@ -134,7 +134,7 @@ export default function ServicesPage() {
           {servicesList.map((service, idx) => (
             <div
               key={service.id}
-              className="p-8 rounded-3xl bg-white border border-slate-150 shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between text-left group"
+              className="p-8 rounded-3xl bg-white border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between text-left group"
             >
               <div>
                 {/* Icon capsule */}
@@ -188,7 +188,7 @@ export default function ServicesPage() {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
                 transition={{ type: "spring", stiffness: 350, damping: 25 }}
-                className="w-full max-w-lg rounded-3xl p-8 bg-white border border-slate-150 shadow-2xl overflow-hidden relative text-left"
+                className="w-full max-w-lg rounded-3xl p-8 bg-white border border-slate-100 shadow-2xl overflow-hidden relative text-left"
               >
                 {/* Close Button */}
                 <button
