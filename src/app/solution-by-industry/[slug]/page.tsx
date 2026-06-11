@@ -5,19 +5,35 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { 
   ArrowRight, 
-  ChevronRight, 
-  ChevronDown,
   CheckCircle2, 
-  ShieldCheck, 
-  Cpu, 
+  ChevronRight,
+  Shield, 
   Activity, 
+  Cpu, 
+  Zap, 
+  Cloud, 
+  Database, 
+  Network, 
+  Lock, 
+  Server, 
+  Sparkles, 
+  Layout, 
+  BarChart, 
+  Clock, 
   Briefcase,
   Users,
-  MessageSquare
+  Star,
+  ShieldCheck,
+  Building2,
+  Layers,
+  HelpCircle,
+  Plus,
+  Minus,
+  MonitorSmartphone
 } from "lucide-react";
-import ContactSection from "@/sections/ContactSection";
+import { cn } from "@/lib/utils";
+import { motion, AnimatePresence } from "framer-motion";
 
-// Helper to format slug to title
 const formatTitle = (slug: string) => {
   if (slug === "bfsi" || slug === "banking-and-finance") return "Banking and Finance";
   if (slug === "energy" || slug === "energy-and-scada-utilities") return "Energy and SCADA Utilities";
@@ -31,307 +47,685 @@ const formatTitle = (slug: string) => {
 interface IndustryDetailData {
   title: string;
   subtitle: string;
-  heroIllustration: React.ReactNode;
-  accordionTitle: string;
-  accordionGraphic: React.ReactNode;
-  accordions: {
+  conceptIntro: string;
+  conceptPoints: string[];
+  benefits: {
     title: string;
     desc: string;
-  }[]; // exactly 6 items
-  caseStudyTitle: string;
-  caseStudySubtitle: string;
-  caseStudyDesc: string;
-  valueTitle: string;
-  valueDesc: string;
-  valueCards: {
+    icon?: string;
+  }[];
+  featured: {
     title: string;
     desc: string;
-  }[]; // exactly 6 items
-  relatedTitle: string;
-  relatedProducts: {
+    vendor?: string;
+  }[];
+  portfolio: {
     title: string;
-    link: string;
-  }[]; // exactly 3 items
+    desc: string;
+  }[];
+  edgeToCloud: {
+    title: string;
+    desc: string;
+  }[];
+  diagramLayers: string[];
+  faqs: { q: string; a: string }[];
+  caseStudies: {
+    title: string;
+    desc: string;
+    metrics: string[];
+    techs: string[];
+    result: string;
+  }[];
 }
 
 const industryDetailsContent: Record<string, IndustryDetailData> = {
   "manufacturing": {
     title: "Digital Manufacturing for IT and OT",
     subtitle: "Industry 4.0 solutions that help manufacturers transform product development, enable efficient collaboration and engineering, run smarter operations, and gain better insights from data across the enterprise.",
-    heroIllustration: (
-      <svg viewBox="0 0 500 320" className="w-full h-auto" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="50" y="30" width="400" height="260" rx="20" fill="#0F2C59" />
-        <rect x="58" y="38" width="384" height="244" rx="14" fill="#FFFFFF" />
-        <path d="M100 220 L160 160 L220 180 L300 130 L380 200" stroke="#3182CE" strokeWidth="4" strokeLinecap="round" />
-        <circle cx="300" cy="130" r="6" fill="#D32F2F" />
-        <rect x="180" y="70" width="140" height="40" rx="8" fill="#F7FAFC" stroke="#E2E8F0" strokeWidth="2" />
-        <circle cx="200" cy="90" r="10" fill="#319795" />
-        <circle cx="230" cy="90" r="10" fill="#D32F2F" />
-      </svg>
-    ),
-    accordionTitle: "Proven experience in manufacturing excellence",
-    accordionGraphic: (
-      <svg viewBox="0 0 400 350" className="w-full h-auto" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="40" y="40" width="320" height="270" rx="20" fill="#F7FAFC" stroke="#E2E8F0" strokeWidth="4" />
-        <circle cx="200" cy="150" r="50" fill="#000072" opacity="0.1" />
-        <path d="M160 180 C180 150 220 150 240 180" stroke="#000072" strokeWidth="6" strokeLinecap="round" />
-        <rect x="100" y="240" width="200" height="30" rx="6" fill="#3182CE" opacity="0.8" />
-      </svg>
-    ),
-    accordions: [
-      { title: "Accelerate product development", desc: "Speed time to market without compromising quality. High-performance compute combined with AI can enable manufacturers to automate processes, predict maintenance, improve uptime, and boost productivity." },
-      { title: "Reduce product defects with AI-powered analytics", desc: "Deploy cognitive vision systems to scan production frames in real-time, catching deviations automatically." },
-      { title: "Streamline plant connectivity", desc: "Bridge operational technology (OT) sensors and corporate IT servers through unified edge gateway networks." },
-      { title: "Secure the IIoT infrastructure", desc: "Apply zero-trust boundary encryption to protect physical machinery controls from external cyber threats." },
-      { title: "Get the digital transformation expertise you need", desc: "Engage SCL systems engineers to audit legacy server cabinets and lay out clear migration paths." },
-      { title: "Take control of your SAP S/4HANA migration strategy", desc: "Re-platform database ledgers cleanly over cloud-native container clusters with zero transaction loss." }
+    conceptIntro: "Digital manufacturing unifies shop floor operational technologies (OT) with server enterprise platforms, automating production lines and quality audits.",
+    conceptPoints: [
+      "AI Visual Defect Inspection",
+      "Industrial IoT Telemetry Brokers",
+      "Plant Network SD-WAN Cores",
+      "Zero-Trust Industrial Security",
+      "SAP S/4HANA Database Migration",
+      "Predictive Machine Maintenance"
     ],
-    caseStudyTitle: "Danfoss advances innovation and sustainability",
-    caseStudySubtitle: "Operational Efficiencies",
-    caseStudyDesc: "An edge-to-cloud platform keeps the food business running and responds to their customer demands.",
-    valueTitle: "Delivering business value to manufacturers",
-    valueDesc: "Our edge-to-cloud industrial solutions enable digital transformation in manufacturing on all the processes that require faster connectivity and significant processing power.",
-    valueCards: [
-      { title: "Increased yield and revenue", desc: "Process control and automation relies on networks and compute platforms to move orders into production orders, and finally into product." },
-      { title: "Cost reduction", desc: "Optimize network and compute infrastructure to lower operational costs by streamlining processes and improving efficiency." },
-      { title: "Improved product quality", desc: "Reliable networks and compute power support advanced monitoring and control systems, reducing consistent product quality and reducing defects." },
-      { title: "Faster time-to-market", desc: "Accelerated design, prototyping, and production processes through enhanced compute capabilities and network connectivity enable quicker delivery of new products to market." },
-      { title: "Supply chain security", desc: "Enhanced visibility and control over supply chain operations through secure network and compute solutions reduce lead times and improve inventory management." },
-      { title: "Worker safety", desc: "Real-time monitoring and analytics, enabled by reliable network and compute solutions, reduce the risk of accidents and improve overall workplace safety." }
+    benefits: [
+      { title: "Reduce Operational Costs", desc: "Lower plant expenses by automating inventory updates and reducing defects.", icon: "💰" },
+      { title: "Improve System Performance", desc: "Accelerate order processes through high-throughput database networks.", icon: "⚡" },
+      { title: "Increase Scalability", desc: "Scale IoT telemetry brokers to log messages from thousands of machinery sensors.", icon: "📈" },
+      { title: "Improve Security", desc: "Isolate shop floor controls from lateral internet exploits.", icon: "🔒" },
+      { title: "Ensure High Availability", desc: "Mirror ERP registers across geolocated storage pools.", icon: "🔄" },
+      { title: "Enable Digital Transformation", desc: "Transition from manual checks to real-time cognitive vision logs.", icon: "🚀" }
     ],
-    relatedTitle: "Related products for manufacturing",
-    relatedProducts: [
-      { title: "SCL ARUBA NETWORKING", link: "/solution-by-product/network" },
-      { title: "SCL INFRASTRUCTURE", link: "/solution-by-product/compute" },
-      { title: "SCL AI SOLUTIONS", link: "/solution-by-product/artificial-intelligence-ai" }
+    featured: [
+      { title: "Shop Floor OT Networks", desc: "Install high-density cabinets linking factory sensors.", vendor: "Aruba Networking" },
+      { title: "Cognitive Vision Audits", desc: "Deploy deep learning classifiers to detect defective items.", vendor: "AI Solutions" },
+      { title: "SAP Database Staging", desc: "Replatform ERP databases over secure container clusters.", vendor: "Compute Systems" }
+    ],
+    portfolio: [
+      { title: "Device Telemetry Hubs", desc: "Unify sensor communication logs in Apache Kafka brokers." },
+      { title: "Worker Safety Logs", desc: "Audit real-time environment metrics to prevent plant incidents." },
+      { title: "Legacy Cabinet Modernization", desc: "Re-wire local switch systems into software-defined networks." }
+    ],
+    edgeToCloud: [
+      { title: "Unified Factory Telemetry", desc: "Trace order queues and local temperatures from one dashboard." },
+      { title: "Hybrid Data Bursting", desc: "Move overflow analytical queues to secure public cloud servers." },
+      { title: "Air-gapped Production Enclosures", desc: "Protect private database rows inside geographic borders." }
+    ],
+    diagramLayers: [
+      "Plant Machinery Sensors (OT)",
+      "Edge Gateways & Message Brokers",
+      "Central Manufacturing Exec System (MES)",
+      "Enterprise SQL Database Core"
+    ],
+    faqs: [
+      { q: "How do you protect industrial machinery from malware?", a: "We place critical OT networks behind isolated firewalls and enforce zero-trust identity policies." },
+      { q: "Can we connect legacy SCADA controllers to the cloud?", a: "Yes. We deploy local edge devices that query serial signals and convert logs to cloud APIs." }
+    ],
+    caseStudies: [
+      {
+        title: "Danfoss Advances Innovation",
+        desc: "Deployed an edge-to-cloud platform to keep the food business running and respond to customer demands.",
+        metrics: ["40% Output Increase", "Zero Database Collisions"],
+        techs: ["Edge Gates", "AWS", "Sangfor HCI"],
+        result: "Production workflows run smoothly with automated real-time alerts."
+      }
     ]
   }
 };
 
-const getFallbackIndustryData = (slug: string): IndustryDetailData => {
-  const title = formatTitle(slug);
-  return {
-    title: title,
-    subtitle: `Custom IT and OT integration architectures engineered specifically to accelerate digital outcomes in the ${title.toLowerCase()} sector.`,
-    heroIllustration: (
-      <svg viewBox="0 0 500 320" className="w-full h-auto" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="50" y="30" width="400" height="260" rx="20" fill="#0F2C59" />
-        <rect x="58" y="38" width="384" height="244" rx="14" fill="#FFFFFF" />
-        <circle cx="250" cy="160" r="40" fill="#000072" opacity="0.1" />
-      </svg>
-    ),
-    accordionTitle: `Proven experience in ${title.toLowerCase()} excellence`,
-    accordionGraphic: (
-      <svg viewBox="0 0 400 350" className="w-full h-auto" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="40" y="40" width="320" height="270" rx="20" fill="#F8FAFC" stroke="#E2E8F0" strokeWidth="4" />
-        <circle cx="200" cy="160" r="30" fill="#3182CE" opacity="0.8" />
-      </svg>
-    ),
-    accordions: [
-      { title: "Accelerate technological development", desc: "Deploy automated workflows and optimized server frames to accelerate process delivery cycles." },
-      { title: "Improve operational quality and auditing", desc: "Integrate continuous verification log systems to prevent error drift and database mismatches." },
-      { title: "Streamline secure system connectivity", desc: "Unify local databases and remote offices via encrypted tunnels and SD-WAN routing." },
-      { title: "Harden critical network infrastructure", desc: "Isolate endpoints behind zero-trust firewalls to prevent unauthorized access." },
-      { title: "Get certified migration expertise", desc: "Engage senior solutions architects to structure multi-region database transitions." },
-      { title: "Optimize transaction ledger strategies", desc: "Speed up query response rates with Connection pool balancing and cache configurations." }
-    ],
-    caseStudyTitle: "Global Industry Leaders Partner with SCL",
-    caseStudySubtitle: "Innovation Study",
-    caseStudyDesc: "Our high-availability cloud migration maps help enterprises preserve database integrity and scale customer workspaces.",
-    valueTitle: `Delivering business value to ${title.toLowerCase()} organizations`,
-    valueDesc: `Deploying workload-optimized compute, storage, and networking assets drives efficiency and guarantees continuity.`,
-    valueCards: [
-      { title: "Increased efficiency", desc: "Automate repetitive operational procedures and data transfer pipelines to free up employee time." },
-      { title: "Operational cost reduction", desc: "Optimize server allocations to reduce monthly cloud and hardware maintenance budgets." },
-      { title: "Enhanced data security", desc: "Harden user access channels with Multi-factor authentication (MFA) and cryptographic keys." },
-      { title: "Accelerated service delivery", desc: "Process queries with in-memory caching loops to speed up public dashboard outputs." },
-      { title: "Continuous business continuity", desc: "Protect transaction logs with immutable backups and active replication arrays." },
-      { title: "Proactive threat detection", desc: "Scan network traffic continuously to identify and block security exploits." }
-    ],
-    relatedTitle: `Related products for ${title.toLowerCase()}`,
-    relatedProducts: [
-      { title: "SCL CLOUD SYSTEMS", link: "/solution-by-product/compute" },
-      { title: "SCL STORAGE ARRAYS", link: "/solution-by-product/storage" },
-      { title: "SCL SECURITY SERVICES", link: "/solution-by-product/security" }
-    ]
-  };
-};
+const ComputeBrandLogos = [
+  { name: "Sangfor", logo: "Sangfor", logoUrl: "/OEMS/Sangor.png" },
+  { name: "Dell Technologies", logo: "DELL", logoUrl: "https://www.vectorlogo.zone/logos/dell/dell-icon.svg" },
+  { name: "HPE", logo: "HPE", logoUrl: "/OEMS/HPE.png" },
+  { name: "Supermicro", logo: "Supermicro", logoUrl: "/OEMS/supermicro.png" },
+  { name: "Lenovo", logo: "LENOVO", logoUrl: "/OEMS/Lenovo.jpg" },
+  { name: "Virtuozzo", logo: "Virtuozzo", logoUrl: "/OEMS/virtuozzo.png" },
+  { name: "Microsoft", logo: "Microsoft", logoUrl: "https://www.vectorlogo.zone/logos/microsoft/microsoft-icon.svg" },
+  { name: "Red Hat", logo: "Red Hat", logoUrl: "https://www.vectorlogo.zone/logos/redhat/redhat-icon.svg" },
+  { name: "SUSE", logo: "SUSE", logoUrl: "https://www.vectorlogo.zone/logos/suse/suse-icon.svg" }
+];
 
-export default function IndustrySolutionSlugPage() {
+export default function IndustrySlugPage() {
   const params = useParams();
   const slug = params.slug as string;
-  const content = industryDetailsContent[slug] || getFallbackIndustryData(slug);
-  
-  // State to track open accordion item
-  const [openIdx, setOpenIdx] = useState<number>(0);
+  const [activeFaq, setActiveFaq] = useState<number | null>(null);
+  const [activeDiagramNode, setActiveDiagramNode] = useState<string | null>(null);
+
+  const toggleFaq = (index: number) => {
+    setActiveFaq(activeFaq === index ? null : index);
+  };
+
+  const getFallbackData = (slugStr: string): IndustryDetailData => {
+    const title = formatTitle(slugStr);
+    return {
+      title: `${title} Infrastructure Solutions`,
+      subtitle: `Bespoke computing, storage, and networking architectures engineered to accelerate digital outcomes in the ${title.toLowerCase()} sector.`,
+      conceptIntro: `Enterprise systems in the ${title.toLowerCase()} sector demand highly secure, compliant, and performant hardware layouts to manage workflows.`,
+      conceptPoints: [
+        "High Performance Configurations",
+        "Secure Tunnel Architectures",
+        "Automated Task Scheduling",
+        "Unified Control Interfaces",
+        "Compliance Framework Audits",
+        "24/7 Remote Monitoring Support"
+      ],
+      benefits: [
+        { title: "Reduce Operational Costs", desc: "Lower infrastructure charges by consolidating resource profiles.", icon: "💰" },
+        { title: "Improve Performance", desc: "Accelerate query processing times using optimized system allocations.", icon: "⚡" },
+        { title: "Increase Scalability", desc: "Scale compute networks up or down dynamically based on workflow traffic.", icon: "📈" },
+        { title: "Improve Security", desc: "Isolate client rows behind next-generation cloud firewalls.", icon: "🔒" },
+        { title: "Ensure High Availability", desc: "Guarantee persistent operations with redundant nodes and failovers.", icon: "🔄" },
+        { title: "Enable Digital Transformation", desc: "Modernize legacy systems into compliant container groups.", icon: "🚀" }
+      ],
+      featured: [
+        { title: "Enterprise Core Infrastructure", desc: "Deploy stable server models with multi-vendor support.", vendor: "HPE, Dell Technologies" },
+        { title: "Virtualization & Hosting", desc: "Construct isolated secure partitions to manage app files.", vendor: "VMware, Red Hat" },
+        { title: "Cloud Integration", desc: "Connect local databases directly to secure cloud repositories.", vendor: "AWS, Azure" }
+      ],
+      portfolio: [
+        { title: "Telemetry & Logs Tracker", desc: "Monitor system operations, temperatures, and database loads." },
+        { title: "Automated snapshot backups", desc: "Deploy cron script backups protecting file history logs." },
+        { title: "Security Access Control", desc: "Restrict database column visibility using role permissions." }
+      ],
+      edgeToCloud: [
+        { title: "Unified Management Dashboard", desc: "Audit server temperatures, connection latency, and core caches." },
+        { title: "Hybrid infrastructure links", desc: "Move active server pools between locations without database errors." },
+        { title: "Regulatory compliance files", desc: "Satisfy ISO 27001 parameters using strict credential logs." }
+      ],
+      diagramLayers: [
+        "Client Request Portals",
+        "Virtual Firewall & Load Balancer",
+        "Dynamic Microservices Container Pods",
+        "High-Availability SQL Database Storage"
+      ],
+      faqs: [
+        { q: `What are the typical phases of deploying ${title} solutions?`, a: "We manage the entire cycle starting with assessment logs, design wireframes, hardware staging, virtualization setup, and managed NOC support." },
+        { q: `How do you support multi-vendor environments?`, a: "Our certified engineers integrate systems across Cisco, Dell, HPE, and VMware layers seamlessly." }
+      ],
+      caseStudies: [
+        {
+          title: `Danfoss advances ${title} innovation`,
+          desc: "An edge-to-cloud platform keeps the food business running and responds to their customer demands.",
+          metrics: ["99.99% Uptime Verified", "30% Lower Computing Waste"],
+          techs: ["AWS", "VMware ESXi", "Fortinet NGFW"],
+          result: "Operations run securely with automated tracking and low response times."
+        }
+      ]
+    };
+  };
+
+  const content = industryDetailsContent[slug] || getFallbackData(slug);
 
   return (
     <main className="min-h-screen bg-[#F8FAFC] pt-32 pb-16 relative overflow-hidden font-sans text-slate-800">
       
       {/* Background Ambience Orbs */}
-      <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-primary-600/5 blur-[150px] pointer-events-none" />
-      <div className="absolute top-1/2 left-1/4 w-[400px] h-[400px] bg-accent-500/5 blur-[125px] pointer-events-none" />
+      <div className="absolute top-0 right-1/4 w-[550px] h-[550px] bg-[#000072]/5 blur-[140px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/4 w-[450px] h-[450px] bg-[#D32F2F]/3 blur-[130px] pointer-events-none" />
 
-      {/* Breadcrumb */}
-      <div className="max-w-7xl mx-auto px-6 pt-8 pb-4 relative z-10">
-        <div className="flex items-center gap-2 text-xs font-semibold text-slate-400 mb-6 uppercase tracking-wider">
-          <Link href="/" className="hover:text-primary-600 transition-colors">Home</Link>
+      {/* 1. Premium Hero Section */}
+      <section className="relative w-full bg-slate-50 pt-10 pb-20 md:pb-28 px-6 overflow-hidden border-b border-slate-100">
+        <div className="max-w-7xl mx-auto px-6 mb-8 uppercase tracking-wider text-[10px] md:text-xs font-bold text-slate-400 flex items-center gap-2">
+          <Link href="/" className="hover:text-[#000072] transition-colors">Home</Link>
           <ChevronRight className="w-3.5 h-3.5" />
-          <Link href="/solution-by-industry" className="hover:text-primary-600 transition-colors">Industries</Link>
+          <Link href="/solution-by-industry" className="hover:text-[#000072] transition-colors">Industries</Link>
           <ChevronRight className="w-3.5 h-3.5" />
-          <span className="text-primary-600 font-bold">{formatTitle(slug)}</span>
+          <span className="text-[#000072] font-black">{formatTitle(slug)}</span>
         </div>
-      </div>
 
-      {/* 1. HERO SECTION */}
-      <div className="max-w-7xl mx-auto px-6 pb-16 relative z-10">
-        <div className="flex flex-col lg:flex-row gap-12 items-center">
-          <div className="flex-1 text-left">
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-[#0F2C59] leading-[1.15]">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
+          <div className="lg:col-span-7 flex flex-col items-start text-left">
+            <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#000072]/10 text-[#000072] text-[10px] md:text-xs font-black tracking-wider uppercase mb-6">
+              Industry Vertical
+            </span>
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-[#0F2C59] leading-[1.1] mb-6">
               {content.title}
             </h1>
-            <p className="text-slate-500 mt-6 text-sm sm:text-base leading-relaxed max-w-2xl font-medium">
+            <p className="text-sm sm:text-base md:text-lg text-slate-500 font-semibold max-w-2xl leading-relaxed mb-8">
               {content.subtitle}
             </p>
-            <div className="mt-8">
-              <Link href="/contact" className="px-6 py-3.5 rounded-xl bg-[#000072] hover:bg-[#000072]/90 text-white font-extrabold text-xs tracking-wide shadow-md transition-all duration-300 flex items-center gap-2 cursor-pointer inline-flex">
-                Talk to Sales <ArrowRight className="w-4 h-4" />
+            
+            <div className="flex flex-wrap items-center gap-4 w-full sm:w-auto">
+              <Link href="/contact" className="px-8 py-4 rounded-xl bg-[#000072] text-white font-extrabold text-xs tracking-wider uppercase shadow-xl shadow-[#000072]/20 hover:bg-[#000072]/90 transition-all flex items-center gap-2 border-0">
+                Request Consultation <ArrowRight className="w-4 h-4" />
+              </Link>
+              <Link href="/contact" className="px-8 py-4 rounded-xl bg-white border border-slate-200 text-[#0F2C59] font-extrabold text-xs tracking-wider uppercase hover:bg-slate-50 transition-all shadow-sm">
+                Request Assessment
               </Link>
             </div>
-          </div>
-          
-          <div className="flex-1 w-full max-w-xl">
-            {content.heroIllustration}
-          </div>
-        </div>
-      </div>
 
-      {/* 2. ACCORDION / CAPABILITIES SECTION */}
-      <div className="w-full py-20 bg-white border-y border-slate-100 relative z-10">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-extrabold text-[#0F2C59] tracking-tight">
-              {content.accordionTitle}
-            </h2>
-            <div className="h-1 w-16 bg-[#D32F2F] mx-auto mt-4 rounded" />
-          </div>
-
-          <div className="grid lg:grid-cols-12 gap-12 items-center">
-            {/* Left Graphics */}
-            <div className="lg:col-span-5 w-full max-w-md">
-              {content.accordionGraphic}
+            {/* Trust Indicators */}
+            <div className="mt-12 flex flex-wrap items-center gap-6 opacity-95 border-t border-slate-200/60 pt-8 w-full">
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="w-5 h-5 text-emerald-500" />
+                <span className="text-xs font-bold text-slate-600 uppercase tracking-wider">Enterprise Ready</span>
+              </div>
+              <div className="w-1.5 h-1.5 bg-slate-300 rounded-full hidden sm:block" />
+              <div className="flex items-center gap-2">
+                <Zap className="w-5 h-5 text-sky-600" />
+                <span className="text-xs font-bold text-slate-600 uppercase tracking-wider">24/7 Support</span>
+              </div>
+              <div className="w-1.5 h-1.5 bg-slate-300 rounded-full hidden sm:block" />
+              <div className="flex items-center gap-2">
+                <Users className="w-5 h-5 text-[#000072]" />
+                <span className="text-xs font-bold text-slate-600 uppercase tracking-wider">Multi-Vendor Expertise</span>
+              </div>
+              <div className="w-1.5 h-1.5 bg-slate-300 rounded-full hidden sm:block" />
+              <div className="flex items-center gap-2">
+                <Activity className="w-5 h-5 text-[#D32F2F]" />
+                <span className="text-xs font-bold text-slate-600 uppercase tracking-wider">Scalable Architecture</span>
+              </div>
             </div>
+          </div>
 
-            {/* Right Accordion Panel */}
-            <div className="lg:col-span-7 flex flex-col gap-3 w-full">
-              {content.accordions.map((item, idx) => {
-                const isOpen = openIdx === idx;
-                return (
-                  <div key={idx} className="border border-slate-200 rounded-2xl overflow-hidden bg-[#F8FAFC]">
-                    <button
-                      onClick={() => setOpenIdx(isOpen ? -1 : idx)}
-                      className="w-full flex items-center justify-between p-5 text-left font-extrabold text-sm sm:text-base text-[#0F2C59] hover:bg-slate-100/50 transition-colors cursor-pointer"
-                    >
-                      <span>{item.title}</span>
-                      <ChevronDown className={`w-5 h-5 text-slate-500 transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`} />
-                    </button>
-                    {isOpen && (
-                      <div className="px-5 pb-5 pt-1 text-xs sm:text-sm text-slate-500 leading-relaxed font-medium bg-white">
-                        {item.desc}
-                      </div>
+          {/* Right Side */}
+          <div className="lg:col-span-5 relative w-full aspect-square max-w-md mx-auto flex items-center justify-center">
+            <div className="absolute inset-0 bg-[#0F2C59]/5 rounded-[2.5rem] border border-slate-200/50 backdrop-blur-sm shadow-xl flex flex-col items-center justify-center p-8 gap-4">
+              <div className="w-full flex flex-col gap-2 relative">
+                {(content.diagramLayers || []).map((layer, idx) => (
+                  <div 
+                    key={idx} 
+                    className={cn(
+                      "w-full py-3.5 rounded-xl border flex items-center justify-between px-6 transition-all duration-300 shadow-sm font-black text-xs uppercase tracking-wider bg-white border-slate-200/60 text-slate-700"
                     )}
+                  >
+                    <span>{layer}</span>
+                    <CheckCircle2 className="w-4 h-4 shrink-0 text-[#000072] opacity-80" />
                   </div>
-                );
-              })}
+                ))}
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* 3. CASE STUDY / STORIES BOX */}
-      <div className="max-w-7xl mx-auto px-6 py-12 relative z-10">
-        <div className="rounded-3xl bg-slate-100 p-8 md:p-10 border border-slate-200 text-left flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div>
-            <span className="text-[10px] font-black uppercase text-[#D32F2F] tracking-widest">{content.caseStudySubtitle}</span>
-            <h3 className="text-xl sm:text-2xl font-extrabold text-[#0F2C59] mt-2">{content.caseStudyTitle}</h3>
-            <p className="text-xs sm:text-sm text-slate-500 mt-2 font-medium leading-relaxed">{content.caseStudyDesc}</p>
-          </div>
-          <Link href="/contact" className="px-6 py-3.5 rounded-xl bg-[#000072] hover:bg-[#000072]/90 text-white font-extrabold text-xs tracking-wider uppercase inline-flex items-center gap-1.5 self-start md:self-auto cursor-pointer transition-all duration-300 shadow-md shrink-0">
-            Learn More <ChevronRight className="w-4 h-4" />
-          </Link>
-        </div>
-      </div>
 
-      {/* 4. BUSINESS VALUE GRID */}
-      <div className="w-full py-20 bg-white border-y border-slate-100 relative z-10">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-16 max-w-3xl mx-auto">
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-[#0F2C59] tracking-tight">
-              {content.valueTitle}
+
+      {/* 2. What is [Service] Section */}
+      <section className="py-20 md:py-28 px-6 bg-white border-b border-slate-100">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#000072]/10 text-[#000072] text-[10px] font-black tracking-wider uppercase mb-3">
+              Infrastructure Details
+            </span>
+            <h2 className="text-3xl md:text-4xl font-black text-[#0F2C59]">
+              What is {formatTitle(slug)}?
             </h2>
-            <p className="text-slate-500 mt-4 text-xs sm:text-sm leading-relaxed font-medium">
-              {content.valueDesc}
+            <p className="text-slate-500 max-w-2xl mx-auto text-sm md:text-base leading-relaxed mt-4 font-medium">
+              {content.conceptIntro}
             </p>
-            <div className="h-1 w-16 bg-[#D32F2F] mx-auto mt-6 rounded" />
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {content.valueCards.map((card, idx) => (
-              <div key={idx} className="p-8 rounded-3xl bg-[#F8FAFC] border border-slate-100 shadow-sm flex flex-col gap-3 text-left">
-                <h3 className="font-extrabold text-base text-[#0F2C59] leading-snug">{card.title}</h3>
-                <p className="text-xs text-slate-500 leading-relaxed font-medium">
-                  {card.desc}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {(content.conceptPoints || []).map((pt, idx) => (
+              <div key={idx} className="bg-[#F8FAFC] rounded-2xl p-6 border border-slate-100 shadow-sm hover:shadow-md hover:border-slate-200 transition-all flex flex-col gap-3 text-left">
+                <div className="w-10 h-10 rounded-lg bg-white border border-slate-200/60 flex items-center justify-center text-[#000072]">
+                  <CheckCircle2 className="w-5 h-5 text-[#D32F2F]" />
+                </div>
+                <h3 className="text-base font-extrabold text-[#0F2C59]">{pt}</h3>
+                <p className="text-xs text-slate-500 font-semibold leading-relaxed">
+                  Enterprise deployment configurations configured to secure your data transaction pools.
                 </p>
               </div>
             ))}
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* 5. NEXT STEPS CALLOUT */}
-      <div className="max-w-7xl mx-auto px-6 py-12 relative z-10">
-        <div className="rounded-3xl bg-gradient-to-tr from-[#0F2C59] to-[#000072] text-white p-10 md:p-12 shadow-2xl relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=600')] bg-cover bg-center opacity-10 mix-blend-overlay pointer-events-none" />
-          <div className="relative z-10 max-w-2xl">
-            <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
-              Take the next steps
-            </h2>
-            <p className="text-slate-300 mt-4 text-xs sm:text-sm leading-relaxed">
-              Ready to get started? Explore purchasing options or engage with SCL experts to determine the best solutions for your business needs.
-            </p>
-          </div>
-          <div className="relative z-10 shrink-0">
-            <Link href="/contact" className="px-6 py-3.5 rounded-xl bg-white text-[#0F2C59] font-extrabold text-xs tracking-wider uppercase hover:bg-slate-50 transition-all duration-300 inline-flex items-center gap-2 cursor-pointer shadow-md">
-              Chat now <MessageSquare className="w-4 h-4" />
-            </Link>
-          </div>
-        </div>
-      </div>
-
-      {/* 6. RELATED PRODUCTS SECTION */}
-      <div className="w-full py-16 bg-[#F8FAFC] relative z-10">
-        <div className="max-w-7xl mx-auto px-6 text-center">
-          <h2 className="text-lg font-black text-[#0F2C59] mb-4">
-            {content.relatedTitle}
+      {/* 3. Business Outcomes Section */}
+      <section className="py-20 md:py-28 px-6 bg-[#FAFAFA] border-b border-slate-100">
+        <div className="max-w-7xl mx-auto text-center">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#D32F2F]/10 text-[#D32F2F] text-[10px] font-black tracking-wider uppercase mb-3">
+            Business Value
+          </span>
+          <h2 className="text-3xl md:text-4xl font-black text-[#0F2C59] mb-16">
+            Enterprise Outcomes Mapped to ROI
           </h2>
-          <div className="h-1 w-16 bg-[#D32F2F] mx-auto mb-10 rounded" />
-          
-          <div className="flex flex-wrap items-center justify-center gap-4 md:gap-6">
-            {content.relatedProducts.map((prod, idx) => (
-              <Link 
-                key={idx} 
-                href={prod.link}
-                className="px-6 py-3 rounded-xl border border-slate-200 shadow-sm bg-white hover:border-[#000072] text-[#000072] hover:text-[#D32F2F] transition-all duration-300 font-extrabold text-xs tracking-wider uppercase cursor-pointer"
-              >
-                {prod.title}
-              </Link>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {(content.benefits || []).map((outcome, idx) => (
+              <div key={idx} className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm text-left flex flex-col gap-3 hover:shadow-md transition-all">
+                <span className="text-xl">{outcome.icon || "🛡️"}</span>
+                <h3 className="text-base font-black text-[#0F2C59]">{outcome.title}</h3>
+                <p className="text-xs text-slate-500 font-semibold leading-relaxed">{outcome.desc}</p>
+              </div>
             ))}
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Contact Form Section */}
-      <ContactSection />
+      {/* 4. Core Solutions / Service Categories */}
+      <section className="py-20 md:py-28 px-6 bg-white border-b border-slate-100">
+        <div className="max-w-7xl mx-auto text-center">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#000072]/10 text-[#000072] text-[10px] font-black tracking-wider uppercase mb-3">
+            Portfolio Groups
+          </span>
+          <h2 className="text-3xl md:text-4xl font-black text-[#0F2C59] mb-16">
+            Core Solutions Portfolio
+          </h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {(content.featured || []).map((cat, idx) => (
+              <div key={idx} className="bg-[#F8FAFC] rounded-2xl p-6 border border-slate-155 shadow-sm flex flex-col justify-between hover:shadow-lg transition-all text-left">
+                <div>
+                  <h3 className="text-base font-black text-[#0F2C59] mb-3">{cat.title}</h3>
+                  <p className="text-xs text-slate-500 font-semibold leading-relaxed mb-4">{cat.desc}</p>
+                </div>
+                <div className="border-t border-slate-150 pt-4 mt-4 text-[11px] font-bold">
+                  {cat.vendor && <div><span className="text-[#000072]">Brands:</span> <span className="text-slate-600">{cat.vendor}</span></div>}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 5. Architecture Diagram Section */}
+      <section className="py-20 md:py-28 px-6 bg-[#FAFAFA] border-b border-slate-100">
+        <div className="max-w-4xl mx-auto text-center">
+          <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[#000072]/10 text-[#000072] text-[10px] font-black tracking-wider uppercase mb-3">
+            System Diagrams
+          </span>
+          <h2 className="text-3xl md:text-4xl font-black text-[#0F2C59] mb-4">
+            Visual Solution Blueprint
+          </h2>
+          <p className="text-slate-500 max-w-2xl mx-auto text-sm md:text-base leading-relaxed mb-16 font-medium">
+            Explore the multi-tier deployment flow mapping client queries to core data storage networks.
+          </p>
+
+          <div className="flex flex-col gap-4 border border-slate-150 rounded-3xl p-6 md:p-10 bg-white relative shadow-sm">
+            {(content.diagramLayers || []).map((node, idx) => (
+              <div 
+                key={idx}
+                onMouseEnter={() => setActiveDiagramNode(node)}
+                onMouseLeave={() => setActiveDiagramNode(null)}
+                className={cn(
+                  "py-4.5 px-6 rounded-2xl border text-center transition-all duration-300 font-extrabold text-xs uppercase tracking-wider bg-slate-50 relative cursor-default shadow-xs",
+                  activeDiagramNode === node ? "scale-[1.02] shadow-md border-slate-400 bg-slate-100" : "border-slate-200"
+                )}
+              >
+                {node}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 6. Use Cases Section */}
+      <section className="py-20 md:py-28 px-6 bg-white border-b border-slate-100">
+        <div className="max-w-7xl mx-auto text-center">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#000072]/10 text-[#000072] text-[10px] font-black tracking-wider uppercase mb-3">
+            Use Cases
+          </span>
+          <h2 className="text-3xl md:text-4xl font-black text-[#0F2C59] mb-16">
+            Enterprise Infrastructure Use Cases
+          </h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              { title: "Enterprise Database Hosting", desc: "Run SQL Server and PostgreSQL databases with high thread counts." },
+              { title: "Big Data Processing", desc: "Manage parallel calculation nodes analyzing petabytes of text logs." },
+              { title: "Disaster Recovery", desc: "Replicate server volumes to secure offsite vaults using veeam tools." }
+            ].map((usecase, idx) => (
+              <div key={idx} className="bg-slate-50 rounded-2xl p-6 border border-slate-100 hover:shadow-md transition-all text-left flex flex-col gap-3">
+                <h3 className="text-base font-black text-[#0F2C59]">{usecase.title}</h3>
+                <p className="text-xs text-slate-500 font-semibold leading-relaxed">{usecase.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 7. Industry Solutions Section */}
+      <section className="py-20 md:py-28 px-6 bg-[#FAFAFA] border-b border-slate-100">
+        <div className="max-w-7xl mx-auto text-center">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#D32F2F]/10 text-[#D32F2F] text-[10px] font-black tracking-wider uppercase mb-3">
+            Domain Segments
+          </span>
+          <h2 className="text-3xl md:text-4xl font-black text-[#0F2C59] mb-16">
+            Industry Computing Blueprints
+          </h2>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {[
+              { title: "Banking & Finance", desc: "Low latency computing nodes running transactional ledgers safely.", icon: "🏦" },
+              { title: "Government", desc: "Isolated physical racks matching ISO security audit metrics.", icon: "🏛️" },
+              { title: "Healthcare", desc: "Secure virtualization nodes hosting encrypted medical charts.", icon: "🏥" },
+              { title: "Telecommunications", desc: "Edge routing gates handling high network package rates.", icon: "📡" },
+              { title: "Education", desc: "Flexible container groups scaling LMS software during exam hours.", icon: "🏫" },
+              { title: "Manufacturing", desc: "Firmware telemetry nodes logging factory sensor signals.", icon: "🏭" },
+              { title: "Retail & E-commerce", desc: "Dynamic web compute instances handling customer checkout queues.", icon: "🛒" },
+              { title: "Logistics", desc: "Offline tracking systems compiling routing coordinates.", icon: "🚚" }
+            ].map((ind, idx) => (
+              <div key={idx} className="bg-white rounded-2xl p-6 border border-slate-150 shadow-sm text-left flex flex-col gap-3 hover:shadow-md transition-all">
+                <span className="text-2xl">{ind.icon}</span>
+                <h3 className="text-sm font-black text-[#0F2C59]">{ind.title}</h3>
+                <p className="text-[11px] text-slate-500 font-semibold leading-relaxed">{ind.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 8. Technology Ecosystem Section */}
+      <section className="py-20 md:py-28 px-6 bg-white border-b border-slate-100">
+        <div className="max-w-7xl mx-auto text-center">
+          <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[#000072]/10 text-[#000072] text-[10px] font-black tracking-wider uppercase mb-3">
+            Ecosystem
+          </span>
+          <h2 className="text-3xl md:text-4xl font-black text-[#0F2C59] mb-16">
+            Technology Ecosystem
+          </h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-6 text-left max-w-5xl mx-auto">
+            {[
+              { cat: "Hardware", items: ["Dell PowerEdge", "HPE ProLiant", "Lenovo Systems"] },
+              { cat: "Virtualization", items: ["VMware ESXi", "Microsoft Hyper-V", "Sangfor aSV"] },
+              { cat: "Cloud", items: ["AWS EC2", "Azure Compute", "Hybrid Tunnels"] },
+              { cat: "Networking", items: ["Cisco Core", "Juniper Routing", "SD-WAN Gates"] },
+              { cat: "Security", items: ["Fortinet WAF", "Sophos Endpoints", "IAM Directories"] }
+            ].map((group, idx) => (
+              <div key={idx} className="bg-slate-50 border border-slate-100 p-5 rounded-2xl flex flex-col gap-3 shadow-xs">
+                <h3 className="text-xs font-black text-[#000072] uppercase tracking-wider">{group.cat}</h3>
+                <div className="h-0.5 w-6 bg-[#D32F2F] rounded" />
+                <ul className="flex flex-col gap-2">
+                  {group.items.map((it, itIdx) => (
+                    <li key={itIdx} className="text-[11px] font-extrabold text-slate-600 flex items-center gap-1">
+                      <CheckCircle2 className="w-3 h-3 text-[#D32F2F] shrink-0" />
+                      <span>{it}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 9. Deployment Process Section */}
+      <section className="py-20 md:py-28 px-6 bg-[#FAFAFA] border-b border-slate-100">
+        <div className="max-w-7xl mx-auto text-center">
+          <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[#D32F2F]/10 text-[#D32F2F] text-[10px] font-black tracking-wider uppercase mb-3">
+            Lifecycle Map
+          </span>
+          <h2 className="text-3xl md:text-4xl font-black text-[#0F2C59] mb-16">
+            Deployment Process Lifecycle
+          </h2>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-7 gap-4 relative">
+            {[
+              { num: "01", title: "Assessment", desc: "Auditing active VM core usages." },
+              { num: "02", title: "Design", desc: "Mapping virtual networks." },
+              { num: "03", title: "Planning", desc: "Configuring server rack hardware." },
+              { num: "04", title: "Deployment", desc: "Mounting physical nodes into cabinets." },
+              { num: "05", title: "Optimization", desc: "Installing ESXi hypervisor pools." },
+              { num: "06", title: "Monitoring", desc: "Adjusting load balancer allocations." },
+              { num: "07", title: "Managed NOC", desc: "Routing alerts to our certified NOC." }
+            ].map((step, idx) => (
+              <div key={idx} className="flex flex-col items-center relative z-10 bg-white border border-slate-150 p-4 rounded-xl shadow-xs">
+                <div className="w-10 h-10 rounded-full bg-slate-50 border-2 border-[#000072] flex items-center justify-center font-black text-[#000072] text-[11px] mb-3">
+                  {step.num}
+                </div>
+                <h3 className="text-[10px] font-black text-[#0F2C59] mb-1">{step.title}</h3>
+                <p className="text-[9px] text-slate-400 font-semibold leading-relaxed">{step.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 10. Reliability / Security / Performance Section */}
+      <section className="py-20 md:py-28 px-6 bg-white border-b border-slate-100">
+        <div className="max-w-7xl mx-auto text-center">
+          <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[#000072]/10 text-[#000072] text-[10px] font-black tracking-wider uppercase mb-3">
+            Resilience
+          </span>
+          <h2 className="text-3xl md:text-4xl font-black text-[#0F2C59] mb-16">
+            Reliability & Performance Engineering
+          </h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              { title: "High Availability Systems", desc: "Set up active clustered VM nodes that handle hardware errors without downtime.", icon: "🔄" },
+              { title: "Failover Architecture", desc: "Configure hot standby servers that take over database transactions instantly.", icon: "⚡" },
+              { title: "Performance Tuning", desc: "Audit CPU scaling flags and RAM frequency allocations to maximize compute speeds.", icon: "📈" }
+            ].map((item, idx) => (
+              <div key={idx} className="bg-slate-50 rounded-2xl p-6 border border-slate-100 shadow-sm text-left flex flex-col gap-3">
+                <span className="text-xl">{item.icon}</span>
+                <h3 className="text-base font-black text-[#0F2C59]">{item.title}</h3>
+                <p className="text-xs text-slate-500 font-semibold leading-relaxed">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 11. Why Choose Silicon Section */}
+      <section className="py-20 md:py-28 px-6 bg-[#FAFAFA] border-b border-slate-100">
+        <div className="max-w-7xl mx-auto text-center">
+          <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[#D32F2F]/10 text-[#D32F2F] text-[10px] font-black tracking-wider uppercase mb-3">
+            Advantages
+          </span>
+          <h2 className="text-3xl md:text-4xl font-black text-[#0F2C59] mb-16">
+            Why Partner With Silicon Computing
+          </h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              { title: "Certified Infrastructure Engineers", desc: "Our technicians hold AWS, VMware, and Dell technical certification credentials." },
+              { title: "Multi-Vendor Expertise", desc: "We coordinate and integrate systems across Cisco, HPE, Dell, and VMware layers." },
+              { title: "End-to-End Deployment", desc: "We coordinate everything from network topology maps down to local rack layouts." }
+            ].map((adv, idx) => (
+              <div key={idx} className="bg-white rounded-2xl p-6 border border-slate-150 shadow-sm text-left flex flex-col gap-3 hover:shadow-md transition-all">
+                <span className="text-xs font-black text-[#000072]">ADVANTAGE 0{idx + 1}</span>
+                <h3 className="text-base font-black text-[#0F2C59]">{adv.title}</h3>
+                <p className="text-xs text-slate-500 font-semibold leading-relaxed">{adv.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 12. Case Studies Section */}
+      <section className="py-20 md:py-28 px-6 bg-white border-b border-slate-100">
+        <div className="max-w-7xl mx-auto text-center">
+          <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[#000072]/10 text-[#000072] text-[10px] font-black tracking-wider uppercase mb-3">
+            Case Studies
+          </span>
+          <h2 className="text-3xl md:text-4xl font-black text-[#0F2C59] mb-16">
+            Optimization In Action
+          </h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+            {(content.caseStudies || []).map((study, idx) => (
+              <div key={idx} className="bg-[#F8FAFC] rounded-3xl p-8 border border-slate-150 shadow-sm text-left flex flex-col justify-between hover:shadow-md transition-all">
+                <div>
+                  <h3 className="text-lg font-black text-[#0F2C59] mb-3">{study.title}</h3>
+                  <p className="text-xs text-slate-500 font-semibold mb-6 leading-relaxed">{study.desc}</p>
+                  
+                  <div className="flex flex-wrap gap-2.5 mb-6">
+                    {study.metrics.map((m, mIdx) => (
+                      <span key={mIdx} className="bg-emerald-50 text-emerald-600 text-[10px] font-black uppercase tracking-wider px-3 py-1 rounded-md border border-emerald-200/50">
+                        {m}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="border-t border-slate-100 pt-6 mt-6">
+                  <p className="text-[11px] text-slate-600 font-bold leading-relaxed mb-4">
+                    <strong className="text-[#000072]">Result:</strong> {study.result}
+                  </p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {study.techs.map((t, tIdx) => (
+                      <span key={tIdx} className="bg-slate-100 text-slate-600 text-[9px] font-bold px-2 py-0.5 rounded">
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 13. Statistics Section */}
+      <section className="bg-[#0b1329] py-16 text-white border-b border-slate-800 relative">
+        <div className="max-w-7xl mx-auto px-6 grid grid-cols-2 md:grid-cols-5 gap-8 relative z-10 text-center">
+          <div>
+            <span className="text-3xl md:text-4.5xl font-black text-white block mb-1">650+</span>
+            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Deployments</span>
+          </div>
+          <div>
+            <span className="text-3xl md:text-4.5xl font-black text-white block mb-1">180+</span>
+            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Enterprise Clients</span>
+          </div>
+          <div>
+            <span className="text-3xl md:text-4.5xl font-black text-white block mb-1">920+</span>
+            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Infrastructure Projects</span>
+          </div>
+          <div>
+            <span className="text-3xl md:text-4.5xl font-black text-white block mb-1">12+</span>
+            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Technology Partners</span>
+          </div>
+          <div>
+            <span className="text-3xl md:text-4.5xl font-black text-white block mb-1">8+ Years</span>
+            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Industry Service</span>
+          </div>
+        </div>
+      </section>
+
+      {/* 14. FAQ Section */}
+      <section className="py-20 md:py-28 px-6 bg-white border-b border-slate-100">
+        <div className="max-w-3xl mx-auto">
+          <div className="text-center mb-16">
+            <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[#000072]/10 text-[#000072] text-[10px] font-black tracking-wider uppercase mb-3">
+              FAQ
+            </span>
+            <h2 className="text-3xl md:text-4xl font-black text-[#0F2C59]">
+              Frequently Asked Questions
+            </h2>
+          </div>
+
+          <div className="flex flex-col gap-4">
+            {(content.faqs || []).map((faq, idx) => (
+              <div key={idx} className="border border-slate-100 rounded-2xl overflow-hidden shadow-sm">
+                <button
+                  onClick={() => toggleFaq(idx)}
+                  className="w-full px-6 py-5 bg-white text-left flex items-center justify-between font-black text-slate-800 hover:text-[#000072] transition-colors cursor-pointer border-0"
+                >
+                  <span className="text-xs sm:text-sm">{faq.q}</span>
+                  {activeFaq === idx ? <Minus className="w-4 h-4 text-[#D32F2F] shrink-0" /> : <Plus className="w-4 h-4 text-slate-500 shrink-0" />}
+                </button>
+                <AnimatePresence initial={false}>
+                  {activeFaq === idx && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                      className="bg-white border-t border-slate-100"
+                    >
+                      <p className="px-6 py-5 text-xs text-slate-500 font-semibold leading-relaxed">
+                        {faq.a}
+                      </p>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 15. CTA Section */}
+      <section className="py-20 md:py-28 px-6 bg-gradient-to-br from-[#0F2C59] via-[#0a1e3f] to-[#050f20] text-white overflow-hidden relative">
+        <div className="max-w-4xl mx-auto text-center relative z-10 flex flex-col items-center">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-white text-[10px] font-black uppercase tracking-widest mb-6 backdrop-blur">
+            Partner With Us
+          </span>
+          <h2 className="text-3xl md:text-5xl font-black tracking-tight leading-[1.1] mb-6">
+            Build a Secure, Scalable, Enterprise-Ready Infrastructure
+          </h2>
+          <p className="text-slate-300 max-w-2xl text-xs sm:text-sm md:text-base leading-relaxed mb-10 font-medium">
+            Contact our senior product engineers to audit your project and construct an implementation roadmap.
+          </p>
+
+          <div className="flex flex-wrap items-center justify-center gap-4 w-full sm:w-auto">
+            <Link href="/contact" className="px-8 py-4 rounded-xl bg-[#000072] text-white font-extrabold text-xs tracking-wider uppercase hover:bg-[#000072]/90 shadow-xl transition-all flex items-center gap-2 border-0">
+              Talk to an Expert <ArrowRight className="w-4 h-4" />
+            </Link>
+            <Link href="/contact" className="px-8 py-4 rounded-xl bg-white/5 border border-white/10 text-white font-extrabold text-xs tracking-wider uppercase hover:bg-white/10 transition-all">
+              Request Proposal
+            </Link>
+          </div>
+        </div>
+      </section>
+
     </main>
   );
 }

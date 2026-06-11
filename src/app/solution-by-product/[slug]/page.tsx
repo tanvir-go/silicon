@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { 
@@ -21,10 +21,18 @@ import {
   BarChart, 
   Clock, 
   Briefcase,
-  Users
+  Users,
+  Star,
+  ShieldCheck,
+  Building2,
+  Layers,
+  HelpCircle,
+  Plus,
+  Minus,
+  MonitorSmartphone
 } from "lucide-react";
-import ContactSection from "@/sections/ContactSection";
-import { blogPostsData } from "@/data/mockData";
+import { cn } from "@/lib/utils";
+import { motion, AnimatePresence } from "framer-motion";
 
 // Helper to format slug to title
 const formatTitle = (slug: string) => {
@@ -39,10 +47,13 @@ interface SolutionData {
   subtitle: string;
   description: string;
   heroImage: string;
+  conceptIntro: string;
+  conceptPoints: string[];
   benefits: {
     title: string;
     desc: string;
-  }[]; // 4 benefits
+    icon?: string;
+  }[];
   banner: {
     title: string;
     desc: string;
@@ -51,142 +62,49 @@ interface SolutionData {
   featured: {
     title: string;
     desc: string;
-  }[]; // 4 solutions
+    vendor?: string;
+  }[];
   portfolio: {
     title: string;
     desc: string;
-  }[]; // 12 items
+  }[];
   edgeToCloud: {
     title: string;
     desc: string;
-  }[]; // 3 items
+  }[];
+  diagramLayers: string[];
+  faqs: { q: string; a: string }[];
+  caseStudies?: {
+    title: string;
+    desc: string;
+    metrics: string[];
+    techs: string[];
+    result: string;
+  }[];
 }
 
-const getAccurateHeroImage = (slug: string) => {
-  const s = slug.toLowerCase();
-  if (s.includes("ai") || s.includes("intelligence") || s.includes("machine") || s.includes("ml")) {
-    return "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&q=80&w=800";
-  }
-  if (s.includes("storage") || s.includes("nas") || s.includes("san") || s.includes("disk")) {
-    return "https://images.unsplash.com/photo-1600132806370-bf17e65e942f?auto=format&fit=crop&q=80&w=800";
-  }
-  if (s.includes("network") || s.includes("switch") || s.includes("sd-wan") || s.includes("routing")) {
-    return "https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&q=80&w=800";
-  }
-  if (s.includes("security") || s.includes("cyber") || s.includes("firewall") || s.includes("trust") || s.includes("private")) {
-    return "https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&q=80&w=800";
-  }
-  if (s.includes("database") || s.includes("sql") || s.includes("oracle") || s.includes("postgres")) {
-    return "https://images.unsplash.com/photo-1544383835-bda2bc66a55d?auto=format&fit=crop&q=80&w=800";
-  }
-  if (s.includes("software") || s.includes("code") || s.includes("app") || s.includes("saas")) {
-    return "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=800";
-  }
-  if (s.includes("supercompute") || s.includes("hpc") || s.includes("cluster")) {
-    return "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=800";
-  }
-  if (s.includes("cloud") || s.includes("hybrid")) {
-    return "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=800";
-  }
-  return "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&q=80&w=800";
-};
-
-// Predefined rich content for Solution by Product pages
 const solutionsContent: Record<string, SolutionData> = {
-  "artificial-intelligence-ai": {
-    title: "Artificial Intelligence (AI)",
-    subtitle: "AI / Solutions",
-    description: "Build, train, and deploy advanced machine learning pipelines and neural classifiers. We deliver GPU-accelerated computing nodes, parallel low-latency storage, and high-performance interconnects built for AI workloads.",
-    heroImage: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&q=80&w=800",
-    benefits: [
-      { title: "Hardware-Accelerated Training", desc: "Accelerate deep learning loops using high-density GPU nodes and tensor processing modules." },
-      { title: "Optimized Parallel Data Pipelines", desc: "Feed training nodes with high-throughput parallel data pipelines to maximize accelerator usage." },
-      { title: "Flexible Deployment Models", desc: "Deploy final models to regional cloud systems or secure local edge devices depending on compliance requirements." },
-      { title: "Model Inference Telemetry", desc: "Monitor query speed, accuracy metrics, and node load from a unified panel." }
-    ],
-    banner: {
-      title: "Scale Your AI Infrastructure turn-key",
-      desc: "Deploy pre-configured model training clusters, MLOps orchestration systems, and zero-trust database bridges.",
-      image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=1200"
-    },
-    featured: [
-      { title: "GPU-Accelerated Computing", desc: "Deploy enterprise server hardware loaded with high-density GPU accelerators." },
-      { title: "Parallel Storage Pools", desc: "Feed analytical data directly to processors using low-latency filesystems." },
-      { title: "MLOps Orchestration", desc: "Manage containerized training configurations and version controls dynamically." },
-      { title: "Secure Model APIs", desc: "Expose finished models via verified API gateways protecting source databases." }
-    ],
-    portfolio: [
-      { title: "High-density GPU racks", desc: "Configure server racks loaded with Nvidia Tensor Core computing hardware." },
-      { title: "Lustre parallel filesystems", desc: "Deploy high-speed storage pools to deliver training files to compute nodes." },
-      { title: "Docker & Kubernetes setup", desc: "Orchestrate containers to scale machine learning environments dynamically." },
-      { title: "Model inference API gateways", desc: "Host model API ports with built-in access credentials and billing tracking." },
-      { title: "Jupyter server environments", desc: "Provide developers with interactive sandbox systems linked to new compute nodes." },
-      { title: "Neural network model versioning", desc: "Track model configurations, parameter weights, and training histories safely." },
-      { title: "Automated labeling pipelines", desc: "Pre-process raw customer telemetry data to prepare training sets dynamically." },
-      { title: "Hardware-secured API endpoints", desc: "Isolate client inference requests using HSM cryptographic keys." },
-      { title: "Low-power edge analytics modules", desc: "Run analytical models directly on small hardware devices to lower cloud bandwidth fees." },
-      { title: "Dynamic processor scheduling", desc: "Prioritize compute workloads to balance training runs with real-time app requests." },
-      { title: "Model accuracy metrics logs", desc: "Track query success levels to alert developers of configuration drift." },
-      { title: "Certified consulting services", desc: "Work with systems architects to design custom computing infrastructures." }
-    ],
-    edgeToCloud: [
-      { title: "Unified Management Console", desc: "Monitor training progress, server temperatures, and api requests from one panel." },
-      { title: "Hybrid bursting pipelines", desc: "Burst heavy computing queues to public cloud instances when local systems are busy." },
-      { title: "Sovereign data security", desc: "Protect client registers by keeping raw training files inside geographic boundaries." }
-    ]
-  },
-  "compute": {
-    title: "Compute",
-    subtitle: "Compute / Solutions",
-    description: "Optimize workloads and scale your infrastructure with our state-of-the-art compute solutions. We deliver high-fidelity, zero-trust integrated architectures engineered for performance, scalability, and robust security.",
-    heroImage: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&q=80&w=800",
-    benefits: [
-      { title: "Overload prevention and efficiency", desc: "Distribute workloads dynamically across high-availability clusters to prevent system overloading and optimize resource usage." },
-      { title: "Robust security zero-trust model", desc: "Implement zero-trust security controls to isolate critical workloads and prevent unauthorized data transactions." },
-      { title: "Simplified monitoring and management", desc: "Gain unified visibility into your compute resources with integrated monitoring dashboards and automated alerting." },
-      { title: "Power your business operations", desc: "Drive high-performance computing capabilities to support data-intensive enterprise operations." }
-    ],
-    banner: {
-      title: "Improving quality, inspection and analytics",
-      desc: "Transform your data-intensive workloads with automated quality control, AI-driven visual inspection, and advanced predictive analysis.",
-      image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=1200"
-    },
-    featured: [
-      { title: "Enterprise Server Solutions", desc: "Leverage enterprise-grade server infrastructure designed for high density, efficiency, and scale." },
-      { title: "Infrastructure Monitoring & Management", desc: "Gain real-time metrics and absolute control over hardware nodes and software containers." },
-      { title: "Remote Server Management", desc: "Control server environments remotely with secure IPMI and out-of-band administration tools." },
-      { title: "Edge & Dynamic Compute Systems", desc: "Deploy lightweight compute nodes closer to your endpoints to minimize bandwidth latency." }
-    ],
-    portfolio: [
-      { title: "High-performance compute nodes", desc: "Deploy dedicated computing frames for highly parallel mathematical processing." },
-      { title: "Virtual Private Servers (VPS)", desc: "Isolate user spaces with strict hypervisor constraints and dedicated resource quotas." },
-      { title: "Kubernetes clustering & orchestration", desc: "Manage containerized applications across resilient multi-zone server groups." },
-      { title: "Bare-metal dedicated hardware", desc: "Direct hardware access without virtualization overhead for heavy workloads." },
-      { title: "GPU acceleration for AI & ML", desc: "Accelerate deep learning training pipelines with high-throughput graphics processors." },
-      { title: "Fault-tolerant compute zones", desc: "Ensure uninterrupted operations with active-active server configurations." },
-      { title: "Serverless execution models", desc: "Execute micro-functions dynamically without managing local runtime environments." },
-      { title: "Compute-as-a-service (CaaS)", desc: "Scale processing power up or down based on real-time operational telemetry." },
-      { title: "Infrastructure backup & migration", desc: "Transition physical or virtual servers between on-premise and remote locations." },
-      { title: "High-density cabinet integration", desc: "Optimize physical space and cooling efficiency with engineered server racks." },
-      { title: "Liquid-cooling server solutions", desc: "Enhance thermal dissipation for high-density compute frames using active liquid loops." },
-      { title: "Edge compute processing units", desc: "Process local sensor and telemetry data directly on-site to reduce latency." }
-    ],
-    edgeToCloud: [
-      { title: "Unified Management", desc: "Unify operations across on-prem, edge, and cloud with a single pane of glass." },
-      { title: "Transitions matching budget", desc: "Scale resources cost-effectively with flexible pricing models and pay-as-you-grow structures." },
-      { title: "Modernized Hybrid IT", desc: "Bridge legacy hardware with modern hyperconverged layers for seamless operation." }
-    ]
-  },
   "storage": {
-    title: "Storage",
+    title: "Enterprise Storage Solutions",
     subtitle: "Storage / Solutions",
     description: "Deploy resilient, high-speed, and petabyte-scale storage infrastructures. Secure your corporate memory with automated tiering, robust encryption, and multi-zone backups.",
     heroImage: "https://images.unsplash.com/photo-1600132806370-bf17e65e942f?auto=format&fit=crop&q=80&w=800",
+    conceptIntro: "Storage infrastructure forms the bedrock of enterprise data archives, supporting file shares, virtual machines, and real-time transaction history logs.",
+    conceptPoints: [
+      "SAN Block Storage Networks",
+      "NAS Centralized File Pools",
+      "All-Flash NVMe Disk Arrays",
+      "Immutable Object Cloud Buckets",
+      "Dynamic Archival Data Tiering",
+      "Active Disaster Recovery Sync"
+    ],
     benefits: [
-      { title: "Data Durability & Protection", desc: "Protect your data against hardware failures using advanced erasure coding and active replication." },
-      { title: "Dynamic Tiering Optimization", desc: "Automatically transition inactive archives to low-cost cold storage layers to save budget." },
-      { title: "Unified Access Protocols", desc: "Access object, block, and file storage systems through standardized secure APIs." },
-      { title: "Unlimited Scale Potential", desc: "Grow your storage capacity seamlessly from terabytes to petabytes without operational downtime." }
+      { title: "Reduce Operational Costs", desc: "Lower hardware spend up to 40% with dynamic compression and deduplication engines.", icon: "💰" },
+      { title: "Improve System Performance", desc: "Sub-millisecond access times for SQL databases utilizing all-flash arrays.", icon: "⚡" },
+      { title: "Increase Scalability", desc: "Scale capacity seamlessly from terabytes to petabytes without system downtime.", icon: "📈" },
+      { title: "Improve Security", desc: "Protect files from deletion with hardware-enforced write-once-read-many (WORM) controls.", icon: "🔒" },
+      { title: "Ensure High Availability", desc: "Sync storage systems across geographical zones to survive hardware outages.", icon: "🔄" },
+      { title: "Enable Digital Transformation", desc: "Migrate historical tape vaults to accessible secure cloud repositories.", icon: "🚀" }
     ],
     banner: {
       title: "Securing Data Integrity at Absolute Scale",
@@ -194,291 +112,298 @@ const solutionsContent: Record<string, SolutionData> = {
       image: "https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&q=80&w=1200"
     },
     featured: [
-      { title: "All-Flash NVMe Arrays", desc: "Achieve sub-millisecond access times for transactional databases and high-frequency workloads." },
-      { title: "Object Storage Services", desc: "Store unstructured data (videos, backups, logs) with flat namespaces and HTTP access APIs." },
-      { title: "Hybrid Cloud Sync", desc: "Synchronize physical storage arrays with secure cloud buckets in real-time." },
-      { title: "Disaster Recovery Archival", desc: "Maintain off-site, immutable backups protected from ransomware encryptors." }
+      { title: "SAN / NAS Environments", desc: "Host virtual machine drives and file archives on high-throughput arrays.", vendor: "QSAN, Dell Technologies" },
+      { title: "Backup Storage Vaults", desc: "Automate incremental snapshots and store immutable replicas.", vendor: "Veeam, Acronis" },
+      { title: "Cloud Storage Sync", desc: "Establish low-latency tunnels replicating local directories to cloud buckets.", vendor: "AWS, Azure, Synology" }
     ],
     portfolio: [
-      { title: "High-density NAS enclosures", desc: "Centralize file storage over local networks with automated user access boundaries." },
-      { title: "SAN block storage networks", desc: "Dedicate high-speed fiber networks to transactional databases and VM drives." },
-      { title: "Immutable WORM storage", desc: "Ensure files cannot be modified or deleted to align with compliance audits." },
-      { title: "Erasure coded object buckets", desc: "Distribute data fragments across multiple locations to survive hardware failure." },
-      { title: "Active replication systems", desc: "Sync storage pools between data centers to enable instant disaster recovery." },
-      { title: "Encrypted drive integration", desc: "Protect physical storage media with hardware-based AES-256 encryption." },
-      { title: "Automated snapshot scheduling", desc: "Take point-in-time images of volumes without performance degradation." },
-      { title: "Thin provisioning algorithms", desc: "Allocate storage space dynamically to maximize physical drive utilization." },
-      { title: "Legacy storage migration", desc: "Safely transfer massive archives from tape drives to modern cloud-native systems." },
-      { title: "Deduplication & compression", desc: "Reduce storage footprint by removing duplicate data blocks and applying compression." },
-      { title: "File-locking collaboration", desc: "Implement secure file locking across distributed teams to avoid collision." },
-      { title: "Cold-storage tape library", desc: "Archive long-term compliance logs in low-power physical tape vaults." }
+      { title: "All-Flash NVMe Arrays", desc: "Deliver high IOPs throughput for transactional databases." },
+      { title: "Immutable backup snapshots", desc: "Prevent ransomware encryption by locking storage rows." },
+      { title: "Dynamic storage tiering", desc: "Automatically migrate cold data to low-cost archival pools." }
     ],
     edgeToCloud: [
-      { title: "Centralized File Pools", desc: "Access and manage storage nodes globally from a unified administration console." },
-      { title: "Hybrid Tiering Pipeline", desc: "Move data dynamically between physical appliances and remote cloud storage layers." },
-      { title: "Zero-Loss Replication", desc: "Ensure transaction logs are safely committed to multiple geolocations instantly." }
+      { title: "Hybrid File Synchronization", desc: "Bridge on-premise file shares with cloud storage pools." },
+      { title: "Unified Management Console", desc: "Monitor temperatures, latency, and cache sizes from one page." },
+      { title: "Multi-Zone DR Replica Loops", desc: "Commit file updates to multiple servers instantly." }
+    ],
+    diagramLayers: [
+      "User Applications & Interfaces",
+      "Storage Area Network (SAN/NAS Controllers)",
+      "High-Speed All-Flash Array Nodes",
+      "Offsite Backup & Cloud Object Buckets"
+    ],
+    faqs: [
+      { q: "How do you protect stored data from ransomware?", a: "We utilize immutable backups and write-once-read-many (WORM) storage configurations that prevent data modification or deletion during attack events." },
+      { q: "What is the difference between SAN and NAS?", a: "SAN (Storage Area Network) provides block-level storage access for databases and VMs, while NAS (Network Attached Storage) provides file-level access for file sharing." }
     ]
   },
   "network": {
-    title: "Network",
+    title: "Enterprise Networking Solutions",
     subtitle: "Network / Solutions",
     description: "Build fast, secure, and resilient enterprise networking. Integrate software-defined boundaries, global load balancing, and low-latency routing for distributed offices.",
     heroImage: "https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&q=80&w=800",
+    conceptIntro: "Enterprise networking provides the communication fabric linking local branches, private datacenters, remote employees, and public cloud applications.",
+    conceptPoints: [
+      "Software-Defined WAN (SD-WAN)",
+      "Core Switch Architectures",
+      "VLAN Virtual Separation",
+      "Dynamic Routing Protocols",
+      "Low-Latency Fiber Trunks",
+      "Zero-Trust Tunnels"
+    ],
     benefits: [
-      { title: "Micro-Segmentation Gates", desc: "Isolate corporate segments to prevent unauthorized lateral threat movements." },
-      { title: "High-Throughput Routing", desc: "Ensure maximum bandwidth utilization with dynamic BGP route optimization." },
-      { title: "Simplified Cloud Interconnects", desc: "Establish dedicated, secure tunnels between physical offices and cloud networks." },
-      { title: "Intelligent Traffic Shaping", desc: "Prioritize critical operational traffic over standard web navigation requests." }
+      { title: "Reduce Operational Costs", desc: "Cut MPLS link budgets up to 50% by routing traffic over dynamic broadband connections.", icon: "💰" },
+      { title: "Improve System Performance", desc: "Minimize application latency using automated routing path calculation.", icon: "⚡" },
+      { title: "Increase Scalability", desc: "Add new branches and cloud networks instantly with software controls.", icon: "📈" },
+      { title: "Improve Security", desc: "Encrypt all branch-to-branch communications inside IPSec VPN gates.", icon: "🔒" },
+      { title: "Ensure High Availability", desc: "Mitigate link disruptions utilizing active backup paths and automatic failover.", icon: "🔄" },
+      { title: "Enable Digital Transformation", desc: "Unify distributed workspaces with single-pane cloud administration hubs.", icon: "🚀" }
     ],
     banner: {
-      title: "Unifying Distributed Corporate Operations",
-      desc: "Connect branches, datacenters, and remote teams securely with SD-WAN and automated routing policies.",
+      title: "Connecting Distributed Enterprises Securely",
+      desc: "Deploy resilient network cores, redundant switches, and secure gateways engineered for high throughput.",
       image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&q=80&w=1200"
     },
     featured: [
-      { title: "Software-Defined WAN", desc: "Route traffic dynamically over public broadband or MPLS lines to minimize latency." },
-      { title: "Global Load Balancing", desc: "Distribute user requests across multiple regional datacenters for high availability." },
-      { title: "Zero-Trust Tunnels", desc: "Connect remote employees with encrypted end-to-end access boundaries." },
-      { title: "Core Switch Architecture", desc: "Deploy high-density core switches supporting up to 400Gbps network backbones." }
+      { title: "Routing / Switching Fabric", desc: "Deploy high-density core switches and switches handling up to 100G loops.", vendor: "Cisco, Juniper" },
+      { title: "SD-WAN Connectors", desc: "Route branch traffic dynamically across public broadband and private lines.", vendor: "Aruba, Sangfor" },
+      { title: "LAN / WAN Enclosures", desc: "Configure structured cabling and physical fiber runs securely.", vendor: "R&M, Alcatel-Lucent" }
     ],
     portfolio: [
-      { title: "Dynamic routing protocols", desc: "Configure OSPF, BGP, and EIGRP paths for automated network convergence." },
-      { title: "VLAN division isolation", desc: "Segment local area networks into secure virtual workgroups." },
-      { title: "Redundant fiber trunks", desc: "Lay down physical failover paths to avoid connectivity disruptions." },
-      { title: "BGP route optimization", desc: "Calculate optimal routes to reduce internet latency for client systems." },
-      { title: "Edge gateway firewalls", desc: "Analyze incoming and outgoing traffic with deep packet inspection filters." },
-      { title: "DNS resolution systems", desc: "Provide ultra-fast, secure name resolution with DDoS protection built-in." },
-      { title: "Network address translation", desc: "Conserve IP ranges and hide internal network topologies from public scans." },
-      { title: "Wireless mesh controllers", desc: "Coordinate corporate Wi-Fi access points with seamless roaming policies." },
-      { title: "IP address management (IPAM)", desc: "Track, plan, and manage IP allocations across the entire organization." },
-      { title: "Optical transport terminals", desc: "Transmit high-bandwidth data over long distances using dense wave multiplexing." },
-      { title: "Bandwidth limit throttling", desc: "Shape bandwidth usage to guarantee resources for critical applications." },
-      { title: "VPN network aggregators", desc: "Handle thousands of concurrent remote connections with hardware-accelerated encryption." }
+      { title: "BGP Route Optimizations", desc: "Calculate low-latency internet paths for dynamic application loops." },
+      { title: "Zero-Trust Tunnels", desc: "Authenticate remote workers securely without exposing internal networks." },
+      { title: "Dynamic Load Balancing", desc: "Distribute gateway requests across redundant network interfaces." }
     ],
     edgeToCloud: [
-      { title: "Single Console Control", desc: "Manage routing tables, firewalls, and SD-WAN rules from one central portal." },
-      { title: "Low-Latency Direct Connects", desc: "Bridge physical offices directly to cloud networks to bypass public internet risks." },
-      { title: "Automated Fault Detection", desc: "Trigger failover tunnels automatically within milliseconds of a link failure." }
+      { title: "Unified Branch Telemetry", desc: "Trace packet traffic and connection status from a single screen." },
+      { title: "Hybrid Cloud Interconnects", desc: "Establish private low-latency connections linking local racks to public clouds." },
+      { title: "Micro-Segmented Security Zones", desc: "Isolate client devices to stop lateral threat propagation." }
+    ],
+    diagramLayers: [
+      "Branch Offices & Remote Users",
+      "SD-WAN Gateways & Virtual Routers",
+      "High-Density Core Switch Backbone",
+      "Private Datacenter & Cloud Instances"
+    ],
+    faqs: [
+      { q: "What is SD-WAN and how does it help?", a: "SD-WAN separates network control from hardware, allowing traffic routing over multiple paths (broadband, LTE, MPLS) based on quality, lowering costs and increasing reliability." },
+      { q: "How do you protect networks from DDoS attacks?", a: "We install next-generation firewalls (NGFW) and cloud scrubbing gates that identify and filter anomalous packet surges before they reach host servers." }
     ]
   },
   "security": {
-    title: "Security",
+    title: "Zero-Trust Infrastructure Security",
     subtitle: "Security / Solutions",
-    description: "Harden your endpoints, secure your transactions, and protect your intellectual capital. We implement zero-trust access, continuous threat monitoring, and automated incident containment.",
+    description: "Defend your corporate perimeter and cloud assets. Implement next-generation firewalls, identity management (IAM), and endpoint validation controls.",
     heroImage: "https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&q=80&w=800",
+    conceptIntro: "Security infrastructure enforces the zero-trust paradigm: never trust, always verify, ensuring all users, devices, and applications are continuously audited.",
+    conceptPoints: [
+      "Next-Gen Firewalls (NGFW)",
+      "Zero-Trust Identity Control",
+      "Web Application Firewalls (WAF)",
+      "Endpoint Threat Protection",
+      "SIEM Event Logging",
+      "Vulnerability Audit Scans"
+    ],
     benefits: [
-      { title: "Continuous Auditing & Monitoring", desc: "Scan configurations and file integrity in real-time to prevent compliance drift." },
-      { title: "Zero-Trust Identity", desc: "Authenticate every access request using SSO, MFA, and device health checks." },
-      { title: "Threat Intelligence Feed", desc: "Leverage global databases and machine learning to block attacks proactively." },
-      { title: "Automated Incident Containment", desc: "Isolate compromised host nodes instantly to prevent lateral contamination." }
+      { title: "Reduce Operational Costs", desc: "Avoid regulatory penalties and breach remediation costs with active protection.", icon: "💰" },
+      { title: "Improve System Performance", desc: "Filter malicious bots and spam traffic to reduce server load.", icon: "⚡" },
+      { title: "Increase Scalability", desc: "Manage employee access permissions globally using single sign-on (SSO).", icon: "📈" },
+      { title: "Improve Security", desc: "Protect files and network segments with granular access rules.", icon: "🔒" },
+      { title: "Ensure High Availability", desc: "Mitigate service disruptions by blocking application-level attacks.", icon: "🔄" },
+      { title: "Enable Digital Transformation", desc: "Expose secure database APIs to third-party partners without leakage risks.", icon: "🚀" }
     ],
     banner: {
-      title: "Isolating Threat Vectors at the Perimeter",
-      desc: "Protect your databases, transaction gateways, and developer environments with automated boundary controls and active-defense systems.",
-      image: "https://images.unsplash.com/photo-1510511459019-5dda7724fd87?auto=format&fit=crop&q=80&w=1200"
+      title: "Hardening Digital Boundaries Continuously",
+      desc: "Monitor security anomalies and configure threat detection rules using AI-driven telemetry.",
+      image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=1200"
     },
     featured: [
-      { title: "Identity & Access Control (IAM)", desc: "Grant precise roles and resource permissions based on the principle of least privilege." },
-      { title: "Endpoint Protection Systems", desc: "Deploy lightweight agents to monitor activity and block malware on employee devices." },
-      { title: "Data Loss Prevention (DLP)", desc: "Enforce strict policies to prevent sensitive client data from leaving your network." },
-      { title: "SIEM Security Operations", desc: "Consolidate event logs from all systems to detect anomalies and trigger alerts." }
+      { title: "Next-Gen Firewalls", desc: "Block lateral network threats with deep packet inspection rules.", vendor: "Fortinet, Palo Alto" },
+      { title: "Zero Trust & IAM", desc: "Authenticate device health and user identities before routing traffic.", vendor: "Entrust, Cisco Security" },
+      { title: "Endpoint & SIEM Security", desc: "Trace active file logs and security events across server groups.", vendor: "Wazuh, Sophos" }
     ],
     portfolio: [
-      { title: "Multi-factor authentication (MFA)", desc: "Require secondary verification codes and hardware security keys for logins." },
-      { title: "Hardware cryptography keys", desc: "Store secret keys inside dedicated hardware security modules (HSM)." },
-      { title: "Intrusion detection systems", desc: "Monitor network packets for signatures of known hacking exploits." },
-      { title: "Vulnerability assessment scans", desc: "Scan codebases and running systems for unpatched software flaws." },
-      { title: "Web application firewall (WAF)", desc: "Filter malicious HTTP requests (SQLi, XSS) targeting your public websites." },
-      { title: "DDoS mitigation systems", desc: "Absorb massive traffic spikes to keep your public APIs online." },
-      { title: "Data database encryption", desc: "Encrypt data fields within databases to protect files from physical theft." },
-      { title: "Zero-trust network boundaries", desc: "De-authorize internal network access until explicitly verified." },
-      { title: "Secure email gateways", desc: "Scan email attachments and links to block phishing and malware campaigns." },
-      { title: "Compliance alignment audits", desc: "Compile documentation and logs to pass SOC2, ISO27001, and HIPAA audits." },
-      { title: "Automated red-team scripts", desc: "Simulate network attacks to test response procedures and boundaries." },
-      { title: "Secure software pipelines", desc: "Scan developer code for secret leaks and library vulnerabilities." }
+      { title: "Micro-Segmented Cloud Nets", desc: "Isolate application layers behind independent firewall policies." },
+      { title: "Vulnerability Scanning", desc: "Scan databases and repository codes for exposed credentials." },
+      { title: "SSL Decryption Inspection", desc: "Inspect encrypted packet headers for embedded malware payloads." }
     ],
     edgeToCloud: [
-      { title: "Central Policy Engine", desc: "Configure security policies in one place and push them to all devices globally." },
-      { title: "Unified Identity Federation", desc: "Use a single corporate identity directory across all internal and cloud platforms." },
-      { title: "Automated Isolation Loops", desc: "Isolate threat vectors automatically across hybrid systems within milliseconds." }
+      { title: "Central Security Panel", desc: "Trace user login locations, threat logs, and compliance metrics from one screen." },
+      { title: "Active Threat Containment", desc: "Isolate compromised virtual servers automatically when an alert triggers." },
+      { title: "Audited Compliance Reports", desc: "Maintain structured logs mapping PCI-DSS and ISO 27001 parameters." }
+    ],
+    diagramLayers: [
+      "User Access Point (SSO/MFA Authenticated)",
+      "Identity Posture & Device Health Validation",
+      "Next-Gen Firewall & WAF Inspection",
+      "Segmented Target Databases & App Clusters"
+    ],
+    faqs: [
+      { q: "What is a Zero-Trust architecture?", a: "Zero-Trust assumes threats are inside the network. It requires continuous verification of every user, device, and request, rather than trusting by default." },
+      { q: "How does endpoint protection differ from firewalls?", a: "Firewalls inspect traffic between networks, while endpoint protection runs directly on devices (servers, laptops) to block file-level malware executions." }
     ]
   },
   "software": {
-    title: "Software",
+    title: "Enterprise Operating Systems & Software",
     subtitle: "Software / Solutions",
-    description: "Deliver intuitive, modern, and scalable software architectures. We build bespoke SaaS portals, API-first integrations, and event-driven microservices engineered for business outcomes.",
+    description: "Standardize your runtime environments with supported operating systems, container platforms, and DevOps collaboration tools.",
     heroImage: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=800",
+    conceptIntro: "Enterprise software provides the compliant, certified operating systems, container platforms, and developer systems running business logic.",
+    conceptPoints: [
+      "Supported Linux OS (RHEL/SUSE)",
+      "Kubernetes Container Platforms",
+      "DevOps Automation & Pipelines",
+      "Collaboration Software Hubs",
+      "IT Service Portals (ITSM)",
+      "Infrastructure Monitoring UI"
+    ],
     benefits: [
-      { title: "API-First Architecture", desc: "Ensure your systems are ready to connect with third-party vendors and client tools." },
-      { title: "Rapid CI/CD Pipelines", desc: "Automate code testing and deployment to reduce release cycles from months to hours." },
-      { title: "Elastic Microservices", desc: "Scale specific code components independently to manage traffic spikes cost-effectively." },
-      { title: "Modern User Interfaces", desc: "Provide beautiful, responsive layouts that make work efficient and enjoyable." }
+      { title: "Reduce Operational Costs", desc: "Consolidate operating licenses to reduce compliance waste.", icon: "💰" },
+      { title: "Improve System Performance", desc: "Run optimized operating system kernels that reduce RAM overhead.", icon: "⚡" },
+      { title: "Increase Scalability", desc: "Orchestrate container groups using Kubernetes to scale apps dynamically.", icon: "📈" },
+      { title: "Improve Security", desc: "Apply security patches automatically to block operating system exploits.", icon: "🔒" },
+      { title: "Ensure High Availability", desc: "Deploy container groups across multiple regions to avoid single point failures.", icon: "🔄" },
+      { title: "Enable Digital Transformation", desc: "Transition from manual script runs to version-controlled CI/CD systems.", icon: "🚀" }
     ],
     banner: {
-      title: "Modernizing Legacy Systems Safely",
-      desc: "Deconstruct aging software monoliths into robust, cloud-native services with zero downtime during migration.",
-      image: "https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&q=80&w=1200"
-    },
-    featured: [
-      { title: "Custom SaaS Hubs", desc: "Build multi-tenant customer hubs with granular billing plans and custom workspaces." },
-      { title: "Event-Driven Systems", desc: "Sync systems instantly using high-throughput brokers like Apache Kafka." },
-      { title: "Mobile App Ecosystems", desc: "Deploy responsive mobile platforms using React Native or Flutter frameworks." },
-      { title: "Headless CMS Platforms", desc: "Decouple editorial content from display layers to speed up content delivery." }
-    ],
-    portfolio: [
-      { title: "Bespoke customer databases", desc: "Structure user records with custom fields and data indexing templates." },
-      { title: "Automated billing gateways", desc: "Integrate Stripe or Adyen payment structures with automated invoicing rules." },
-      { title: "Real-time chat channels", desc: "Add collaborative chat tools to customer portals using WebSockets." },
-      { title: "Data translation pipelines", desc: "Convert file structures (XML, CSV, JSON) automatically between systems." },
-      { title: "Developer testing suites", desc: "Run comprehensive unit, integration, and end-to-end tests automatically." },
-      { title: "Visual analytics dashboards", desc: "Display system performance metrics in clean charts and tables." },
-      { title: "Single sign-on integrations", desc: "Connect corporate directories (Okta, Azure AD) for quick user logins." },
-      { title: "Serverless script running", desc: "Run business logic scripts dynamically without dedicated server overhead." },
-      { title: "PDF reporting generators", desc: "Compile complex data tables into styled PDF invoices and audits." },
-      { title: "Localization translation files", desc: "Support international users with dynamically localized languages." },
-      { title: "Database caching layers", desc: "Store frequent database results in memory to speed up page loads." },
-      { title: "System health monitoring", desc: "Track CPU usage, error logs, and response times in real-time." }
-    ],
-    edgeToCloud: [
-      { title: "Global Service Fabric", desc: "Deploy software containers across geolocations for low latency." },
-      { title: "Unified Configuration Maps", desc: "Manage environment variables and API keys securely across all servers." },
-      { title: "Progressive App Releases", desc: "Deploy code changes to small groups of users first to verify stability." }
-    ]
-  },
-  "database": {
-    title: "Database",
-    subtitle: "Database / Solutions",
-    description: "Architect high-performance database environments. We deliver multi-region replication, sub-millisecond query optimization, and secure point-in-time data recovery.",
-    heroImage: "https://images.unsplash.com/photo-1544383835-bda2bc66a55d?auto=format&fit=crop&q=80&w=800",
-    benefits: [
-      { title: "Zero-Downtime Migration", desc: "Transfer massive production databases to new infrastructure without offline cycles." },
-      { title: "Sub-Millisecond Query Response", desc: "Optimize indices and query syntax to eliminate bottleneck latency." },
-      { title: "Geographic Sync Pipelines", desc: "Replicate transactions instantly across world regions to support global users." },
-      { title: "Continuous Streaming Backups", desc: "Ensure absolute data survival with point-in-time transaction logging." }
-    ],
-    banner: {
-      title: "Scaling Transactional Systems Uninterrupted",
-      desc: "Maintain consistent database operations through traffic surges with automatic read-replica scaling and partitioning.",
-      image: "https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&q=80&w=1200"
-    },
-    featured: [
-      { title: "High-Availability Clusters", desc: "Deploy active-passive database pairs with automatic failover triggers." },
-      { title: "NoSQL Big Data Systems", desc: "Scale unstructured log files and catalog schemas across multiple servers." },
-      { title: "In-Memory Caching Loops", desc: "Speed up database read speeds by serving assets from fast RAM pools." },
-      { title: "Data Warehousing setups", desc: "Consolidate records from multiple departments into one search database." }
-    ],
-    portfolio: [
-      { title: "Relational database tuning", desc: "Adjust buffer sizes and locking parameters on PostgreSQL or Oracle database servers." },
-      { title: "Table partition indexing", desc: "Split massive tables into manageable chunks to keep queries fast." },
-      { title: "Automated backup streaming", desc: "Stream database backup bytes to secure object storage continuously." },
-      { title: "Multi-region replica synchronization", desc: "Configure replication lag alerts to ensure global datastores stay synced." },
-      { title: "NoSQL database scaling", desc: "Set up MongoDB or Cassandra clusters with automatic shard balancing." },
-      { title: "Transactional integrity enforcement", desc: "Enforce strict ACID compliance across distributed database nodes." },
-      { title: "Historical data cold archiving", desc: "Move aged ledger entries to low-cost read-only storage engines." },
-      { title: "GraphQL query resolvers", desc: "Translate front-end client queries into optimized database search commands." },
-      { title: "Database performance diagnostic sweeps", desc: "Detect and rewrite slow queries that are holding up applications." },
-      { title: "Data dictionary structure maps", desc: "Build clear schemas detailing tables, fields, and foreign key relations." },
-      { title: "Connection pool balancing", desc: "Manage thousands of database connections without running out of server sockets." },
-      { title: "SQL injection prevention filters", desc: "Validate input strings to block database hacking attempts." }
-    ],
-    edgeToCloud: [
-      { title: "Unified Console Overview", desc: "Monitor database health, latency, and cache hits from a single dashboard." },
-      { title: "Dynamic Read-Replica Scaling", desc: "Spin up additional read-only nodes dynamically during high traffic." },
-      { title: "Seamless Migration Framework", desc: "Sync and switch production traffic to new servers with zero downtime." }
-    ]
-  },
-  "supercomputing": {
-    title: "Supercomputing",
-    subtitle: "Supercomputing / Solutions",
-    description: "Unleash extreme computing capacity. We design cluster computing systems, high-speed interconnect matrices, and liquid-cooled configurations for scientific and AI workloads.",
-    heroImage: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=800",
-    benefits: [
-      { title: "Massive Parallel Performance", desc: "Harness thousands of compute cores working in sync to solve complex math problems." },
-      { title: "Ultra-Fast Switch Fabrics", desc: "Connect nodes using low-latency InfiniBand lines to prevent networking bottlenecks." },
-      { title: "Thermal Management Engineering", desc: "Maintain stable core temperatures using specialized liquid cooling loops." },
-      { title: "Automated Workload Schedulers", desc: "Optimize cluster use using queue managers like Slurm or Kubernetes." }
-    ],
-    banner: {
-      title: "Powering the Next Wave of Discoveries",
-      desc: "Accelerate weather prediction, molecular simulation, and generative AI training using custom supercomputing clusters.",
+      title: "Standardizing Compliant Software Foundations",
+      desc: "Accelerate software deployments utilizing certified operating systems and GitOps automation models.",
       image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=1200"
     },
     featured: [
-      { title: "High-Performance Clusters (HPC)", desc: "Build custom server matrices with optimized master and compute node designs." },
-      { title: "GPU Accelerator Matrices", desc: "Cluster hundreds of high-throughput AI chips with fast memory interconnects." },
-      { title: "InfiniBand Networking Fabrics", desc: "Link server nodes with low-latency, high-bandwidth interconnects." },
-      { title: "Liquid Cooling Cabling", desc: "Remove heat directly from processing dies with efficient water loops." }
+      { title: "Enterprise OS Platforms", desc: "Deploy stable Linux and Windows environments backed by active SLAs.", vendor: "Red Hat (RHEL), Microsoft, SUSE" },
+      { title: "Kubernetes & DevOps", desc: "Manage container clusters and automate software release pipelines.", vendor: "Kubernetes, GitLab" },
+      { title: "Collaboration & ITSM Tools", desc: "Support developers with collaborative boards and ticketing systems.", vendor: "Atlassian, Freshworks" }
     ],
     portfolio: [
-      { title: "Node allocation queue scheduling", desc: "Configure priority queues to maximize job execution speeds." },
-      { title: "MPI code parallelization", desc: "Refactor application logic to run across multiple server nodes concurrently." },
-      { title: "High-speed scratch storage pools", desc: "Provide terabytes of temporary storage with fast parallel write speeds." },
-      { title: "Liquid cooling manifolds", desc: "Distribute coolant flows evenly across high-density server cabinets." },
-      { title: "InfiniBand cable routing", desc: "Plan fiber pathways to ensure redundant network connections." },
-      { title: "GPU tensor core tuning", desc: "Configure mathematical operations to run on fast AI hardware units." },
-      { title: "Cluster health diagnostics", desc: "Track server temperatures, power draws, and errors continuously." },
-      { title: "Persistent storage arrays", desc: "Save simulation results to high-capacity SAS or NVMe storage pools." },
-      { title: "Linux cluster orchestration", desc: "Deploy custom operating system images to compute nodes in parallel." },
-      { title: "Virtual desktop compute access", desc: "Let researchers launch graphic-heavy jobs from simple web portals." },
-      { title: "Power supply redundancy blocks", desc: "Ensure compute grids never shut down due to utility failures." },
-      { title: "Compiler optimization diagnostics", desc: "Compile software code with advanced flags to squeeze out extra speed." }
+      { title: "GitOps Pipeline Design", desc: "Automate code deployments from Git repositories directly to production servers." },
+      { title: "Telemetry & Logs (Grafana)", desc: "Audit server CPU usage, response times, and application errors visually." },
+      { title: "System Patch Management", desc: "Schedule automated software patches to keep packages secure." }
     ],
     edgeToCloud: [
-      { title: "Central Queue Portal", desc: "Submit and monitor compute jobs on local and cloud clusters from one screen." },
-      { title: "Hybrid Compute Scale", desc: "Burst heavy workloads to cloud HPC instances when local queues are full." },
-      { title: "Integrated Storage Sync", desc: "Replicate final output files from cluster nodes to persistent data archives." }
+      { title: "Unified Software Telemetry", desc: "Audit cluster versions, active containers, and software licenses from one console." },
+      { title: "Hybrid Container Bridges", desc: "Move running container instances between local servers and public clouds." },
+      { title: "Sovereign OS Isolation", desc: "Run private isolated operating system environments for compliance audits." }
+    ],
+    diagramLayers: [
+      "Developer Code Push (GitLab)",
+      "Automated CI/CD Test Pipelines",
+      "Kubernetes Container Pod Cluster",
+      "Stable Linux Kernel (RHEL/SUSE) Bare Metal Host"
+    ],
+    faqs: [
+      { q: "Why should we use Red Hat Enterprise Linux (RHEL) over free variants?", a: "RHEL provides enterprise SLA support, validated package stability, and compliance certifications crucial for running financial and medical databases." },
+      { q: "What is GitOps?", a: "GitOps uses Git repositories as the single source of truth for infrastructure and software configurations, automating deployment directly from repository logs." }
+    ]
+  },
+  "database": {
+    title: "Enterprise Database Solutions",
+    subtitle: "Database / Solutions",
+    description: "Power transactional business portals with high-availability relational, NoSQL, and columnar database clusters.",
+    heroImage: "https://images.unsplash.com/photo-1544383835-bda2bc66a55d?auto=format&fit=crop&q=80&w=800",
+    conceptIntro: "Database infrastructure stores, processes, and queries your critical structured and unstructured records with high consistency.",
+    conceptPoints: [
+      "Relational SQL Databases",
+      "Distributed NoSQL Engines",
+      "Data Warehouse Warehouses",
+      "High Availability Clustering",
+      "Active replication syncs",
+      "Database access audits"
+    ],
+    benefits: [
+      { title: "Reduce Operational Costs", desc: "Consolidate databases onto consolidated clusters to lower CPU license fees.", icon: "💰" },
+      { title: "Improve System Performance", desc: "Optimize index structures to return query results in milliseconds.", icon: "⚡" },
+      { title: "Increase Scalability", desc: "Add read replicas dynamically to handle massive query volumes.", icon: "📈" },
+      { title: "Improve Security", desc: "Encrypt database tables at rest and mask columns containing sensitive data.", icon: "🔒" },
+      { title: "Ensure High Availability", desc: "Deploy database groups across multiple regions with automatic failovers.", icon: "🔄" },
+      { title: "Enable Digital Transformation", desc: "Consolidate scattered server databases into a single cloud warehouse.", icon: "🚀" }
+    ],
+    banner: {
+      title: "Powering High-Throughput Transactions Safely",
+      desc: "Configure replication loops, verify database schema integrity, and tune connection pools.",
+      image: "https://images.unsplash.com/photo-1544383835-bda2bc66a55d?auto=format&fit=crop&q=80&w=1200"
+    },
+    featured: [
+      { title: "Relational SQL Clusters", desc: "Run core ACID transactions on stable relational database platforms.", vendor: "Oracle, PostgreSQL, Microsoft SQL" },
+      { title: "Distributed NoSQL & APIs", desc: "Store unstructured records and scale query speeds dynamically.", vendor: "MongoDB, Supabase" },
+      { title: "Columnar Warehouses", desc: "Execute complex analytical computations on petabytes of records.", vendor: "EnterpriseDB, PostgreSQL" }
+    ],
+    portfolio: [
+      { title: "Read-Replica Sync Loops", desc: "Distribute read traffic to secondary databases to lower primary server loads." },
+      { title: "Automated snapshot backup", desc: "Deploy cron scripts saving point-in-time recovery data safely." },
+      { title: "Database connection pools", desc: "Manage active threads to avoid database crashes during query spikes." }
+    ],
+    edgeToCloud: [
+      { title: "Unified Data Console", desc: "Audit table space sizes, query response times, and slow queries from one screen." },
+      { title: "Hybrid Data Replication", desc: "Replicate database rows between local servers and public cloud SQL instances." },
+      { title: "Sovereign Database Columns", desc: "Isolate client records within local geographical borders." }
+    ],
+    diagramLayers: [
+      "Application Client Queries",
+      "Load Balancer & Connection Pool Manager",
+      "Primary SQL Writer Database Node",
+      "Secondary Read-Replicas & Archive Storage"
+    ],
+    faqs: [
+      { q: "How do you optimize slow database queries?", a: "We run query plan diagnostics, identify missing table indexes, configure table partitions, and optimize cache allocations on the server." },
+      { q: "How do you handle database disaster recovery?", a: "We establish active-passive database replication loops, sending incremental logs to an offsite backup location to allow rapid failover." }
+    ]
+  },
+  "supercomputing": {
+    title: "Supercomputing & HPC Solutions",
+    subtitle: "Supercomputing / Solutions",
+    description: "Accelerate scientific calculations, molecular modeling, and deep learning neural networks with high-density GPU computing clusters.",
+    heroImage: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=800",
+    conceptIntro: "Supercomputing combines high-density accelerators, InfiniBand networks, and parallel storage systems to compute complex calculations.",
+    conceptPoints: [
+      "High-Density GPU Clusters",
+      "Low-Latency InfiniBand Switch",
+      "Parallel Storage Pools",
+      "MLOps Training Pipelines",
+      "Distributed Compute Schedulers",
+      "Thermal Liquid Cooling"
+    ],
+    benefits: [
+      { title: "Reduce Operational Costs", desc: "Lower training budgets by scheduling jobs on spot computing instances.", icon: "💰" },
+      { title: "Improve System Performance", desc: "Accelerate scientific model runs using parallel GPU processing cores.", icon: "⚡" },
+      { title: "Increase Scalability", desc: "Scale compute networks from single nodes to massive multi-server clusters.", icon: "📈" },
+      { title: "Improve Security", desc: "Protect private datasets using hardware-enforced cryptographic boundaries.", icon: "🔒" },
+      { title: "Ensure High Availability", desc: "Orchestrate compute groups using container models to bypass node errors.", icon: "🔄" },
+      { title: "Enable Digital Transformation", desc: "Transition from legacy CPU calculations to modern parallel processing loops.", icon: "🚀" }
+    ],
+    banner: {
+      title: "Engineering Infinite Computing Performance",
+      desc: "Deploy pre-configured GPU racks, high-speed InfiniBand switches, and parallel storage volumes.",
+      image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=1200"
+    },
+    featured: [
+      { title: "GPU Acceleration Nodes", desc: "Install high-density GPU servers engineered for parallel workloads.", vendor: "NVIDIA, Supermicro" },
+      { title: "HPC Computing Racks", desc: "Configure multi-node servers built for high performance compute requirements.", vendor: "Dell Technologies, HPE, Lenovo" },
+      { title: "Parallel Storage & Networks", desc: "Connect servers using high-throughput InfiniBand networks.", vendor: "Kubernetes, Red Hat, SUSE" }
+    ],
+    portfolio: [
+      { title: "GPU Core Allocations", desc: "Audit node temperatures and workload queues from a single dashboard." },
+      { title: "Parallel Lustre Storage", desc: "Feed datasets directly into compute nodes with multi-gigabit speeds." },
+      { title: "Containerized HPC Jobs", desc: "Manage research workloads using container models to preserve dependencies." }
+    ],
+    edgeToCloud: [
+      { title: "Unified HPC Portal", desc: "Track active jobs, node usage, and thermal metrics from a single page." },
+      { title: "Hybrid Cluster Bursting", desc: "Burst heavy computing queues to public cloud instances when local nodes are full." },
+      { title: "Secure Dataset Enclosures", desc: "Sanitize customer records before feeding files to analytical models." }
+    ],
+    diagramLayers: [
+      "Job Scheduler (Slurm / Kubernetes)",
+      "High-Speed InfiniBand Networking Switch",
+      "High-Density GPU Compute Nodes",
+      "Parallel Lustre SSD Storage Array"
+    ],
+    faqs: [
+      { q: "What is InfiniBand and why is it used in HPC?", a: "InfiniBand is a high-speed communications link that offers extremely high throughput and sub-microsecond latency, critical for linking GPU nodes in a cluster." },
+      { q: "How do you manage heat in supercomputing racks?", a: "We configure specialized high-density airflow racks and liquid cooling loops that dissipate heat directly from CPU and GPU chips." }
     ]
   }
 };
 
-// Generates fallback data for other slugs dynamically
-const getFallbackData = (slug: string): SolutionData => {
-  const title = formatTitle(slug);
-  return {
-    title: title,
-    subtitle: `${title} / Solutions`,
-    description: `Optimize, automate, and protect your corporate processes with our industry-leading ${title.toLowerCase()} configurations. We build high-fidelity architectures designed to match enterprise-level efficiency and scalability parameters.`,
-    heroImage: getAccurateHeroImage(slug),
-    benefits: [
-      { title: "High Scalability", desc: "Instantly scale your operations to meet enterprise demand without compromising on speed or reliability." },
-      { title: "Zero-Trust Security", desc: "Enforce comprehensive security parameters across your entire stack to protect critical corporate assets." },
-      { title: "Optimized Performance", desc: "Streamline workloads and minimize latency through modern, efficient architectural paradigms." },
-      { title: "Seamless Integration", desc: "Easily connect with your existing infrastructure through standardized APIs and flexible deployment options." }
-    ],
-    banner: {
-      title: `Accelerating your ${title} workloads`,
-      desc: `Transform your legacy operational nodes into responsive software-defined pipelines equipped with automation and zero-trust safeguards.`,
-      image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=1200"
-    },
-    featured: [
-      { title: `Core ${title} Solutions`, desc: `Deploy robust baseline configurations matching standard corporate requirements.` },
-      { title: "Monitoring & Operations Controls", desc: "Gain total visibility into workload health metrics and active databases." },
-      { title: "Secure Gateway Tunnels", desc: "Establish encrypted network routes to verify and protect transaction data." },
-      { title: "Dynamic Load Balance Control", desc: "Redistribute server loads automatically during massive customer spikes." }
-    ],
-    portfolio: [
-      { title: `Bespoke ${title} frameworks`, desc: "Tailor processing gates and layouts to your exact business metrics." },
-      { title: "Automated event pipelines", desc: "Process and route telemetry data between systems with sub-second latency." },
-      { title: "Hardware-enforced encryption", desc: "Protect files and fields using active cryptoprocessors." },
-      { title: "Failover clustering loops", desc: "Ensure persistent database availability with active-active server pairs." },
-      { title: "Unified control dashboards", desc: "Display critical metrics in real-time widgets and logs grids." },
-      { title: "API integration boundaries", desc: "Standardize data exchanges with clean JSON endpoints and keys." },
-      { title: "Historical logging archives", desc: "Compile full transaction files for compliance audits." },
-      { title: "User security access control", desc: "Manage employee access boundaries using least privilege roles." },
-      { title: "Hybrid scale configurations", desc: "Bridge on-premise hardware frames with secure cloud instances." },
-      { title: "Resource budget optimization", desc: "Tune cache layouts to lower active cloud database charges." },
-      { title: "System error diagnostics", desc: "Detect processing bottleneck files before they slow down portals." },
-      { title: "Continuous backup schedules", desc: "Stream database transaction backup logs to immutable object vaults." }
-    ],
-    edgeToCloud: [
-      { title: "Unified Management Console", desc: "Monitor all system nodes from a single browser-accessible control screen." },
-      { title: "Pay-as-you-grow licensing", desc: "Keep development charges aligned with your actual operational capacity." },
-      { title: "Hybrid Infrastructure Bridge", desc: "Modernize legacy database models without having to rewrite software." }
-    ]
-  };
-};
-
-// Sleek Brand Logo lists
 const ComputeBrandLogos = [
   { name: "Sangfor", logo: "Sangfor", logoUrl: "/OEMS/Sangor.png" },
   { name: "Dell Technologies", logo: "DELL", logoUrl: "https://www.vectorlogo.zone/logos/dell/dell-icon.svg" },
@@ -564,11 +489,73 @@ const SupercomputingBrandLogos = [
   { name: "Google Cloud", logo: "GCP", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/5/51/Google_Cloud_logo.svg" }
 ];
 
-
-
 export default function SolutionsDynamicPage() {
   const params = useParams();
   const slug = params.slug as string;
+  const [activeFaq, setActiveFaq] = useState<number | null>(null);
+  const [activeDiagramNode, setActiveDiagramNode] = useState<string | null>(null);
+
+  const toggleFaq = (index: number) => {
+    setActiveFaq(activeFaq === index ? null : index);
+  };
+
+  const getFallbackData = (slugStr: string): SolutionData => {
+    const title = formatTitle(slugStr);
+    return {
+      title: `${title} Infrastructure Solutions`,
+      subtitle: `${title} / Solutions`,
+      description: `Optimize dynamic workloads and secure your data paths with our state-of-the-art ${title} solutions.`,
+      heroImage: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&q=80&w=800",
+      conceptIntro: `Enterprise ${title} provides the critical operational layout necessary to support business logic and query paths.`,
+      conceptPoints: [
+        "High Performance Configurations",
+        "Secure Tunnel Architectures",
+        "Automated Task Scheduling",
+        "Unified Control Interfaces",
+        "Compliance Framework Audits",
+        "24/7 Remote Monitoring Support"
+      ],
+      benefits: [
+        { title: "Reduce Operational Costs", desc: "Lower infrastructure charges by consolidating resource profiles.", icon: "💰" },
+        { title: "Improve Performance", desc: "Accelerate query processing times using optimized system allocations.", icon: "⚡" },
+        { title: "Increase Scalability", desc: "Scale compute networks up or down dynamically based on workflow traffic.", icon: "📈" },
+        { title: "Improve Security", desc: "Isolate client rows behind next-generation cloud firewalls.", icon: "🔒" },
+        { title: "Ensure High Availability", desc: "Guarantee persistent operations with redundant nodes and failovers.", icon: "🔄" },
+        { title: "Enable Digital Transformation", desc: "Modernize legacy systems into compliant container groups.", icon: "🚀" }
+      ],
+      banner: {
+        title: `Build Secure and Scalable ${title} Architectures`,
+        desc: "Partner with Silicon to engineer resilient systems designed for high throughput and zero data loss.",
+        image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=1200"
+      },
+      featured: [
+        { title: "Enterprise Core Infrastructure", desc: "Deploy stable server models with multi-vendor support.", vendor: "HPE, Dell Technologies" },
+        { title: "Virtualization & Hosting", desc: "Construct isolated secure partitions to manage app files.", vendor: "VMware, Red Hat" },
+        { title: "Cloud Integration", desc: "Connect local databases directly to secure cloud repositories.", vendor: "AWS, Azure" }
+      ],
+      portfolio: [
+        { title: "Telemetry & Logs Tracker", desc: "Monitor system operations, temperatures, and database loads." },
+        { title: "Automated snapshot backups", desc: "Deploy cron script backups protecting file history logs." },
+        { title: "Security Access Control", desc: "Restrict database column visibility using role permissions." }
+      ],
+      edgeToCloud: [
+        { title: "Unified Management Dashboard", desc: "Audit server temperatures, connection latency, and core caches." },
+        { title: "Hybrid infrastructure links", desc: "Move active server pools between locations without database errors." },
+        { title: "Regulatory compliance files", desc: "Satisfy ISO 27001 parameters using strict credential logs." }
+      ],
+      diagramLayers: [
+        "Client Request Portals",
+        "Virtual Firewall & Load Balancer",
+        "Dynamic Microservices Container Pods",
+        "High-Availability SQL Database Storage"
+      ],
+      faqs: [
+        { q: `What are the typical phases of deploying ${title} solutions?`, a: "We manage the entire cycle starting with assessment logs, design wireframes, hardware staging, virtualization setup, and managed NOC support." },
+        { q: `How do you support multi-vendor environments?`, a: "Our certified engineers integrate systems across Cisco, Dell, HPE, and VMware layers seamlessly." }
+      ]
+    };
+  };
+
   const content = solutionsContent[slug] || getFallbackData(slug);
   
   // Resolve brands partnered dynamically per product category
@@ -580,26 +567,6 @@ export default function SolutionsDynamicPage() {
   else if (slug === "database") brands = DatabaseBrandLogos;
   else if (slug === "supercomputing") brands = SupercomputingBrandLogos;
 
-  
-  // Filter relevant blog posts for this solution dynamically by category
-  const getRelevantPosts = (slugString: string) => {
-    const norm = (slugString || "").toLowerCase();
-    let targetCat = "";
-    if (norm.includes("ai") || norm.includes("artificial") || norm.includes("machine") || norm.includes("cognitive")) {
-      targetCat = "AI & Innovation";
-    } else if (norm.includes("security") || norm.includes("protection") || norm.includes("sec")) {
-      targetCat = "Cyber Security";
-    } else {
-      targetCat = "Cloud Operations";
-    }
-    const matched = blogPostsData.filter(
-      (post) => post.category.toLowerCase() === targetCat.toLowerCase()
-    );
-    return matched.length > 0 ? matched : blogPostsData;
-  };
-
-  const relevantPosts = getRelevantPosts(slug);
-
   return (
     <main className="min-h-screen bg-[#F8FAFC] pt-32 pb-16 relative overflow-hidden font-sans text-slate-800">
       
@@ -607,11 +574,9 @@ export default function SolutionsDynamicPage() {
       <div className="absolute top-0 right-1/4 w-[550px] h-[550px] bg-[#000072]/5 blur-[140px] pointer-events-none" />
       <div className="absolute top-1/2 left-1/4 w-[450px] h-[450px] bg-[#D32F2F]/3 blur-[130px] pointer-events-none" />
 
-      {/* 1. HERO SECTION */}
-      <div className="max-w-7xl mx-auto px-6 pt-8 pb-20 relative z-10">
-        
-        {/* Breadcrumb */}
-        <div className="flex items-center gap-2 text-[10px] md:text-xs font-bold text-slate-400 mb-8 uppercase tracking-wider">
+      {/* 1. Premium Hero Section */}
+      <section className="relative w-full bg-slate-50 pt-10 pb-20 md:pb-28 px-6 overflow-hidden border-b border-slate-100">
+        <div className="max-w-7xl mx-auto px-6 mb-8 uppercase tracking-wider text-[10px] md:text-xs font-bold text-slate-400 flex items-center gap-2">
           <Link href="/" className="hover:text-[#000072] transition-colors">Home</Link>
           <ChevronRight className="w-3.5 h-3.5" />
           <Link href="/solution-by-product" className="hover:text-[#000072] transition-colors">Solutions</Link>
@@ -619,43 +584,74 @@ export default function SolutionsDynamicPage() {
           <span className="text-[#000072] font-black">{formatTitle(slug)}</span>
         </div>
 
-        <div className="flex flex-col lg:flex-row gap-12 lg:gap-16 items-center">
-          <div className="flex-1 text-left">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
+          <div className="lg:col-span-7 flex flex-col items-start text-left">
             <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#000072]/10 text-[#000072] text-[10px] md:text-xs font-black tracking-wider uppercase mb-6">
-              Enterprise Product Solutions
+              Enterprise Solution
             </span>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-[#0F2C59] leading-[1.12]">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-[#0F2C59] leading-[1.1] mb-6">
               {content.title}
             </h1>
-            <p className="text-slate-500 mt-6 text-sm sm:text-base leading-relaxed max-w-2xl font-medium">
+            <p className="text-sm sm:text-base md:text-lg text-slate-500 font-semibold max-w-2xl leading-relaxed mb-8">
               {content.description}
             </p>
-            <div className="mt-8 flex flex-wrap items-center gap-4">
-              <Link href="/contact" className="px-6 py-3.5 rounded-xl bg-[#000072] hover:bg-[#000072]/90 text-white font-extrabold text-xs tracking-wide shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-2 cursor-pointer">
-                Deploy Now <ArrowRight className="w-4 h-4" />
+            
+            <div className="flex flex-wrap items-center gap-4 w-full sm:w-auto">
+              <Link href="/contact" className="px-8 py-4 rounded-xl bg-[#000072] text-white font-extrabold text-xs tracking-wider uppercase shadow-xl shadow-[#000072]/20 hover:bg-[#000072]/90 transition-all flex items-center gap-2 border-0">
+                Request Consultation <ArrowRight className="w-4 h-4" />
               </Link>
-              <Link href="/contact" className="px-6 py-3.5 rounded-xl bg-white border border-slate-200 text-[#0F2C59] font-extrabold text-xs tracking-wide hover:bg-slate-50 shadow-sm transition-all duration-300 flex items-center gap-2 cursor-pointer">
-                Talk to Sales
+              <Link href="/contact" className="px-8 py-4 rounded-xl bg-white border border-slate-200 text-[#0F2C59] font-extrabold text-xs tracking-wider uppercase hover:bg-slate-50 transition-all shadow-sm">
+                Request Assessment
               </Link>
             </div>
+
+            {/* Trust Indicators */}
+            <div className="mt-12 flex flex-wrap items-center gap-6 opacity-95 border-t border-slate-200/60 pt-8 w-full">
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="w-5 h-5 text-emerald-500" />
+                <span className="text-xs font-bold text-slate-600 uppercase tracking-wider">Enterprise Ready</span>
+              </div>
+              <div className="w-1.5 h-1.5 bg-slate-300 rounded-full hidden sm:block" />
+              <div className="flex items-center gap-2">
+                <Zap className="w-5 h-5 text-sky-600" />
+                <span className="text-xs font-bold text-slate-600 uppercase tracking-wider">24/7 Support</span>
+              </div>
+              <div className="w-1.5 h-1.5 bg-slate-300 rounded-full hidden sm:block" />
+              <div className="flex items-center gap-2">
+                <Users className="w-5 h-5 text-[#000072]" />
+                <span className="text-xs font-bold text-slate-600 uppercase tracking-wider">Multi-Vendor Expertise</span>
+              </div>
+              <div className="w-1.5 h-1.5 bg-slate-300 rounded-full hidden sm:block" />
+              <div className="flex items-center gap-2">
+                <Activity className="w-5 h-5 text-[#D32F2F]" />
+                <span className="text-xs font-bold text-slate-600 uppercase tracking-wider">Scalable Architecture</span>
+              </div>
+            </div>
           </div>
-          
-          <div className="flex-1 w-full max-w-xl relative">
-            {/* Tech frame overlay */}
-            <div className="absolute -inset-1.5 bg-gradient-to-r from-[#000072]/20 to-[#D32F2F]/20 rounded-[32px] blur opacity-40 pointer-events-none" />
-            <div className="rounded-3xl bg-white shadow-xl p-3 relative overflow-hidden aspect-[4/3] flex items-center justify-center border border-slate-100 z-10">
-              <img 
-                src={content.heroImage} 
-                alt={content.title}
-                className="w-full h-full object-cover rounded-2xl" 
-              />
+
+              {/* Right Side */}
+          <div className="lg:col-span-5 relative w-full aspect-square max-w-md mx-auto flex items-center justify-center">
+            <div className="absolute inset-0 bg-[#0F2C59]/5 rounded-[2.5rem] border border-slate-200/50 backdrop-blur-sm shadow-xl flex flex-col items-center justify-center p-8 gap-4">
+              <div className="w-full flex flex-col gap-2 relative">
+                {(content.diagramLayers || []).map((layer, idx) => (
+                  <div 
+                    key={idx} 
+                    className={cn(
+                      "w-full py-3.5 rounded-xl border flex items-center justify-between px-6 transition-all duration-300 shadow-sm font-black text-xs uppercase tracking-wider bg-white border-slate-200/60 text-slate-700"
+                    )}
+                  >
+                    <span>{layer}</span>
+                    <CheckCircle2 className="w-4 h-4 shrink-0 text-[#000072] opacity-80" />
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* BRANDS ROW */}
-      <div className="w-full py-16 bg-white border-b border-slate-100 relative z-10">
+      {/* Technology Partners / Integrated Global Brands Section */}
+      <section className="w-full py-16 bg-white border-b border-slate-100 overflow-hidden">
         <div className="max-w-7xl mx-auto px-6 text-center">
           <span className="text-[10px] uppercase font-black text-[#D32F2F] tracking-widest block mb-2">Technology Partners</span>
           <h2 className="text-3xl font-black text-[#0F2C59] tracking-tight">
@@ -669,7 +665,7 @@ export default function SolutionsDynamicPage() {
                   <img 
                     src={brand.logoUrl} 
                     alt={brand.name} 
-                    className="max-h-10 max-w-[85%] object-contain filter grayscale group-hover:grayscale-0 opacity-75 group-hover:opacity-100 transition-all duration-300"
+                    className="max-h-10 max-w-[85%] object-contain filter grayscale-0 group-hover:grayscale opacity-100 group-hover:opacity-75 transition-all duration-300"
                   />
                 ) : (
                   <span className="text-xs md:text-sm font-black text-slate-400 group-hover:text-[#0F2C59] transition-colors uppercase tracking-widest">
@@ -680,199 +676,430 @@ export default function SolutionsDynamicPage() {
             ))}
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* 2. BENEFITS SECTION */}
-      <div className="w-full py-20 bg-white border-y border-slate-100 relative z-10">
-        <div className="max-w-7xl mx-auto px-6">
+      {/* 2. What is [Service] Section */}
+      <section className="py-20 md:py-28 px-6 bg-white border-b border-slate-100">
+        <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <span className="text-[10px] uppercase font-black text-[#D32F2F] tracking-widest block mb-2">Value Realization</span>
-            <h2 className="text-3xl font-black text-[#0F2C59] tracking-tight">
-              Benefits of Silicon {formatTitle(slug)}
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#000072]/10 text-[#000072] text-[10px] font-black tracking-wider uppercase mb-3">
+              Infrastructure Details
+            </span>
+            <h2 className="text-3xl md:text-4xl font-black text-[#0F2C59]">
+              What is {formatTitle(slug)}?
             </h2>
-            <div className="h-1 w-12 bg-[#D32F2F] mx-auto mt-4 rounded" />
-          </div>
-          
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {content.benefits.map((benefit, idx) => (
-              <div key={idx} className="p-8 rounded-3xl bg-[#F8FAFC] border border-slate-100 shadow-sm flex flex-col gap-4 hover:shadow-lg hover:-translate-y-1 hover:border-slate-200 transition-all duration-300 text-left group">
-                <div className="w-10 h-10 rounded-xl bg-[#000072]/5 text-[#000072] group-hover:bg-[#000072] group-hover:text-white flex items-center justify-center shrink-0 transition-colors duration-300">
-                  <CheckCircle2 className="w-5.5 h-5.5" />
-                </div>
-                <h3 className="font-extrabold text-base text-[#0F2C59] leading-snug">{benefit.title}</h3>
-                <p className="text-xs text-slate-500 leading-relaxed font-medium">
-                  {benefit.desc}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* 3. BANNER SECTION */}
-      <div className="w-full relative z-10 overflow-hidden py-24 bg-slate-900 border-b border-slate-850">
-        <div className="absolute inset-0 bg-cover bg-center opacity-20 mix-blend-overlay pointer-events-none" style={{ backgroundImage: `url(${content.banner.image})` }} />
-        <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-900/95 to-slate-950/80 pointer-events-none" />
-        
-        <div className="max-w-7xl mx-auto px-6 relative z-10 text-center flex flex-col items-center">
-          <div className="w-14 h-14 rounded-2xl bg-white/5 text-[#D32F2F] flex items-center justify-center border border-white/10 mb-6">
-            <Shield className="w-7 h-7" />
-          </div>
-          <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight max-w-3xl leading-snug">
-            {content.banner.title}
-          </h2>
-          <p className="text-slate-400 mt-4 text-xs sm:text-sm leading-relaxed max-w-2xl font-medium">
-            {content.banner.desc}
-          </p>
-        </div>
-      </div>
-
-      {/* 4. FEATURED SOLUTIONS SECTION */}
-      <div className="w-full py-20 relative z-10 bg-[#F8FAFC]">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-16">
-            <span className="text-[10px] uppercase font-black text-[#D32F2F] tracking-widest block mb-2">Core Offerings</span>
-            <h2 className="text-3xl font-black text-[#0F2C59] tracking-tight">
-              Featured {formatTitle(slug)} Solutions
-            </h2>
-            <div className="h-1 w-12 bg-[#D32F2F] mx-auto mt-4 rounded" />
-          </div>
-
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {content.featured.map((sol, idx) => (
-              <div key={idx} className="p-8 rounded-3xl bg-white border border-slate-150 shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col gap-4 text-left group">
-                <div className="w-10 h-10 rounded-xl bg-red-50 text-[#D32F2F] flex items-center justify-center group-hover:bg-[#D32F2F] group-hover:text-white transition-colors duration-300">
-                  <Sparkles className="w-5 h-5" />
-                </div>
-                <h3 className="font-extrabold text-base text-[#0F2C59] leading-tight">{sol.title}</h3>
-                <p className="text-xs text-slate-500 leading-relaxed font-medium">
-                  {sol.desc}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* 5. ADDITIONAL PORTFOLIO GRID */}
-      <div className="w-full py-20 bg-white border-y border-slate-100 relative z-10">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-16">
-            <span className="text-[10px] uppercase font-black text-[#D32F2F] tracking-widest block mb-2">Product Capabilities</span>
-            <h2 className="text-3xl font-black text-[#0F2C59] tracking-tight">
-              Additional {formatTitle(slug)} Portfolio
-            </h2>
-            <div className="h-1 w-12 bg-[#D32F2F] mx-auto mt-4 rounded" />
-          </div>
-
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {content.portfolio.map((item, idx) => (
-              <div key={idx} className="p-8 rounded-3xl bg-[#F8FAFC] border border-slate-100 hover:border-slate-200 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col gap-3 text-left">
-                <h3 className="font-extrabold text-base text-[#0F2C59] leading-tight">{item.title}</h3>
-                <p className="text-xs text-slate-500 leading-relaxed font-medium">
-                  {item.desc}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* 6. SOLUTIONS ACROSS EDGE TO CLOUD */}
-      <div className="w-full py-20 bg-[#F8FAFC] relative z-10">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-16">
-            <span className="text-[10px] uppercase font-black text-[#D32F2F] tracking-widest block mb-2">Deployment Architectures</span>
-            <h2 className="text-3xl font-black text-[#0F2C59] tracking-tight">
-              {formatTitle(slug)} Solutions Across Edge to Cloud
-            </h2>
-            <div className="h-1 w-12 bg-[#D32F2F] mx-auto mt-4 rounded" />
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-6">
-            {content.edgeToCloud.map((item, idx) => (
-              <div key={idx} className="p-8 rounded-3xl bg-white border border-slate-150 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col gap-3 text-left">
-                <h3 className="font-extrabold text-base text-[#0F2C59] leading-tight">{item.title}</h3>
-                <p className="text-xs text-slate-500 leading-relaxed font-medium">
-                  {item.desc}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* 8. GET STARTED CALLOUT */}
-      <div className="max-w-7xl mx-auto px-6 py-16 relative z-10">
-        <div className="rounded-[32px] bg-gradient-to-tr from-[#0F2C59] to-[#000072] text-white p-10 md:p-14 shadow-2xl relative overflow-hidden">
-          <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=600')] bg-cover bg-center opacity-10 mix-blend-overlay pointer-events-none" />
-          <div className="relative z-10 max-w-2xl text-left">
-            <h2 className="text-2xl sm:text-3.5xl font-black tracking-tight leading-tight">
-              Get Started with Silicon {formatTitle(slug)}
-            </h2>
-            <p className="text-slate-300 mt-4 text-xs sm:text-sm leading-relaxed font-medium">
-              Ready to optimize your {formatTitle(slug).toLowerCase()} infrastructure? Reach out to our solutions architects today to discuss your technical requirements and custom operational pipelines.
+            <p className="text-slate-500 max-w-2xl mx-auto text-sm md:text-base leading-relaxed mt-4 font-medium">
+              {content.conceptIntro}
             </p>
-            <div className="mt-8">
-              <Link href="/contact" className="px-6 py-3.5 rounded-xl bg-white text-[#0F2C59] font-extrabold text-xs tracking-wide hover:bg-slate-50 transition-all duration-300 inline-flex items-center gap-2 cursor-pointer shadow-md">
-                Talk to Sales <ArrowRight className="w-4 h-4" />
-              </Link>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* 9. NEWS & RESOURCES SECTION */}
-      <div className="w-full py-20 bg-[#F8FAFC] border-t border-slate-100 relative z-10">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-16">
-            <span className="text-[10px] uppercase font-black text-[#D32F2F] tracking-widest block mb-2">Resource Library</span>
-            <h2 className="text-3xl font-black text-[#0F2C59] tracking-tight">
-              {formatTitle(slug)} News and Resources
-            </h2>
-            <div className="h-1 w-12 bg-[#D32F2F] mx-auto mt-4 rounded" />
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {relevantPosts.map((post) => (
-              <article key={post.id} className="rounded-3xl bg-white border border-slate-150 overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group">
-                <div>
-                  <div className="aspect-[16/9] relative overflow-hidden bg-slate-100">
-                    <img 
-                      src={post.image} 
-                      alt={post.title} 
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                  </div>
-                  <div className="p-6 text-left">
-                    <span className="text-[10px] font-black uppercase text-[#D32F2F] tracking-widest">{post.category}</span>
-                    <h3 className="font-extrabold text-base text-[#0F2C59] leading-snug mt-2.5 group-hover:text-[#D32F2F] transition-colors line-clamp-2">
-                      {post.title}
-                    </h3>
-                    <p className="text-xs text-slate-500 leading-relaxed mt-2.5 line-clamp-3 font-medium">
-                      {post.excerpt}
-                    </p>
-                  </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {(content.conceptPoints || []).map((pt, idx) => (
+              <div key={idx} className="bg-[#F8FAFC] rounded-2xl p-6 border border-slate-100 shadow-sm hover:shadow-md hover:border-slate-200 transition-all flex flex-col gap-3 text-left">
+                <div className="w-10 h-10 rounded-lg bg-white border border-slate-200/60 flex items-center justify-center text-[#000072]">
+                  <CheckCircle2 className="w-5 h-5 text-[#D32F2F]" />
                 </div>
-                
-                <div className="p-6 pt-0 flex items-center justify-between border-t border-slate-100 mt-4">
-                  <div className="flex items-center gap-2">
-                    <Clock className="w-3.5 h-3.5 text-slate-400" />
-                    <span className="text-[10px] text-slate-400 font-bold">{post.readTime}</span>
-                  </div>
-                  <Link href={`/blog/${post.id}`} className="text-xs font-extrabold text-[#000072] group-hover:text-[#D32F2F] transition-colors flex items-center gap-1">
-                    Read Article <ChevronRight className="w-4 h-4" />
-                  </Link>
-                </div>
-              </article>
+                <h3 className="text-base font-extrabold text-[#0F2C59]">{pt}</h3>
+                <p className="text-xs text-slate-500 font-semibold leading-relaxed">
+                  Enterprise deployment configurations configured to secure your data transaction pools.
+                </p>
+              </div>
             ))}
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Contact Section */}
-      <ContactSection />
+      {/* 3. Business Outcomes Section */}
+      <section className="py-20 md:py-28 px-6 bg-[#FAFAFA] border-b border-slate-100">
+        <div className="max-w-7xl mx-auto text-center">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#D32F2F]/10 text-[#D32F2F] text-[10px] font-black tracking-wider uppercase mb-3">
+            Business Value
+          </span>
+          <h2 className="text-3xl md:text-4xl font-black text-[#0F2C59] mb-16">
+            Enterprise Outcomes Mapped to ROI
+          </h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {(content.benefits || []).map((outcome, idx) => (
+              <div key={idx} className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm text-left flex flex-col gap-3 hover:shadow-md transition-all">
+                <span className="text-xl">{outcome.icon || "🛡️"}</span>
+                <h3 className="text-base font-black text-[#0F2C59]">{outcome.title}</h3>
+                <p className="text-xs text-slate-500 font-semibold leading-relaxed">{outcome.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 4. Core Solutions / Service Categories */}
+      <section className="py-20 md:py-28 px-6 bg-white border-b border-slate-100">
+        <div className="max-w-7xl mx-auto text-center">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#000072]/10 text-[#000072] text-[10px] font-black tracking-wider uppercase mb-3">
+            Portfolio Groups
+          </span>
+          <h2 className="text-3xl md:text-4xl font-black text-[#0F2C59] mb-16">
+            Core Solutions Portfolio
+          </h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {(content.featured || []).map((cat, idx) => (
+              <div key={idx} className="bg-[#F8FAFC] rounded-2xl p-6 border border-slate-150 shadow-sm flex flex-col justify-between hover:shadow-lg transition-all text-left">
+                <div>
+                  <h3 className="text-base font-black text-[#0F2C59] mb-3">{cat.title}</h3>
+                  <p className="text-xs text-slate-500 font-semibold leading-relaxed mb-4">{cat.desc}</p>
+                </div>
+                <div className="border-t border-slate-150 pt-4 mt-4 text-[11px] font-bold">
+                  {cat.vendor && <div><span className="text-[#000072]">Brands:</span> <span className="text-slate-600">{cat.vendor}</span></div>}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 5. Architecture Diagram Section */}
+      <section className="py-20 md:py-28 px-6 bg-[#FAFAFA] border-b border-slate-100">
+        <div className="max-w-4xl mx-auto text-center">
+          <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[#000072]/10 text-[#000072] text-[10px] font-black tracking-wider uppercase mb-3">
+            System Diagrams
+          </span>
+          <h2 className="text-3xl md:text-4xl font-black text-[#0F2C59] mb-4">
+            Visual Solution Blueprint
+          </h2>
+          <p className="text-slate-500 max-w-2xl mx-auto text-sm md:text-base leading-relaxed mb-16 font-medium">
+            Explore the multi-tier deployment flow mapping client queries to core data storage networks.
+          </p>
+
+          <div className="flex flex-col gap-4 border border-slate-150 rounded-3xl p-6 md:p-10 bg-white relative shadow-sm">
+            {(content.diagramLayers || []).map((node, idx) => (
+              <div 
+                key={idx}
+                onMouseEnter={() => setActiveDiagramNode(node)}
+                onMouseLeave={() => setActiveDiagramNode(null)}
+                className={cn(
+                  "py-4.5 px-6 rounded-2xl border text-center transition-all duration-300 font-extrabold text-xs uppercase tracking-wider bg-slate-50 relative cursor-default shadow-xs",
+                  activeDiagramNode === node ? "scale-[1.02] shadow-md border-slate-400 bg-slate-100" : "border-slate-200"
+                )}
+              >
+                {node}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 6. Use Cases Section */}
+      <section className="py-20 md:py-28 px-6 bg-white border-b border-slate-100">
+        <div className="max-w-7xl mx-auto text-center">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#000072]/10 text-[#000072] text-[10px] font-black tracking-wider uppercase mb-3">
+            Use Cases
+          </span>
+          <h2 className="text-3xl md:text-4xl font-black text-[#0F2C59] mb-16">
+            Enterprise Infrastructure Use Cases
+          </h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              { title: "Enterprise Database Hosting", desc: "Run SQL Server and PostgreSQL databases with high thread counts." },
+              { title: "Big Data Processing", desc: "Manage parallel calculation nodes analyzing petabytes of text logs." },
+              { title: "Disaster Recovery", desc: "Replicate server volumes to secure offsite vaults using veeam tools." }
+            ].map((usecase, idx) => (
+              <div key={idx} className="bg-slate-50 rounded-2xl p-6 border border-slate-100 hover:shadow-md transition-all text-left flex flex-col gap-3">
+                <h3 className="text-base font-black text-[#0F2C59]">{usecase.title}</h3>
+                <p className="text-xs text-slate-500 font-semibold leading-relaxed">{usecase.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 7. Industry Solutions Section */}
+      <section className="py-20 md:py-28 px-6 bg-[#FAFAFA] border-b border-slate-100">
+        <div className="max-w-7xl mx-auto text-center">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#D32F2F]/10 text-[#D32F2F] text-[10px] font-black tracking-wider uppercase mb-3">
+            Domain Segments
+          </span>
+          <h2 className="text-3xl md:text-4xl font-black text-[#0F2C59] mb-16">
+            Industry Computing Blueprints
+          </h2>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {[
+              { title: "Banking & Finance", desc: "Low latency computing nodes running transactional ledgers safely.", icon: "🏦" },
+              { title: "Government", desc: "Isolated physical racks matching ISO security audit metrics.", icon: "🏛️" },
+              { title: "Healthcare", desc: "Secure virtualization nodes hosting encrypted medical charts.", icon: "🏥" },
+              { title: "Telecommunications", desc: "Edge routing gates handling high network package rates.", icon: "📡" },
+              { title: "Education", desc: "Flexible container groups scaling LMS software during exam hours.", icon: "🏫" },
+              { title: "Manufacturing", desc: "Firmware telemetry nodes logging factory sensor signals.", icon: "🏭" },
+              { title: "Retail & E-commerce", desc: "Dynamic web compute instances handling customer checkout queues.", icon: "🛒" },
+              { title: "Logistics", desc: "Offline tracking systems compiling routing coordinates.", icon: "🚚" }
+            ].map((ind, idx) => (
+              <div key={idx} className="bg-white rounded-2xl p-6 border border-slate-150 shadow-sm text-left flex flex-col gap-3 hover:shadow-md transition-all">
+                <span className="text-2xl">{ind.icon}</span>
+                <h3 className="text-sm font-black text-[#0F2C59]">{ind.title}</h3>
+                <p className="text-[11px] text-slate-500 font-semibold leading-relaxed">{ind.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 8. Technology Ecosystem Section */}
+      <section className="py-20 md:py-28 px-6 bg-white border-b border-slate-100">
+        <div className="max-w-7xl mx-auto text-center">
+          <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[#000072]/10 text-[#000072] text-[10px] font-black tracking-wider uppercase mb-3">
+            Ecosystem
+          </span>
+          <h2 className="text-3xl md:text-4xl font-black text-[#0F2C59] mb-16">
+            Technology Ecosystem
+          </h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-6 text-left max-w-5xl mx-auto">
+            {[
+              { cat: "Hardware", items: ["Dell PowerEdge", "HPE ProLiant", "Lenovo Systems"] },
+              { cat: "Virtualization", items: ["VMware ESXi", "Microsoft Hyper-V", "Sangfor aSV"] },
+              { cat: "Cloud", items: ["AWS EC2", "Azure Compute", "Hybrid Tunnels"] },
+              { cat: "Networking", items: ["Cisco Core", "Juniper Routing", "SD-WAN Gates"] },
+              { cat: "Security", items: ["Fortinet WAF", "Sophos Endpoints", "IAM Directories"] }
+            ].map((group, idx) => (
+              <div key={idx} className="bg-slate-50 border border-slate-100 p-5 rounded-2xl flex flex-col gap-3 shadow-xs">
+                <h3 className="text-xs font-black text-[#000072] uppercase tracking-wider">{group.cat}</h3>
+                <div className="h-0.5 w-6 bg-[#D32F2F] rounded" />
+                <ul className="flex flex-col gap-2">
+                  {group.items.map((it, itIdx) => (
+                    <li key={itIdx} className="text-[11px] font-extrabold text-slate-600 flex items-center gap-1">
+                      <CheckCircle2 className="w-3 h-3 text-[#D32F2F] shrink-0" />
+                      <span>{it}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 9. Deployment Process Section */}
+      <section className="py-20 md:py-28 px-6 bg-[#FAFAFA] border-b border-slate-100">
+        <div className="max-w-7xl mx-auto text-center">
+          <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[#D32F2F]/10 text-[#D32F2F] text-[10px] font-black tracking-wider uppercase mb-3">
+            Lifecycle Map
+          </span>
+          <h2 className="text-3xl md:text-4xl font-black text-[#0F2C59] mb-16">
+            Deployment Process Lifecycle
+          </h2>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-7 gap-4 relative">
+            {[
+              { num: "01", title: "Assessment", desc: "Auditing active VM core usages." },
+              { num: "02", title: "Design", desc: "Mapping virtual networks." },
+              { num: "03", title: "Planning", desc: "Configuring server rack hardware." },
+              { num: "04", title: "Deployment", desc: "Mounting physical nodes into cabinets." },
+              { num: "05", title: "Optimization", desc: "Installing ESXi hypervisor pools." },
+              { num: "06", title: "Monitoring", desc: "Adjusting load balancer allocations." },
+              { num: "07", title: "Managed NOC", desc: "Routing alerts to our certified NOC." }
+            ].map((step, idx) => (
+              <div key={idx} className="flex flex-col items-center relative z-10 bg-white border border-slate-150 p-4 rounded-xl shadow-xs">
+                <div className="w-10 h-10 rounded-full bg-slate-50 border-2 border-[#000072] flex items-center justify-center font-black text-[#000072] text-[11px] mb-3">
+                  {step.num}
+                </div>
+                <h3 className="text-[10px] font-black text-[#0F2C59] mb-1">{step.title}</h3>
+                <p className="text-[9px] text-slate-400 font-semibold leading-relaxed">{step.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 10. Reliability / Security / Performance Section */}
+      <section className="py-20 md:py-28 px-6 bg-white border-b border-slate-100">
+        <div className="max-w-7xl mx-auto text-center">
+          <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[#000072]/10 text-[#000072] text-[10px] font-black tracking-wider uppercase mb-3">
+            Resilience
+          </span>
+          <h2 className="text-3xl md:text-4xl font-black text-[#0F2C59] mb-16">
+            Reliability & Performance Engineering
+          </h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              { title: "High Availability Systems", desc: "Set up active clustered VM nodes that handle hardware errors without downtime.", icon: "🔄" },
+              { title: "Failover Architecture", desc: "Configure hot standby servers that take over database transactions instantly.", icon: "⚡" },
+              { title: "Performance Tuning", desc: "Audit CPU scaling flags and RAM frequency allocations to maximize compute speeds.", icon: "📈" }
+            ].map((item, idx) => (
+              <div key={idx} className="bg-slate-50 rounded-2xl p-6 border border-slate-100 shadow-sm text-left flex flex-col gap-3">
+                <span className="text-xl">{item.icon}</span>
+                <h3 className="text-base font-black text-[#0F2C59]">{item.title}</h3>
+                <p className="text-xs text-slate-500 font-semibold leading-relaxed">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 11. Why Choose Silicon Section */}
+      <section className="py-20 md:py-28 px-6 bg-[#FAFAFA] border-b border-slate-100">
+        <div className="max-w-7xl mx-auto text-center">
+          <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[#D32F2F]/10 text-[#D32F2F] text-[10px] font-black tracking-wider uppercase mb-3">
+            Advantages
+          </span>
+          <h2 className="text-3xl md:text-4xl font-black text-[#0F2C59] mb-16">
+            Why Partner With Silicon Computing
+          </h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              { title: "Certified Infrastructure Engineers", desc: "Our technicians hold AWS, VMware, and Dell technical certification credentials." },
+              { title: "Multi-Vendor Expertise", desc: "We coordinate and integrate systems across Cisco, HPE, Dell, and VMware layers." },
+              { title: "End-to-End Deployment", desc: "We coordinate everything from network topology maps down to local rack layouts." }
+            ].map((adv, idx) => (
+              <div key={idx} className="bg-white rounded-2xl p-6 border border-slate-150 shadow-sm text-left flex flex-col gap-3 hover:shadow-md transition-all">
+                <span className="text-xs font-black text-[#000072]">ADVANTAGE 0{idx + 1}</span>
+                <h3 className="text-base font-black text-[#0F2C59]">{adv.title}</h3>
+                <p className="text-xs text-slate-500 font-semibold leading-relaxed">{adv.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 12. Case Studies Section */}
+      <section className="py-20 md:py-28 px-6 bg-white border-b border-slate-100">
+        <div className="max-w-7xl mx-auto text-center">
+          <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[#000072]/10 text-[#000072] text-[10px] font-black tracking-wider uppercase mb-3">
+            Case Studies
+          </span>
+          <h2 className="text-3xl md:text-4xl font-black text-[#0F2C59] mb-16">
+            Optimization In Action
+          </h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+            {(content.caseStudies || []).map((study, idx) => (
+              <div key={idx} className="bg-[#F8FAFC] rounded-3xl p-8 border border-slate-150 shadow-sm text-left flex flex-col justify-between hover:shadow-md transition-all">
+                <div>
+                  <h3 className="text-lg font-black text-[#0F2C59] mb-3">{study.title}</h3>
+                  <p className="text-xs text-slate-500 font-semibold mb-6 leading-relaxed">{study.desc}</p>
+                  
+                  <div className="flex flex-wrap gap-2.5 mb-6">
+                    {study.metrics.map((m, mIdx) => (
+                      <span key={mIdx} className="bg-emerald-50 text-emerald-600 text-[10px] font-black uppercase tracking-wider px-3 py-1 rounded-md border border-emerald-200/50">
+                        {m}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="border-t border-slate-100 pt-6 mt-6">
+                  <p className="text-[11px] text-slate-600 font-bold leading-relaxed mb-4">
+                    <strong className="text-[#000072]">Result:</strong> {study.result}
+                  </p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {study.techs.map((t, tIdx) => (
+                      <span key={tIdx} className="bg-slate-100 text-slate-600 text-[9px] font-bold px-2 py-0.5 rounded">
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 13. Statistics Section */}
+      <section className="bg-[#0b1329] py-16 text-white border-b border-slate-800 relative">
+        <div className="max-w-7xl mx-auto px-6 grid grid-cols-2 md:grid-cols-5 gap-8 relative z-10 text-center">
+          <div>
+            <span className="text-3xl md:text-4.5xl font-black text-white block mb-1">650+</span>
+            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Deployments</span>
+          </div>
+          <div>
+            <span className="text-3xl md:text-4.5xl font-black text-white block mb-1">180+</span>
+            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Enterprise Clients</span>
+          </div>
+          <div>
+            <span className="text-3xl md:text-4.5xl font-black text-white block mb-1">920+</span>
+            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Infrastructure Projects</span>
+          </div>
+          <div>
+            <span className="text-3xl md:text-4.5xl font-black text-white block mb-1">12+</span>
+            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Technology Partners</span>
+          </div>
+          <div>
+            <span className="text-3xl md:text-4.5xl font-black text-white block mb-1">8+ Years</span>
+            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Industry Service</span>
+          </div>
+        </div>
+      </section>
+
+      {/* 14. FAQ Section */}
+      <section className="py-20 md:py-28 px-6 bg-white border-b border-slate-100">
+        <div className="max-w-3xl mx-auto">
+          <div className="text-center mb-16">
+            <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[#000072]/10 text-[#000072] text-[10px] font-black tracking-wider uppercase mb-3">
+              FAQ
+            </span>
+            <h2 className="text-3xl md:text-4xl font-black text-[#0F2C59]">
+              Frequently Asked Questions
+            </h2>
+          </div>
+
+          <div className="flex flex-col gap-4">
+            {(content.faqs || []).map((faq, idx) => (
+              <div key={idx} className="border border-slate-100 rounded-2xl overflow-hidden shadow-sm">
+                <button
+                  onClick={() => toggleFaq(idx)}
+                  className="w-full px-6 py-5 bg-white text-left flex items-center justify-between font-black text-slate-800 hover:text-[#000072] transition-colors cursor-pointer border-0"
+                >
+                  <span className="text-xs sm:text-sm">{faq.q}</span>
+                  {activeFaq === idx ? <Minus className="w-4 h-4 text-[#D32F2F] shrink-0" /> : <Plus className="w-4 h-4 text-slate-500 shrink-0" />}
+                </button>
+                <AnimatePresence initial={false}>
+                  {activeFaq === idx && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                      className="bg-white border-t border-slate-100"
+                    >
+                      <p className="px-6 py-5 text-xs text-slate-500 font-semibold leading-relaxed">
+                        {faq.a}
+                      </p>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 15. CTA Section */}
+      <section className="py-20 md:py-28 px-6 bg-gradient-to-br from-[#0F2C59] via-[#0a1e3f] to-[#050f20] text-white overflow-hidden relative">
+        <div className="max-w-4xl mx-auto text-center relative z-10 flex flex-col items-center">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-white text-[10px] font-black uppercase tracking-widest mb-6 backdrop-blur">
+            Partner With Us
+          </span>
+          <h2 className="text-3xl md:text-5xl font-black tracking-tight leading-[1.1] mb-6">
+            Build a Secure, Scalable, Enterprise-Ready Infrastructure
+          </h2>
+          <p className="text-slate-300 max-w-2xl text-xs sm:text-sm md:text-base leading-relaxed mb-10 font-medium">
+            Contact our senior product engineers to audit your project and construct an implementation roadmap.
+          </p>
+
+          <div className="flex flex-wrap items-center justify-center gap-4 w-full sm:w-auto">
+            <Link href="/contact" className="px-8 py-4 rounded-xl bg-[#000072] text-white font-extrabold text-xs tracking-wider uppercase hover:bg-[#000072]/90 shadow-xl transition-all flex items-center gap-2 border-0">
+              Talk to an Expert <ArrowRight className="w-4 h-4" />
+            </Link>
+            <Link href="/contact" className="px-8 py-4 rounded-xl bg-white/5 border border-white/10 text-white font-extrabold text-xs tracking-wider uppercase hover:bg-white/10 transition-all">
+              Request Proposal
+            </Link>
+          </div>
+        </div>
+      </section>
+
     </main>
   );
 }
-

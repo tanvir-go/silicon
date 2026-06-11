@@ -6,7 +6,7 @@ import {
   MonitorSmartphone, Smartphone, PenTool, TerminalSquare, 
   CheckCircle2, ArrowRight, ShieldCheck, Code, Globe, 
   Cpu, Database, Layers, ArrowLeft, ChevronDown, ChevronUp, Plus, Minus,
-  Activity, Star, Sparkles, Building2, Zap, Rocket, HelpCircle
+  Activity, Star, Sparkles, Building2, Zap, Rocket, HelpCircle, Users
 } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
@@ -32,32 +32,20 @@ export default function ApplicationServicesPage() {
   return (
     <main className="min-h-screen bg-[#F8FAFC] font-sans text-slate-800 overflow-hidden">
       
-      {/* 1. Hero Section (Modern Split Layout) */}
-      <section className="relative w-full bg-gradient-to-br from-[#0F2C59] via-[#0a1e3f] to-[#050f20] pt-36 pb-24 md:pt-48 md:pb-36 px-6 overflow-hidden">
-        {/* Animated Gradient Ambient Background */}
-        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-900/40 via-transparent to-transparent pointer-events-none" />
-        <div className="absolute -top-40 -right-40 w-[600px] h-[600px] bg-[#D32F2F]/15 rounded-full blur-[140px] pointer-events-none animate-pulse-slow" />
-        
-        {/* Decorative Grid Background */}
-        <div 
-          className="absolute inset-0 opacity-5 pointer-events-none"
-          style={{
-            backgroundImage: "radial-gradient(#ffffff 1px, transparent 1px)",
-            backgroundSize: "32px 32px"
-          }}
-        />
+      {/* 1. Hero Section (Modern Split Layout - Premium Light Background) */}
+      <section className="relative w-full bg-slate-50 pt-36 pb-24 md:pt-48 md:pb-36 px-6 overflow-hidden border-b border-slate-100">
 
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
           {/* Left Side: Content */}
           <div className="lg:col-span-7 flex flex-col items-start text-left">
-            <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#D32F2F]/10 border border-[#D32F2F]/25 text-white text-xs font-black tracking-widest uppercase mb-6 backdrop-blur-md">
+            <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#D32F2F]/10 border border-[#D32F2F]/15 text-[#D32F2F] text-xs font-black tracking-widest uppercase mb-6 backdrop-blur-md">
               <Sparkles className="w-3.5 h-3.5 text-[#D32F2F] animate-pulse" />
               Enterprise Application Services
             </span>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-[1.1] mb-6">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-[#0F2C59] tracking-tight leading-[1.1] mb-6">
               Empowering Businesses Through <span className="text-[#D32F2F]">Smart Applications</span>
             </h1>
-            <p className="text-sm sm:text-base md:text-lg text-slate-300 font-medium max-w-2xl leading-relaxed mb-8">
+            <p className="text-sm sm:text-base md:text-lg text-slate-500 font-semibold max-w-2xl leading-relaxed mb-8">
               We build powerful, scalable, and secure applications that accelerate your digital transformation journey. From global enterprises to growing startups, our systems are engineered for high-availability.
             </p>
             
@@ -65,56 +53,56 @@ export default function ApplicationServicesPage() {
               <Link href="/contact" className="px-8 py-4 rounded-xl bg-[#000072] text-white font-extrabold text-xs tracking-wider uppercase shadow-xl shadow-[#000072]/20 hover:bg-[#000072]/90 transition-all flex items-center gap-2 border-0">
                 Request Consultation <ArrowRight className="w-4 h-4" />
               </Link>
-              <a href="#" className="px-8 py-4 rounded-xl bg-white/5 border border-white/10 text-white font-extrabold text-xs tracking-wider uppercase hover:bg-white/10 transition-all">
+              <a href="#" className="px-8 py-4 rounded-xl bg-white border border-slate-200 text-[#0F2C59] font-extrabold text-xs tracking-wider uppercase hover:bg-slate-50 transition-all shadow-sm">
                 Download Company Profile
               </a>
             </div>
 
             {/* Trust Indicators / Badges */}
-            <div className="mt-12 flex flex-wrap items-center gap-6 opacity-85 border-t border-white/10 pt-8 w-full">
+            <div className="mt-12 flex flex-wrap items-center gap-6 opacity-90 border-t border-slate-200/60 pt-8 w-full">
               <div className="flex items-center gap-2">
                 <ShieldCheck className="w-5 h-5 text-emerald-500" />
-                <span className="text-xs font-bold text-slate-300 uppercase tracking-wider">ISO 27001 Certified</span>
+                <span className="text-xs font-bold text-slate-600 uppercase tracking-wider">ISO 27001 Certified</span>
               </div>
-              <div className="w-1.5 h-1.5 bg-slate-500 rounded-full hidden sm:block" />
+              <div className="w-1.5 h-1.5 bg-slate-300 rounded-full hidden sm:block" />
               <div className="flex items-center gap-2">
-                <Star className="w-5 h-5 text-yellow-400 fill-yellow-400" />
-                <span className="text-xs font-bold text-slate-300 uppercase tracking-wider">99.9% Uptime Guarantee</span>
+                <Star className="w-5 h-5 text-yellow-500 fill-yellow-500" />
+                <span className="text-xs font-bold text-slate-600 uppercase tracking-wider">99.9% Uptime Guarantee</span>
               </div>
             </div>
           </div>
 
           {/* Right Side: Graphic Mockup & Floating Icons */}
           <div className="lg:col-span-5 relative w-full aspect-square max-w-md mx-auto flex items-center justify-center">
-            <div className="absolute inset-0 bg-[#F0F4F7]/5 rounded-[2.5rem] border border-white/5 backdrop-blur-sm shadow-2xl flex items-center justify-center overflow-hidden">
-              <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=600')] bg-cover bg-center opacity-10 grayscale mix-blend-overlay" />
+            <div className="absolute inset-0 bg-[#0F2C59]/5 rounded-[2.5rem] border border-slate-200/50 backdrop-blur-sm shadow-xl flex items-center justify-center overflow-hidden">
+              <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=600')] bg-cover bg-center opacity-5 grayscale mix-blend-overlay" />
               
               {/* Central Premium Dashboard Representation */}
-              <div className="z-10 bg-slate-900/90 border border-slate-700/50 p-6 rounded-3xl shadow-2xl w-5/6 flex flex-col gap-4">
-                <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+              <div className="z-10 bg-white border border-slate-200 p-6 rounded-3xl shadow-2xl w-5/6 flex flex-col gap-4">
+                <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                   <div className="flex gap-1.5">
                     <span className="w-3 h-3 rounded-full bg-[#D32F2F]" />
                     <span className="w-3 h-3 rounded-full bg-yellow-500" />
                     <span className="w-3 h-3 rounded-full bg-emerald-500" />
                   </div>
-                  <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Enterprise Console</span>
+                  <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Enterprise Console</span>
                 </div>
-                <div className="flex items-center gap-3 bg-slate-800/40 p-3 rounded-xl border border-slate-700/30">
-                  <Activity className="w-5 h-5 text-emerald-500" />
+                <div className="flex items-center gap-3 bg-slate-50 p-3 rounded-xl border border-slate-100">
+                  <Activity className="w-5 h-5 text-emerald-500 animate-pulse" />
                   <div className="flex-1">
-                    <div className="w-16 h-2 bg-slate-600 rounded" />
-                    <div className="w-10 h-1.5 bg-slate-700 rounded mt-1.5" />
+                    <div className="w-16 h-2 bg-slate-300 rounded animate-pulse" />
+                    <div className="w-10 h-1.5 bg-slate-200 rounded mt-1.5" />
                   </div>
-                  <span className="text-[10px] font-black text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded">Active</span>
+                  <span className="text-[10px] font-black text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">Active</span>
                 </div>
                 <div className="grid grid-cols-2 gap-3">
-                  <div className="bg-slate-800/40 p-3 rounded-xl border border-slate-700/30">
-                    <div className="w-8 h-2 bg-slate-600 rounded" />
-                    <div className="w-12 h-4 bg-slate-400 rounded mt-2" />
+                  <div className="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                    <div className="w-8 h-2 bg-slate-300 rounded" />
+                    <div className="w-12 h-4 bg-slate-200 rounded mt-2" />
                   </div>
-                  <div className="bg-slate-800/40 p-3 rounded-xl border border-slate-700/30">
-                    <div className="w-8 h-2 bg-slate-600 rounded" />
-                    <div className="w-12 h-4 bg-slate-400 rounded mt-2" />
+                  <div className="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                    <div className="w-8 h-2 bg-slate-300 rounded" />
+                    <div className="w-12 h-4 bg-slate-200 rounded mt-2" />
                   </div>
                 </div>
               </div>
@@ -134,18 +122,17 @@ export default function ApplicationServicesPage() {
       </section>
 
       {/* 2. Trusted By Section */}
-      <section className="bg-white py-12 border-b border-slate-100 overflow-hidden">
+      <section className="bg-white py-20 border-b border-slate-100 overflow-hidden">
         <div className="max-w-7xl mx-auto px-6">
-          <p className="text-center text-xs font-black text-slate-400 uppercase tracking-widest mb-8">
-            TRUSTED BY GOVERNMENT AGENCIES, GLOBAL ENTERPRISES, AND STRATEGIC TECHNOLOGY PARTNERS
+          <p className="text-center text-xs font-black text-slate-400 uppercase tracking-widest mb-12">
+            AUTHORIZED ENTERPRISE TECHNOLOGY PARTNER & OEM ECOSYSTEM
           </p>
-          <div className="flex flex-wrap items-center justify-center gap-8 md:gap-16 opacity-60">
-            {/* Grayscale hoverable organization names */}
-            <span className="font-extrabold text-lg md:text-xl tracking-wider text-slate-600 hover:text-[#0F2C59] transition-colors cursor-default">HPE Enterprise</span>
-            <span className="font-extrabold text-lg md:text-xl tracking-wider text-slate-600 hover:text-[#0F2C59] transition-colors cursor-default">Cisco Systems</span>
-            <span className="font-extrabold text-lg md:text-xl tracking-wider text-slate-600 hover:text-[#0F2C59] transition-colors cursor-default">Dell Technologies</span>
-            <span className="font-extrabold text-lg md:text-xl tracking-wider text-slate-600 hover:text-[#0F2C59] transition-colors cursor-default">Broadcom</span>
-            <span className="font-extrabold text-lg md:text-xl tracking-wider text-slate-600 hover:text-[#0F2C59] transition-colors cursor-default">Huawei IT</span>
+          <div className="flex flex-wrap items-center justify-center gap-12 md:gap-24 opacity-60 hover:opacity-75 transition-opacity">
+            <img src="/OEMS/Atlassian.png" alt="Atlassian" className="h-12 object-contain grayscale-0 hover:grayscale transition-all cursor-default" />
+            <img src="/OEMS/GitLab.png" alt="GitLab" className="h-12 object-contain grayscale-0 hover:grayscale transition-all cursor-default" />
+            <img src="/OEMS/Adobe.png" alt="Adobe" className="h-12 object-contain grayscale-0 hover:grayscale transition-all cursor-default" />
+            <img src="/OEMS/Freshworks.png" alt="Freshworks" className="h-12 object-contain grayscale-0 hover:grayscale transition-all cursor-default" />
+            <img src="/OEMS/Microsoft SQL Server.png" alt="Microsoft SQL Server" className="h-16 object-contain grayscale-0 hover:grayscale transition-all cursor-default" />
           </div>
         </div>
       </section>
@@ -191,7 +178,7 @@ export default function ApplicationServicesPage() {
             Core Service Offerings
           </span>
           <h2 className="text-3xl md:text-4xl font-black text-[#0F2C59] mb-16">
-            Transforming Ideas Into Intelligent Applications
+            Our Application Services
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
